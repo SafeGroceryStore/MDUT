@@ -20,7 +20,7 @@
 - 支持文件浏览功能
 
 ## Oracle
-- 目前仅支持命令执行功能
+- 目前仅支持命令执行功能(初测要 Oracle 版本 <= 10)
 
 ## PostsgreSql
 - 8.2以下版本使用默认库执行 /lib/x86_64-linux-gnu/libc.so.6 /lib/libc.so.6 /lib64/libc.so.6

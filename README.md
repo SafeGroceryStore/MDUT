@@ -16,13 +16,21 @@
 - 支持 Sp_OACreate 命令回显(依赖 bulk insert 命令)
 - 支持文件浏览功能
 ## Oracle
+- 目前仅支持命令执行功能
 ## Redis
 ## PostsgreSql
 
 # TODO
-1. 完善 Mssql 的功能
-2. 完成 Oracle 的开发
+1. 增加 Mssql CLR 的功能
+2. 增加全局延时功能
+3. Redis
+4. 数据库查询功能
+5. Oracle 文件管理功能
+6. Oracle 反弹 Shell 功能
 
 # 参考
 sql综合利用工具(sqltools)
 
+
+## 法律
+> 该项目仅供合法的渗透测试以及爱好者参考学习，请各位遵守《中华人民共和国网络安全法》以及相应地方的法律，禁止使用该项目进行违法操作，否则自行承担相关责任！

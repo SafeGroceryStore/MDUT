@@ -35,6 +35,7 @@
 ## Oracle
 - 支持命令执行功能(测试 Oracle 为版本 10 和 11)
 - 支持反弹 Shell 功能
+- XMLQUERY 功能本地测试不稳定，会出现没有 JAVA 权限，不推荐使用。
 
 ## PostsgreSql
 - 8.2以下版本使用默认库执行 /lib/x86_64-linux-gnu/libc.so.6 /lib/libc.so.6 /lib64/libc.so.6

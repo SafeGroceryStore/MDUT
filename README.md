@@ -54,7 +54,7 @@
 
 
 # TODO
-1. 增加 Mssql CLR 的功能
+1. ~~增加 Mssql CLR 的功能~~
 2. 增加全局延时功能
 3. Redis
 4. 数据库查询功能

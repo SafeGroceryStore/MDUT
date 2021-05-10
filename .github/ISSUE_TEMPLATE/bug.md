@@ -1,6 +1,6 @@
 ---
-name: 漏洞报告
-about: Describe this issue template's purpose here.
+name: Bug
+about: 漏洞报告
 title: ''
 labels: bug
 assignees: ''

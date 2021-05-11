@@ -8,7 +8,7 @@
 
 MDUT (Multiple Database Utilization Tools) is a Chinese database cross platform utilization tool that integrates multiple mainstream database types.Based on the foundation of the predecessors SQLTOOLS, this program was developed (a tribute to SQLTOOLS), which aims to integrate common database utilization methods in one program, breaking the barriers that various database utilization tools require various environments and cause considerable inconvenience. In addition, the tool uses JAVAFx as the GUI operation interface, which is beautiful. At the same time, the program also supports simultaneous operation of multiple databases, each of which is independent of each other, which greatly facilitates the use of network security workers.
 
-[中文](./README_ZH.md) / [ChangeLogs](./CHANGELOG.md)
+[中文](./README_ZH.md) / [Document](https://www.yuque.com/u21224612/nezuig) / [ChangeLogs](./CHANGELOG.md)
 ## ScreenShot
 ![image.png](https://i.loli.net/2021/05/11/c1M6YqZNAOnjmfp.png)
 
@@ -21,7 +21,8 @@ MDUT (Multiple Database Utilization Tools) is a Chinese database cross platform 
 │   └── MDATKit.zip // CLR Source code
 ├── README.md
 ├── README_ZH.md
-└── redis-cus-rogue.py // Redis cus-rogue script
+├── redis-cus-rogue.py // Redis cus-rogue script
+└── ShellUtil.java // Oracle JAVA Script
 ```
 
 
@@ -29,13 +30,8 @@ MDUT (Multiple Database Utilization Tools) is a Chinese database cross platform 
 1. HTTP Tunnel
 
 ## Thanks
-* [j1anFen](https://jianfensec.com/)
-* [冰蝎](https://github.com/rebeyond/Behinder)
-* [ODAT](https://github.com/quentinhardy/odat)
-* [MSDAT](https://github.com/quentinhardy/msdat)
-* [SQLTOOLS - 深度撞击]()
-* [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings)
-* [WarSQLKit](https://github.com/mindspoof/MSSQL-Fileless-Rootkit-WarSQLKit)
+[j1anFen](https://jianfensec.com/) / [冰蝎](https://github.com/rebeyond/Behinder) / [ODAT](https://github.com/quentinhardy/odat) / [MSDAT](https://github.com/quentinhardy/msdat) / SQLTOOLS - 深度撞击
+ / [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) / [WarSQLKit](https://github.com/mindspoof/MSSQL-Fileless-Rootkit-WarSQLKit)
 
 ## PS
 After the release of `v2.0`, the subsequent update speed will slow down, please understand. However, the project will continue to be updated,and I hope you can also participate in the project. So let's work together! :)

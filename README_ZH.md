@@ -8,7 +8,7 @@
 
 MDUT 全称 Multiple Database Utilization Tools，是一款中文的数据库跨平台利用工具，集合了多种主流的数据库类型。基于前人 SQLTOOLS 的基础开发了这套程序(向 SQLTOOLS 致敬)，旨在将常见的数据库利用手段集合在一个程序中，打破各种数据库利用工具需要各种环境导致使用相当不便的隔阂。此外工具以 JAVAFx 作为 GUI 操作界面，界面美观。同时程序还支持多数据库同时操作，每种数据库都相互独立，极大方便了网络安全工作者的使用。
 
-[English](./README.md) / [更新日志](./CHANGELOG.md)
+[English](./README.md) / [文档](https://www.yuque.com/u21224612/nezuig) /  / [更新日志](./CHANGELOG.md)
 ## 截图
 ![image.png](https://i.loli.net/2021/05/11/c1M6YqZNAOnjmfp.png)
 
@@ -21,7 +21,8 @@ MDUT 全称 Multiple Database Utilization Tools，是一款中文的数据库跨
 │   └── MDATKit.zip // CLR 源码
 ├── README.md
 ├── README_ZH.md
-└── redis-cus-rogue.py // Redis 主从脚本
+├── redis-cus-rogue.py // Redis 主从脚本
+└── ShellUtil.java // Oracle JAVA 脚本
 ```
 
 
@@ -29,14 +30,9 @@ MDUT 全称 Multiple Database Utilization Tools，是一款中文的数据库跨
 1. HTTP Tunnel
 
 ## 致谢
-* [j1anFen](https://jianfensec.com/)
-* [冰蝎](https://github.com/rebeyond/Behinder)
-* [ODAT](https://github.com/quentinhardy/odat)
-* [MSDAT](https://github.com/quentinhardy/msdat)
-* [SQLTOOLS - 深度撞击]()
-* [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings)
-* [WarSQLKit](https://github.com/mindspoof/MSSQL-Fileless-Rootkit-WarSQLKit)
-
+[j1anFen](https://jianfensec.com/) / [冰蝎](https://github.com/rebeyond/Behinder) / [ODAT](https://github.com/quentinhardy/odat) / [MSDAT](https://github.com/quentinhardy/msdat) / SQLTOOLS - 深度撞击
+ / [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) / [WarSQLKit](https://github.com/mindspoof/MSSQL-Fileless-Rootkit-WarSQLKit)
+ 
 ## 随写
 发布 `v2.0` 之后后续更新速度会变慢，望谅解。但项目会一直更新下去，也希望各位也可以参与到项目里一起发光发热! :) Thanks all
 

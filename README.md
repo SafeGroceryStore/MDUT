@@ -1,72 +1,44 @@
+![](https://i.loli.net/2021/05/10/bX6FP4shupnBoDJ.png)
 # MDUT
-一款用于数据库利用工具，集合了多种主流的数据库类型。由 Ch1ng & j1anFen 共同完成开发。
+[![Author](https://img.shields.io/badge/author-Ch1ng-red.svg?style=flat-square)](https://github.com/ch1ngg)
+[![Author](https://img.shields.io/badge/author-j1anFen-red.svg?style=flat-square)](https://github.com/j1anFen)
+[![Stargazers](https://img.shields.io/github/stars/SafeGroceryStore/MDUT.svg?style=flat-square)](https://github.com/SafeGroceryStore/MDUT/stargazers)
+[![Fork](https://img.shields.io/github/forks/SafeGroceryStore/MDUT.svg?style=flat-square)](https://github.com/SafeGroceryStore/MDUT/ork)
+[![License](https://img.shields.io/github/license/SafeGroceryStore/MDUT.svg?style=flat-square)](https://github.com/SafeGroceryStore/MDUT/blob/main/LICENSE)
 
-![pic](./images/WechatIMG2609.png)
+MDUT (Multiple Database Utilization Tools) is a Chinese database utilization tool that integrates multiple mainstream database types.
 
-# 起因
-由于各种数据库利用工具需要各种环境导致使用相当不便，便萌生了开发此工具的想法，将常用的数据库集合在一起并且优化当时工具的一些不足。工具没有神仙技巧，都是网上现成的 POC 集合，更多的是开发时候对 JavaFx 的操控。
+[中文](./README_ZH.md) / [ChangeLogs](./CHANGELOG.md)
+## ScreenShot
+![image.png](https://i.loli.net/2021/05/11/c1M6YqZNAOnjmfp.png)
 
-# 更新日志
-- 2020-12-30 - MDAT v1.0 发布
-- 2021-01-06 - MDAT v1.1
-  - 增加更新检测功能
-  - 增加关闭、关于按钮
-  - **Oracle**
-    - 增加创建函数功能使用前需要先按照对应账号权限创建函数
-    - 增加反弹 Shell 功能
-    - 增加多种命令执行类型
-    - 增加清除痕迹功能
-    - 微调 UI 交互
-  - **Mssql**
-    - 增加激活组件功能
-    - 增加 SPOACREATE COM 组件的命令执行方式
-    - 优化清理痕迹功能
-- 2021-02-03 - MDAT v1.2
-  - **Mssql**
-    - 完善文件管理功能
-    - 增加获取管理员密码功能
-    - 优化用户交互逻辑
-- 2021-04-22 - MDUT v1.2.1
-  - MDAT 改名为 MDUT
-
-# 功能
-## Mysql
-- 传统UDF提权自适应版本
-- NTFS创建目录(鸡肋基本没成功过)
-
-## Mssql
-- 使用 jTDS 包，支持 Microsoft SQL Server (6.5, 7, 2000, 2005, 2008 and 2012) 数据库版本
-- 支持 Sp_OACreate 命令回显(依赖 bulk insert 命令)
-- 支持 Sp_OACreate 命令回显(COM 组件)
-- 支持文件浏览功能
-
-## Oracle
-- 支持命令执行功能(测试 Oracle 为版本 10 和 11)
-- 支持反弹 Shell 功能
-- XMLQUERY 功能本地测试不稳定，会出现没有 JAVA 权限，不推荐使用。
-
-## PostsgreSql
-- 8.2以下版本使用默认库执行 /lib/x86_64-linux-gnu/libc.so.6 /lib/libc.so.6 /lib64/libc.so.6
-- 8.2-9.2使用UDF提权（目前程序已编译9.0, 9.1, 9.2）
-- 9.3-Latest(默认使用cve-2019-9193提权)
-
-## Redis
-- 涉及主从与远程交互暂未写
+## Directory
+```
+.
+├── CHANGELOG.md
+├── MDAT-DEV // MDUT Source code
+├── MDUTSqlKit
+│   └── MDATKit.zip // CLR Source code
+├── README.md
+├── README_ZH.md
+└── redis-cus-rogue.py // Redis cus-rogue script
+```
 
 
-# TODO
-1. ~~增加 Mssql CLR 的功能~~
-2. 增加全局延时功能
-3. Redis
-4. 数据库查询功能
-5. Oracle 文件管理功能
-6. ~~Oracle 反弹 Shell 功能~~
+## TODO
+1. HTTP Tunnel
 
-等等。。
+## Thanks
+* [j1anFen](https://jianfensec.com/)
+* [冰蝎](https://github.com/rebeyond/Behinder)
+* [ODAT](https://github.com/quentinhardy/odat)
+* [MSDAT](https://github.com/quentinhardy/msdat)
+* [SQLTOOLS - 深度撞击]()
+* [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings)
+* [WarSQLKit](https://github.com/mindspoof/MSSQL-Fileless-Rootkit-WarSQLKit)
 
-# 参考
-- sql综合利用工具(sqltools)
-- [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/PostgreSQL%20Injection.md)
+## PS
+After the release of `v2.0`, the subsequent update speed will slow down, please understand. However, the project will continue to be updated,and I hope you can also participate in the project. So let's work together! :)
 
-## 法律
-> 该项目仅供合法的渗透测试以及爱好者参考学习，请各位遵守《中华人民共和国网络安全法》以及相应地方的法律，禁止使用该项目进行违法操作，否则自行承担相关责任！
+## Law
+> This tool can only be used in enterprise security construction with sufficient legal authorization. In the process of using this tool, you should ensure that all your behaviors comply with local laws and regulations. If you have any illegal behavior in the process of using this tool, you will bear all consequences. All developers and contributors of this tool will not bear any legal and joint liability. Please do not install and use this tool unless you have fully read, understood and accepted all the terms of this agreement. Your use or your acceptance of this agreement in any other way, express or implied, shall be deemed to have read and agreed to be bound by this agreement.

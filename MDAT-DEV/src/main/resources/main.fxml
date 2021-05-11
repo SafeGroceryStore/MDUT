@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainController">
+   <children>
+      <MenuBar VBox.vgrow="ALWAYS">
+        <menus>
+          <Menu mnemonicParsing="false" text="文件">
+            <items>
+              <MenuItem fx:id="setting" mnemonicParsing="false" onAction="#settingAction" text="设置" />
+                  <MenuItem fx:id="close" mnemonicParsing="false" onAction="#closeAction" text="关闭" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="帮助">
+            <items>
+              <MenuItem fx:id="update" mnemonicParsing="false" onAction="#updateAction" text="更新" />
+                  <MenuItem fx:id="about" mnemonicParsing="false" onAction="#aboutAction" text="关于" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <TableView fx:id="databaseTableView" maxHeight="Infinity" maxWidth="Infinity" prefHeight="594.0" prefWidth="800.0"  VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="idCol" prefWidth="42.0" style="-fx-alignment: CENTER;" text="ID" />
+          <TableColumn fx:id="ipCol" prefWidth="148.0" style="-fx-alignment: CENTER;" text="IP" />
+          <TableColumn fx:id="datebaseTypeCol" maxWidth="Infinity" prefWidth="96.0" style="-fx-alignment: CENTER;" text="数据库类型" />
+            <TableColumn fx:id="connectTypeCol" maxWidth="Infinity" prefWidth="121.0" style="-fx-alignment: CENTER;" text="连接类型" />
+            <TableColumn fx:id="memoCol" maxWidth="Infinity" prefWidth="96.0" style="-fx-alignment: CENTER;" text="备忘" />
+            <TableColumn fx:id="addTimeCol" maxWidth="Infinity" prefWidth="240.0" style="-fx-alignment: CENTER;" text="添加时间" />
+        </columns>
+         <contextMenu>
+            <ContextMenu>
+              <items>
+                  <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#OpenDatabaseAction" text="打开" />
+                <MenuItem fx:id="addMenuItem" mnemonicParsing="false" onAction="#AddDatabaseAction" text="新增" />
+                  <MenuItem fx:id="editMenuItem" mnemonicParsing="false" onAction="#EditDatabaseAction" text="编辑" />
+                  <MenuItem fx:id="deleteMenuItem" mnemonicParsing="false" onAction="#DeleteDatabaseAction" text="删除" />
+                  <MenuItem fx:id="refreshMenuItem" mnemonicParsing="false" onAction="#RefreshAction" text="刷新" />
+              </items>
+            </ContextMenu>
+         </contextMenu>
+      </TableView>
+      <HBox maxHeight="-Infinity" maxWidth="Infinity" prefHeight="24.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Label fx:id="infoLab" maxWidth="Infinity" text="暂无信息" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets left="3.0" top="3.0" />
+               </padding>
+            </Label>
+            <Label contentDisplay="CENTER" maxWidth="-Infinity" text="By: j1anFen &amp; Ch1ng" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <padding>
+                  <Insets right="3.0" top="3.0" />
+               </padding>
+            </Label>
+         </children>
+      </HBox>
+   </children>
+</VBox>

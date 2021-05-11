@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="205.0" prefWidth="493.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SettingController">
+   <children>
+      <Button fx:id="saveBtn" layoutX="442.0" layoutY="170.0" mnemonicParsing="false" onAction="#SaveAction" text="保存" />
+      <Button fx:id="cancelBtn" layoutX="387.0" layoutY="170.0" mnemonicParsing="false" onAction="#CancelAction" text="取消" />
+      <TabPane prefHeight="170.0" prefWidth="493.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="常规">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <CheckBox fx:id="autoUpdateBox" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="软件启动更新检查" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Mysql">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="211.0" prefWidth="552.0">
+                     <children>
+                        <Label layoutX="15.0" layoutY="19.0" text="Driver:" />
+                        <TextField fx:id="mysqlText" layoutX="84.0" layoutY="14.0" prefHeight="27.0" prefWidth="346.0" />
+                        <Button fx:id="mysqlBtn" layoutX="439.0" layoutY="14.0" mnemonicParsing="false" onAction="#MysqlAction" text="浏览" />
+                        <Label layoutX="14.0" layoutY="59.0" text="ClassName:" />
+                        <TextField fx:id="mysqlClassNameText" layoutX="84.0" layoutY="54.0" prefHeight="27.0" prefWidth="400.0" />
+                        <Label layoutX="14.0" layoutY="99.0" text="JDBCUrl:" />
+                        <TextField fx:id="mysqlJDBCUrlText" layoutX="84.0" layoutY="94.0" prefHeight="27.0" prefWidth="400.0" promptText="{0} - IP   {1} - 端口   {2} - 数据库名" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Mssql">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="211.0" prefWidth="552.0">
+                     <children>
+                        <Label layoutX="15.0" layoutY="19.0" text="Driver:" />
+                        <TextField fx:id="mssqlText" layoutX="84.0" layoutY="14.0" prefHeight="27.0" prefWidth="346.0" />
+                        <Button fx:id="mssqlBtn" layoutX="439.0" layoutY="14.0" mnemonicParsing="false" onAction="#MssqlAction" text="浏览" />
+                        <Label layoutX="14.0" layoutY="59.0" text="ClassName:" />
+                        <TextField fx:id="mssqlClassNameText" layoutX="84.0" layoutY="54.0" prefHeight="27.0" prefWidth="400.0" />
+                        <Label layoutX="14.0" layoutY="99.0" text="JDBCUrl:" />
+                        <TextField fx:id="mssqlJDBCUrlText" layoutX="84.0" layoutY="94.0" prefHeight="27.0" prefWidth="400.0" promptText="{0} - IP   {1} - 端口   {2} - 数据库名" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Oracle">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="211.0" prefWidth="552.0">
+                     <children>
+                        <Label layoutX="15.0" layoutY="19.0" text="Driver:" />
+                        <TextField fx:id="oracleText" layoutX="84.0" layoutY="14.0" prefHeight="27.0" prefWidth="346.0" />
+                        <Button fx:id="oracleBtn" layoutX="439.0" layoutY="14.0" mnemonicParsing="false" onAction="#OracleAction" text="浏览" />
+                        <Label layoutX="14.0" layoutY="59.0" text="ClassName:" />
+                        <TextField fx:id="oracleClassNameText" layoutX="84.0" layoutY="54.0" prefHeight="27.0" prefWidth="400.0" />
+                        <Label layoutX="14.0" layoutY="99.0" text="JDBCUrl:" />
+                        <TextField fx:id="oracleJDBCUrlText" layoutX="84.0" layoutY="94.0" prefHeight="27.0" prefWidth="400.0" promptText="{0} - IP   {1} - 端口   {2} - 数据库名" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="PostgreSql">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="211.0" prefWidth="552.0">
+                     <children>
+                        <Label layoutX="15.0" layoutY="19.0" text="Driver:" />
+                        <TextField fx:id="postgreSqlText" layoutX="84.0" layoutY="14.0" prefHeight="27.0" prefWidth="346.0" />
+                        <Button fx:id="postgreSqlBtn" layoutX="439.0" layoutY="14.0" mnemonicParsing="false" onAction="#PostgreSqlAction" text="浏览" />
+                        <Label layoutX="14.0" layoutY="59.0" text="ClassName:" />
+                        <TextField fx:id="postgreSqlClassNameText" layoutX="84.0" layoutY="54.0" prefHeight="27.0" prefWidth="400.0" />
+                        <Label layoutX="14.0" layoutY="99.0" text="JDBCUrl:" />
+                        <TextField fx:id="postgreSqlJDBCUrlText" layoutX="84.0" layoutY="94.0" prefHeight="27.0" prefWidth="400.0" promptText="{0} - IP   {1} - 端口   {2} - 数据库名" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="824.0" prefWidth="1002.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MysqlController">
+   <children>
+      <TitledPane animated="false" collapsible="false" prefWidth="790.0" text="功能选择">
+         <content>
+            <HBox prefHeight="41.0" prefWidth="788.0" spacing="10.0">
+               <children>
+                  <Button fx:id="mysqludf" mnemonicParsing="false" onAction="#mysqludf" text="UDF提权" />
+                  <Button fx:id="mysqlntfs" mnemonicParsing="false" onAction="#mysqlntfs" text="NTFS新建目录(win)" />
+                  <Button fx:id="mysqlclearn" layoutX="276.0" layoutY="22.0" mnemonicParsing="false" onAction="#mysqlclearn" text="痕迹清理" />
+               </children>
+            </HBox>
+         </content>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+      </TitledPane>
+      <TitledPane animated="false" collapsible="false" prefHeight="83.0" prefWidth="992.0" text="Windows 反弹 Shell">
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+         <content>
+            <HBox prefHeight="94.0" prefWidth="980.0" spacing="8.0">
+               <children>
+                  <Label text="回连地址">
+                     <HBox.margin>
+                        <Insets top="3.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="reverseAddressTextField" maxWidth="Infinity" prefHeight="27.0" prefWidth="437.0" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </TextField>
+                  <Label text="回连端口">
+                     <HBox.margin>
+                        <Insets top="3.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="reversePortTextField" prefHeight="27.0" prefWidth="94.0">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </TextField>
+                  <Button fx:id="reverseRunBtn" mnemonicParsing="false" onAction="#reverseRun" prefHeight="27.0" prefWidth="86.0" text="Go!">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </content>
+      </TitledPane>
+      <TabPane prefHeight="478.0" prefWidth="839.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="命令执行">
+               <content>
+                  <VBox prefHeight="395.0" prefWidth="837.0">
+                     <children>
+                        <HBox prefHeight="47.0" prefWidth="768.0" spacing="10.0">
+                           <children>
+                              <TextField fx:id="mysqlcommand" maxWidth="Infinity" prefHeight="27.0" prefWidth="654.0" HBox.hgrow="ALWAYS" />
+                              <ComboBox fx:id="MysqlEncode" maxWidth="-Infinity" prefHeight="27.0" prefWidth="103.0" promptText="编码" />
+                              <Button fx:id="mysqleval" maxWidth="-Infinity" mnemonicParsing="false" onAction="#mysqleval" prefHeight="27.0" prefWidth="68.0" text="执行" HBox.hgrow="ALWAYS" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                        <TextArea fx:id="mysqloutput" maxWidth="Infinity" prefHeight="151.0" prefWidth="768.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </content>
+          </Tab>
+        </tabs>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+      </TabPane>
+      <TitledPane animated="false" collapsible="false" maxHeight="Infinity" prefHeight="127.0" prefWidth="992.0" text="日志输出" VBox.vgrow="ALWAYS">
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+         <content>
+            <TextArea fx:id="mysqlLogTextArea" prefHeight="200.0" prefWidth="200.0" />
+         </content>
+      </TitledPane>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<VBox prefHeight="802.0" prefWidth="1007.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MssqlController">
+   <children>
+      <TitledPane animated="false" collapsible="false" text="功能选择">
+         <content>
+            <HBox prefHeight="41.0" prefWidth="788.0" spacing="10.0">
+               <children>
+                  <MenuButton mnemonicParsing="false" text="激活组件">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#activatexpcmdshell" text="XPCMDSHELL" />
+                      <MenuItem mnemonicParsing="false" onAction="#activateoap" text="Ole Automation Procedures" />
+                        <MenuItem mnemonicParsing="false" onAction="#activateclr" text="CLR" />
+                    </items>
+                  </MenuButton>
+                  <Button fx:id="Button_getAdminPassword" mnemonicParsing="false" onAction="#getAdminPassword" text="获取管理员密码" />
+                  <Button fx:id="Button_CloseExp" mnemonicParsing="false" onAction="#CloseExp" text="清理痕迹" />
+               </children>
+            </HBox>
+         </content>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+      </TitledPane>
+      <TabPane prefHeight="554.0" prefWidth="997.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="命令执行">
+               <content>
+                  <VBox prefHeight="476.0" prefWidth="788.0">
+                     <children>
+                        <HBox maxHeight="Infinity" maxWidth="Infinity" prefHeight="47.0" prefWidth="768.0" spacing="10.0">
+                           <children>
+                              <TextField fx:id="TextField_MssqlCommand" maxWidth="Infinity" prefHeight="27.0" prefWidth="590.0" HBox.hgrow="ALWAYS" />
+                              <ComboBox fx:id="ComboBox_CLRCommnadType" prefHeight="27.0" prefWidth="141.0" promptText="执行类型(CLR)" HBox.hgrow="ALWAYS" />
+                              <ComboBox fx:id="ComboBox_EncodeType" prefHeight="27.0" prefWidth="102.0" />
+                              <Button fx:id="Button_MssqlCommandRun" maxWidth="-Infinity" mnemonicParsing="false" onAction="#MssqlCommandRun" prefHeight="27.0" prefWidth="68.0" text="执行" HBox.hgrow="ALWAYS" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                        <HBox prefHeight="27.0" prefWidth="768.0" spacing="10.0">
+                           <VBox.margin>
+                              <Insets bottom="10.0" top="-2.0" />
+                           </VBox.margin>
+                           <children>
+                              <Label text="模式：">
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </Label>
+                              <RadioButton fx:id="RadioButton_xpcmdshell" mnemonicParsing="false" selected="true" text="XpCmdshell">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="MssqlCommandTypeGroup" />
+                                 </toggleGroup>
+                                 <padding>
+                                    <Insets top="4.0" />
+                                 </padding>
+                              </RadioButton>
+                              <RadioButton fx:id="RadioButton_AgentJob" mnemonicParsing="false" text="AgentJob" toggleGroup="$MssqlCommandTypeGroup">
+                                 <padding>
+                                    <Insets top="4.0" />
+                                 </padding>
+                              </RadioButton>
+                              <RadioButton fx:id="RadioButton_CLR" mnemonicParsing="false" text="CLR" toggleGroup="$MssqlCommandTypeGroup">
+                                 <padding>
+                                    <Insets top="4.0" />
+                                 </padding>
+                              </RadioButton>
+                              <RadioButton fx:id="RadioButton_oashellcom" mnemonicParsing="false" text="SpOACreate(COM组件)" toggleGroup="$MssqlCommandTypeGroup">
+                                 <padding>
+                                    <Insets top="4.0" />
+                                 </padding>
+                              </RadioButton>
+                              <RadioButton fx:id="RadioButton_oashellbulk" mnemonicParsing="false" text="SpOACreate(BULK语句)" toggleGroup="$MssqlCommandTypeGroup">
+                                 <padding>
+                                    <Insets top="4.0" />
+                                 </padding>
+                              </RadioButton>
+                              <Label fx:id="Label_TimeOut" text="延时(秒)：">
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </Label>
+                              <TextField fx:id="TextField_OAShellTimeOut" prefHeight="10.0" prefWidth="53.0" text="2" />
+                           </children>
+                           <padding>
+                              <Insets bottom="3.0" left="5.0" right="5.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                        <TextArea fx:id="Textarea_MssqlCommandResult" maxWidth="Infinity" prefHeight="413.0" prefWidth="997.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </content>
+          </Tab>
+            <Tab text="文件管理">
+               <content>
+                  <VBox prefHeight="700.0" prefWidth="900.0">
+                     <children>
+                        <HBox prefHeight="51.0" prefWidth="800.0" spacing="10.0">
+                           <children>
+                              <Label text="路径：">
+                                 <padding>
+                                    <Insets top="6.0" />
+                                 </padding>
+                              </Label>
+                              <TextField fx:id="TextField_FilePath" maxWidth="Infinity" prefHeight="27.0" prefWidth="480.0" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="Button_ReadPath" mnemonicParsing="false" onAction="#ReadPath" text="读取" />
+                              <Button fx:id="Button_Return" mnemonicParsing="false" onAction="#Return" text="返回上一层" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                        <SplitPane dividerPositions="0.23" prefHeight="474.0" prefWidth="780.0" VBox.vgrow="ALWAYS">
+                          <items>
+                              <TreeView fx:id="TreeView_PathTree" prefHeight="200.0" prefWidth="200.0" />
+                              <TableView fx:id="TableView_Filetable" prefHeight="537.0" prefWidth="564.0">
+                                 <columns>
+                                  <TableColumn fx:id="fileIconCol" prefWidth="23.0" />
+                                    <TableColumn fx:id="fileNameCol" prefWidth="173.0" text="文件名" />
+                                    <TableColumn fx:id="fileStartTimeCol" minWidth="0.0" prefWidth="159.0" text="创建时间" />
+                                    <TableColumn fx:id="fileSizeCol" prefWidth="127.0" text="文件大小" />
+                                    <TableColumn fx:id="filePermissionCol" prefWidth="188.0" text="文件权限" />
+                                    <TableColumn fx:id="fileTypeCol" prefWidth="50.0" visible="false" />
+                                 </columns>
+                                 <contextMenu>
+                                    <ContextMenu>
+                                      <items>
+                                        <MenuItem fx:id="MenuItem_normalupload" mnemonicParsing="false" onAction="#normalUpload" text="上传" />
+                                          <MenuItem fx:id="MenuItem_normaldeletefile" mnemonicParsing="false" onAction="#normalDelete" text="删除文件" />
+                                          <MenuItem fx:id="MenuItem_normalmkdir" mnemonicParsing="false" onAction="#normalmkdir" text="新建文件夹" />
+                                          <MenuItem fx:id="MenuItem_normaldownload" mnemonicParsing="false" onAction="#normalDownload" text="下载" />
+                                          <MenuItem fx:id="MenuItem_clrupload" mnemonicParsing="false" onAction="#clrUpload" text="上传(CLR)" />
+                                          <MenuItem fx:id="MenuItem_clrdeletefile" mnemonicParsing="false" onAction="#clrDelete" text="删除(CLR)" />
+                                          <MenuItem fx:id="MenuItem_clrmkdir" mnemonicParsing="false" onAction="#clrmkdir" text="新建文件夹(CLR)" />
+                                      </items>
+                                    </ContextMenu>
+                                 </contextMenu>
+                              </TableView>
+                          </items>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </SplitPane>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+        </tabs>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+      </TabPane>
+      <TitledPane animated="false" collapsible="false" maxHeight="Infinity" maxWidth="Infinity" prefHeight="139.0" prefWidth="997.0" text="日志输出" VBox.vgrow="ALWAYS">
+         <content>
+            <TextArea fx:id="mssqlLogTextArea" prefHeight="200.0" prefWidth="200.0" />
+         </content>
+      </TitledPane>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

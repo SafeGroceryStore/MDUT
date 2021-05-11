@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="657.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PostgreSqlController">
+   <children>
+      <TitledPane animated="false" collapsible="false" prefWidth="790.0" text="功能选择">
+         <content>
+            <HBox prefHeight="41.0" prefWidth="788.0" spacing="10.0">
+               <children>
+                  <Button fx:id="postgreSqlSystemBtn" layoutX="22.0" layoutY="22.0" mnemonicParsing="false" onAction="#postgreSqlSystem" text="创建命令函数[libc] &lt;= 8.2" />
+                  <Button fx:id="postgreSqlcUdfBtn" mnemonicParsing="false" onAction="#postgreSqlcUdf" text="UDF提权" />
+                  <Button fx:id="postgreSqlcCearnBtn" layoutX="276.0" layoutY="22.0" mnemonicParsing="false" onAction="#postgreSqlClearn" text="痕迹清理" />
+               </children>
+            </HBox>
+         </content>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+      </TitledPane>
+      <TabPane prefHeight="405.0" prefWidth="790.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="命令执行">
+               <content>
+                  <VBox prefHeight="476.0" prefWidth="788.0">
+                     <children>
+                        <HBox prefHeight="47.0" prefWidth="768.0" spacing="10.0">
+                           <children>
+                              <TextField fx:id="postgreSqlCommandText" maxWidth="Infinity" prefHeight="27.0" prefWidth="550.0" HBox.hgrow="ALWAYS" />
+                              <ComboBox fx:id="postgreSqlEncodeCombox" prefHeight="27.0" prefWidth="107.0" />
+                              <Button fx:id="postgreSqlEvalBtn" maxWidth="-Infinity" mnemonicParsing="false" onAction="#postgreSqlEval" prefHeight="27.0" prefWidth="68.0" text="执行" HBox.hgrow="ALWAYS" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                        <TextArea fx:id="postgreSqlOutputTextArea" maxWidth="Infinity" prefHeight="151.0" prefWidth="768.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </content>
+          </Tab>
+        </tabs>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+      </TabPane>
+      <TitledPane animated="false" collapsible="false" maxHeight="Infinity" maxWidth="Infinity" prefHeight="122.0" prefWidth="790.0" text="日志输出" VBox.vgrow="ALWAYS">
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+         <content>
+            <TextArea fx:id="postgreSqlLogTextArea" prefHeight="157.0" prefWidth="788.0" />
+         </content>
+      </TitledPane>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

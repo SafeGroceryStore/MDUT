@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="494.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AddAndEditController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="常规">
+               <content>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="11.0" layoutY="190.0" text="数据库类型:" />
+                        <Label layoutX="10.0" layoutY="230.0" text="地址:" />
+                        <Label layoutX="11.0" layoutY="272.0" text="端口:" />
+                        <Label layoutX="10.0" layoutY="395.0" text="数据库:" />
+                        <Label layoutX="11.0" layoutY="315.0" text="用户:" />
+                        <Label layoutX="11.0" layoutY="355.0" text="密码:" />
+                        <Label layoutX="11.0" layoutY="435.0" text="超时(秒):" />
+                        <Label layoutX="11.0" layoutY="471.0" text="备忘:" />
+                        <ChoiceBox fx:id="databaseTypeChBox" layoutX="106.0" layoutY="185.0" prefHeight="27.0" prefWidth="368.0" />
+                        <ImageView fx:id="normalLogo" fitHeight="150.0" fitWidth="200.0" layoutX="177.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/images/database.png" />
+                           </image>
+                        </ImageView>
+                        <TextField fx:id="ipAddressText" layoutX="72.0" layoutY="225.0" prefHeight="27.0" prefWidth="402.0" />
+                        <TextField fx:id="portText" layoutX="72.0" layoutY="267.0" prefHeight="27.0" prefWidth="402.0" />
+                        <TextField fx:id="userNameText" layoutX="72.0" layoutY="310.0" prefHeight="27.0" prefWidth="402.0" />
+                        <TextField fx:id="passwordText" layoutX="72.0" layoutY="350.0" prefHeight="27.0" prefWidth="402.0" />
+                        <TextField fx:id="databaseText" layoutX="72.0" layoutY="390.0" prefHeight="27.0" prefWidth="402.0" />
+                        <TextField fx:id="timeOutText" layoutX="72.0" layoutY="430.0" prefHeight="27.0" prefWidth="402.0" text="30" />
+                        <TextArea fx:id="memoText" layoutX="72.0" layoutY="471.0" prefHeight="200.0" prefWidth="400.0" />
+                        <Button fx:id="testConnectBtn" layoutX="10.0" layoutY="694.0" mnemonicParsing="false" onAction="#TestConnectAction" text="测试" />
+                        <Button fx:id="saveBtn" layoutX="430.0" layoutY="694.0" mnemonicParsing="false" onAction="#SaveAction" text="保存" />
+                        <Button fx:id="cancelBtn" layoutX="370.0" layoutY="694.0" mnemonicParsing="false" onAction="#CancelAction" text="取消" />
+                        <Label fx:id="infoLaberl" layoutX="72.0" layoutY="699.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+          </Tab>
+          <Tab text="HTTP">
+               <content>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fx:id="httpLogo" fitHeight="150.0" fitWidth="200.0" layoutX="172.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/images/internet.png" />
+                           </image>
+                        </ImageView>
+                        <CheckBox fx:id="usedHttpTunnelCheckBox" disable="true" layoutX="14.0" layoutY="203.0" mnemonicParsing="false" text="是否使用 HTTP 通道" />
+                        <Label layoutX="14.0" layoutY="238.0" text="通道地址:" />
+                        <TextField fx:id="urlText" disable="true" layoutX="83.0" layoutY="233.0" prefHeight="27.0" prefWidth="397.0" />
+                        <CheckBox fx:id="usedProxyCheckBox" disable="true" layoutX="14.0" layoutY="326.0" mnemonicParsing="false" text="是否使用代理" />
+                        <TextField fx:id="proxyAddressText" disable="true" layoutX="83.0" layoutY="394.0" prefHeight="27.0" prefWidth="397.0" />
+                        <Label layoutX="14.0" layoutY="399.0" text="地址:" />
+                        <Label layoutX="14.0" layoutY="437.0" text="端口:" />
+                        <TextField fx:id="proxyPortText" disable="true" layoutX="83.0" layoutY="432.0" prefHeight="27.0" prefWidth="397.0" />
+                        <TextField fx:id="proxyUserNameText" disable="true" layoutX="83.0" layoutY="471.0" prefHeight="27.0" prefWidth="397.0" />
+                        <Label layoutX="14.0" layoutY="476.0" text="用户名:" />
+                        <TextField fx:id="proxyPasswordText" disable="true" layoutX="83.0" layoutY="509.0" prefHeight="27.0" prefWidth="397.0" />
+                        <Label layoutX="14.0" layoutY="514.0" text="密码:" />
+                        <Label layoutX="14.0" layoutY="362.0" text="类型:" />
+                        <ChoiceBox fx:id="proxyTypeChBox" disable="true" layoutX="83.0" layoutY="357.0" prefHeight="27.0" prefWidth="397.0" />
+                        <TextField fx:id="keyText" disable="true" layoutX="83.0" layoutY="269.0" prefHeight="27.0" prefWidth="316.0" />
+                        <Label layoutX="14.0" layoutY="274.0" text="加密密钥:" />
+                        <Button fx:id="generateBtn" disable="true" layoutX="410.0" layoutY="269.0" mnemonicParsing="false" onAction="#GenerateAction" text="随机生成" />
+                        <Label layoutX="14.0" layoutY="553.0" text="自定义请求头:" />
+                        <TextArea fx:id="HttpHeadersTextA" disable="true" layoutX="13.0" layoutY="575.0" prefHeight="146.0" prefWidth="468.0" />
+                     </children>
+                  </AnchorPane>
+               </content></Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</GridPane>

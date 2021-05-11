@@ -195,7 +195,7 @@ public class MainController implements Initializable {
      */
     public boolean checkVersion() {
         boolean update = false;
-        String currentVersion = "2.0";
+        String currentVersion = "2.0.1";
         String url = "https://gitee.com/ch1nggggg/mdat/raw/master/ver.txt";
         String newVersion = HttpsClientUtil.sendHtpps(url);
         if(!newVersion.equals(currentVersion)){

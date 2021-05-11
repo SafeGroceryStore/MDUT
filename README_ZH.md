@@ -6,7 +6,7 @@
 [![Fork](https://img.shields.io/github/forks/SafeGroceryStore/MDUT.svg?style=flat-square)](https://github.com/SafeGroceryStore/MDUT/ork)
 [![License](https://img.shields.io/github/license/SafeGroceryStore/MDUT.svg?style=flat-square)](https://github.com/SafeGroceryStore/MDUT/blob/main/LICENSE)
 
-MDUT 全称 Multiple Database Utilization Tools，是一款中文的数据库利用工具，集合了多种主流的数据库类型。
+MDUT 全称 Multiple Database Utilization Tools，是一款中文的数据库跨平台利用工具，集合了多种主流的数据库类型。基于前人 SQLTOOLS 的基础开发了这套程序(向 SQLTOOLS 致敬)，旨在将常见的数据库利用手段集合在一个程序中，打破各种数据库利用工具需要各种环境导致使用相当不便的隔阂。此外工具以 JAVAFx 作为 GUI 操作界面，界面美观。同时程序还支持多数据库同时操作，每种数据库都相互独立，极大方便了网络安全工作者的使用。
 
 [English](./README.md) / [更新日志](./CHANGELOG.md)
 ## 截图

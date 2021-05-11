@@ -14,6 +14,15 @@ import java.sql.DriverManager;
  */
 public class Utils {
 
+
+    /**
+     * 当前软件版本
+     * @return
+     */
+    public static String getCurrentVersion() {
+        return "v2.0.2";
+    }
+
     /**
      * 获取当前软件路径
      * @return

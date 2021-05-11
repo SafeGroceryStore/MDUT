@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.URL;
+
 import java.util.*;
 
 import Entity.ControllersFactory;
@@ -195,7 +196,7 @@ public class MainController implements Initializable {
      */
     public boolean checkVersion() {
         boolean update = false;
-        String currentVersion = "2.0.1";
+        String currentVersion = Utils.getCurrentVersion();
         String url = "https://gitee.com/ch1nggggg/mdat/raw/master/ver.txt";
         String newVersion = HttpsClientUtil.sendHtpps(url);
         if(!newVersion.equals(currentVersion)){
@@ -245,7 +246,7 @@ public class MainController implements Initializable {
                 "    Driver: %s\n" +
                 "    ClassName: %s\n" +
                 "    JDBCUrl: %s";
-        FileWriter writer = null;
+        OutputStreamWriter osw = null;
         try {
             String path = Utils.getSelfPath();
             File checkFile = new File(path + File.separator + "config.yaml");
@@ -270,15 +271,15 @@ public class MainController implements Initializable {
                     "jdbc:postgresql://{0}:{1}/{2}"
             );
             // FileWriter(File file, boolean append)，append为true时为追加模式，false或缺省则为覆盖模式
-            writer = new FileWriter(checkFile, false);
-            writer.append(data);
-            writer.flush();
+            osw = new OutputStreamWriter(new FileOutputStream(checkFile), "UTF-8");
+            osw.append(data);
+            osw.flush();
         } catch (Exception e) {
             MessageUtil.showExceptionMessage(e, e.getMessage());
         } finally {
-            if (null != writer) {
+            if (null != osw) {
                 try {
-                    writer.close();
+                    osw.close();
                 } catch (Exception e) {
                     MessageUtil.showExceptionMessage(e, e.getMessage());
                 }

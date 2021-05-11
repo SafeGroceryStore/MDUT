@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -472,6 +473,7 @@ public class MainController implements Initializable {
             JSONObject dbObj = jsondata.getJSONObject(0);
             // 然后借用 DatabaseDateEntity 类进行获取值操作
             Stage st = new Stage();
+            st.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             // 获取数据库的数据
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/mysqlViewTab.fxml"));
             Parent sceneMain = loader.load();
@@ -524,6 +526,8 @@ public class MainController implements Initializable {
             JSONObject dbObj = jsondata.getJSONObject(0);
             // 然后借用 DatabaseDateEntity 类进行获取值操作
             Stage st = new Stage();
+            st.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
+
             // 获取数据库的数据
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/postgreViewTab.fxml"));
             Parent sceneMain = loader.load();
@@ -575,6 +579,8 @@ public class MainController implements Initializable {
             JSONObject dbObj = jsondata.getJSONObject(0);
             // 然后借用 DatabaseDateEntity 类进行获取值操作
             Stage st = new Stage();
+            st.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
+
             // 获取数据库的数据
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/mssqlViewTab.fxml"));
             Parent sceneMain = loader.load();
@@ -626,6 +632,8 @@ public class MainController implements Initializable {
             JSONObject dbObj = jsondata.getJSONObject(0);
             // 然后借用 DatabaseDateEntity 类进行获取值操作
             Stage st = new Stage();
+            st.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
+
             // 获取数据库的数据
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/redisViewTab.fxml"));
             Parent sceneMain = loader.load();
@@ -677,6 +685,7 @@ public class MainController implements Initializable {
             JSONObject dbObj = jsondata.getJSONObject(0);
             // 然后借用 DatabaseDateEntity 类进行获取值操作
             Stage st = new Stage();
+            st.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             // 获取数据库的数据
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/oracleViewTab.fxml"));
             Parent sceneMain = loader.load();

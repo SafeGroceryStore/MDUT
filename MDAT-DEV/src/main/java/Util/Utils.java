@@ -20,7 +20,7 @@ public class Utils {
      * @return
      */
     public static String getCurrentVersion() {
-        return "v2.0.2";
+        return "2.0.2";
     }
 
     /**

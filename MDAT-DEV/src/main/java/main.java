@@ -12,7 +12,7 @@ public class main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
-        primaryStage.setTitle("Multiple Database Utilization Tools - " + Utils  .getCurrentVersion());
+        primaryStage.setTitle("Multiple Database Utilization Tools - v" + Utils  .getCurrentVersion());
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }

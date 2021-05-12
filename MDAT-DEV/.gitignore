@@ -1,9 +1,4 @@
 /target/
-.DS_Store
+**/.DS_Store
 /.idea/
-.DS_Store
-.DS_Store
-src/.DS_Store
-src/main/.DS_Store
 src/main/resources/mssqlViewTab_bak.fxml
-.DS_Store

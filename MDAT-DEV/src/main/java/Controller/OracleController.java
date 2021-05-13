@@ -223,11 +223,6 @@ public class OracleController implements Initializable {
 
 
     @FXML
-    void ReverseShell(ActionEvent event) {
-
-    }
-
-    @FXML
     void DeleteFuction(ActionEvent event) {
         Runnable runner = () -> {
             Platform.runLater(() -> {

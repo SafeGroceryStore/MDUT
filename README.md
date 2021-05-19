@@ -10,7 +10,7 @@ MDUT (Multiple Database Utilization Tools) is a Chinese database cross platform 
 
 [中文](./README_ZH.md) / [Document](https://www.yuque.com/u21224612/nezuig) / [ChangeLogs](./CHANGELOG.md)
 ## ScreenShot
-![image.png](https://i.loli.net/2021/05/11/c1M6YqZNAOnjmfp.png)
+![](https://i.loli.net/2021/05/11/c1M6YqZNAOnjmfp.png)
 
 ## Directory
 ```

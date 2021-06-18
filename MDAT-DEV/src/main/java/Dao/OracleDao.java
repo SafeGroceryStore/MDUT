@@ -7,6 +7,7 @@ import Util.Utils;
 import Util.YamlConfigs;
 import javafx.application.Platform;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -143,7 +144,6 @@ public class OracleDao {
     private OracleController oracleController = (OracleController) ControllersFactory.controllers.get(OracleController.class.getSimpleName());
 
     public OracleDao(String ip,String port,String database,String username,String password,String timeout) throws Exception {
-        String tempFileString = "file://";
         YamlConfigs configs = new YamlConfigs();
         Map<String, Object> yamlToMap = configs.getYamlToMap("config.yaml");
         // 从配置文件读取变量
@@ -161,11 +161,9 @@ public class OracleDao {
         URLCLASSLOADER = (URLClassLoader) ClassLoader.getSystemClassLoader();
         METHOD = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
         METHOD.setAccessible(true);
-        //判断是否是 windows 是的话需要多加一个斜杠
-        if(System.getProperty("os.name").toLowerCase().contains("windows")){
-            tempFileString = "file:///";
-        }
-        METHOD.invoke(URLCLASSLOADER, new URL(tempFileString + JARFILE));
+        // 将路径转为 url 类型进行加载，修复系统路径不兼容问题
+        URL url = (new File(JARFILE)).toURI().toURL();
+        METHOD.invoke(URLCLASSLOADER, url);
         Class.forName(DRIVER);
 
     }

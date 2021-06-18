@@ -76,9 +76,9 @@
           </Tab>
           <Tab text="文件管理">
                <content>
-                  <VBox disable="true" prefHeight="700.0" prefWidth="900.0">
+                  <VBox prefHeight="700.0" prefWidth="900.0">
                      <children>
-                        <HBox disable="true" prefHeight="51.0" prefWidth="800.0" spacing="10.0">
+                        <HBox prefHeight="51.0" prefWidth="800.0" spacing="10.0">
                            <children>
                               <Label text="路径：">
                                  <padding>
@@ -96,7 +96,7 @@
                               <Insets />
                            </VBox.margin>
                         </HBox>
-                        <SplitPane disable="true" dividerPositions="0.23" prefHeight="474.0" prefWidth="780.0" VBox.vgrow="ALWAYS">
+                        <SplitPane dividerPositions="0.23" prefHeight="474.0" prefWidth="780.0" VBox.vgrow="ALWAYS">
                           <items>
                               <TreeView fx:id="TreeView_PathTree" prefHeight="200.0" prefWidth="200.0" />
                               <TableView fx:id="TableView_Filetable" prefHeight="537.0" prefWidth="564.0">

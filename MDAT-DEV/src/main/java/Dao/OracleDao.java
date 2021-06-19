@@ -303,7 +303,7 @@ public class OracleDao {
     }
 
     /**
-     * 初始化 ShellUtilJAVA 代码
+     * 初始化 FileUtilJAVA 代码
      */
     public void importFileUtilJAVA(){
         try {

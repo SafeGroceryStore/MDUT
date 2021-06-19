@@ -438,7 +438,7 @@ public class OracleDao {
 
 
     /**
-     * 获取所以盘符
+     * 获取所有盘符
      * @return
      */
     public ArrayList<String> getDisk(){
@@ -456,24 +456,13 @@ public class OracleDao {
         return res;
     }
 
-//    /**
-//     * 获取当前路径
-//     * @return
-//     */
-//    public String getCurrentPath(){
-//        String res = "";
-//        String sql = "select filerun('getpath','','') from dual";
-//        try {
-//            res = executeSql(sql);
-//        } catch (Exception e) {
-//            Platform.runLater(() ->{
-//                MessageUtil.showExceptionMessage(e,e.getMessage());
-//            });
-//        }
-//        return res;
-//
-//    }
 
+    /**
+     * 获取路径下所有的文件夹和文件名
+     * @param path
+     * @param code
+     * @return
+     */
     public ArrayList<String> getFiles(String path,String code){
         ArrayList<String> res = new ArrayList<String>();
         if (code == null || code.equals("")) {
@@ -492,6 +481,11 @@ public class OracleDao {
         return res;
     }
 
+    /**
+     * 上传文件
+     * @param path
+     * @param contexts
+     */
     public void upload(String path,String contexts){
         String sql = "select filerun('writefile','%s^%s','') from dual";
         try {
@@ -512,6 +506,11 @@ public class OracleDao {
         }
     }
 
+    /**
+     * 下载文件
+     * @param path
+     * @return
+     */
     public String download(String path){
         String sql = "select filerun('readfile','%s','') from dual";
         String res = "";
@@ -526,6 +525,11 @@ public class OracleDao {
         return res;
     }
 
+    /**
+     * 删除文件
+     * @param path
+     * @return
+     */
     public String delete(String path){
         String sql = "select filerun('deletefile','%s','') from dual";
         String res = "";

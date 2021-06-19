@@ -35,6 +35,9 @@ import Entity.ControllersFactory;
 public class MainController implements Initializable {
 
     @FXML
+    private MenuItem resetConfigFile;
+
+    @FXML
     private TableColumn<?, ?> ipCol;
 
     @FXML
@@ -105,6 +108,7 @@ public class MainController implements Initializable {
      */
     public void initTableView() {
         try {
+            databaseTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             databaseTableView.getItems().clear();
             // 从数据库获取用户连接的数据
             JSONArray jsonArray = this.managerDao.listDatabases();
@@ -180,7 +184,6 @@ public class MainController implements Initializable {
                 };
                 Thread workThrad = new Thread(runner);
                 workThrad.start();
-                // do somting
             }
         } catch (Exception e) {
             Platform.runLater(() -> {
@@ -208,7 +211,12 @@ public class MainController implements Initializable {
      * 免责声明
      */
     public void initAlert() {
-        MessageUtil.showErrorMessage("用户须知", "特别提醒，使用该工具必须遵守国家有关的政策和法律，如刑法、国家安全法、保密法、计算机信息系统安全保护条例等，保护国家利益，保护国家安全，对于违法使用该工具而引起的一切责任，由用户负全部责任。一旦您使用了本程序，将视为您已清楚了解上列全部声明并且完全同意。本程序仅供合法的渗透测试以及爱好者参考学习。");
+        YamlConfigs configs = new YamlConfigs();
+        Map<String, Object> yamlToMap = configs.getYamlToMap("config.yaml");
+        String Status = (String) configs.getValue("Global.StartWarn",yamlToMap);
+        if ("true".equals(Status)) {
+            MessageUtil.showErrorMessage("用户须知", "特别提醒，使用该工具必须遵守国家有关的政策和法律，如刑法、国家安全法、保密法、计算机信息系统安全保护条例等，保护国家利益，保护国家安全，对于违法使用该工具而引起的一切责任，由用户负全部责任。一旦您使用了本程序，将视为您已清楚了解上列全部声明并且完全同意。本程序仅供合法的渗透测试以及爱好者参考学习。");
+        }
     }
 
     /**
@@ -230,6 +238,7 @@ public class MainController implements Initializable {
     public void initConfigFile() {
         String data = "Global:\n" +
                 "    AutoUpdate: 'false'\n" +
+                "    StartWarn: 'true'\n" +
                 "Mysql:\n" +
                 "    Driver: %s\n" +
                 "    ClassName: %s\n" +
@@ -414,10 +423,11 @@ public class MainController implements Initializable {
             alert.setContentText("确定删除?");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
-                // 获取选中行的ID
-                String id = ((DatabaseDateEntity) this.databaseTableView.getSelectionModel().getSelectedItem()).getId();
-                // 执行删除语句
-                this.managerDao.delDatebaseById(id);
+                List items = new ArrayList(this.databaseTableView.getSelectionModel().getSelectedItems());
+                for (int i = 0; i < items.size(); i++){
+                    String id = ((DatabaseDateEntity)items.get(i)).getId();
+                    this.managerDao.delDatebaseById(id);
+                }
                 infoLab.setText("删除成功!");
                 // 重新刷新 TableViews
                 this.initTableView();
@@ -723,6 +733,28 @@ public class MainController implements Initializable {
         } catch (Exception e) {
             MessageUtil.showExceptionMessage(e, e.getMessage());
             //e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void resetConfigFileAction(ActionEvent event) {
+        try {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("提示");
+            alert.setHeaderText("");
+            alert.setContentText("确定重设配置文件?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                String path = Utils.getSelfPath();
+                File checkFile = new File(path + File.separator + "config.yaml");
+                if (checkFile.exists()) {
+                    checkFile.delete();
+                }
+                initConfigFile();
+                infoLab.setText("重新生成配置文件成功!");
+            }
+        } catch (Exception e) {
+            MessageUtil.showExceptionMessage(e, e.getMessage());
         }
     }
 }

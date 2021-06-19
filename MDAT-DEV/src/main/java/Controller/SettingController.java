@@ -21,6 +21,9 @@ public class SettingController implements Initializable {
 
 
     @FXML
+    private CheckBox warnBox;
+
+    @FXML
     private Button mssqlBtn;
 
     @FXML
@@ -200,12 +203,14 @@ public class SettingController implements Initializable {
         String postgreSqlJDBCUrl = postgreSqlJDBCUrlText.getText();
 
         String autoupdatebox = autoUpdateBox.isSelected() ? "true" : "false";
+        String warnebox = warnBox.isSelected() ? "true" : "false";
         YamlConfigs configs = new YamlConfigs();
         Map<String, Object> yamlToMap = configs.getYamlToMap("config.yaml");
         try {
-            // configs.updateYaml("sys.cpu.name", "Intel Core i7", "config.yaml");
             // 修改配置文件对应的值
             configs.updateYaml("Global.AutoUpdate",autoupdatebox, "config.yaml");
+            configs.updateYaml("Global.StartWarn",warnebox, "config.yaml");
+
 
             configs.updateYaml("Mysql.Driver",mysqltext, "config.yaml");
             configs.updateYaml("Mysql.ClassName",mysqlClassName, "config.yaml");

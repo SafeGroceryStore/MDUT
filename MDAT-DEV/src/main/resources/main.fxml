@@ -13,6 +13,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="文件">
             <items>
+                  <MenuItem fx:id="resetConfigFile" mnemonicParsing="false" onAction="#resetConfigFileAction" text="重设配置文件" />
               <MenuItem fx:id="setting" mnemonicParsing="false" onAction="#settingAction" text="设置" />
                   <MenuItem fx:id="close" mnemonicParsing="false" onAction="#closeAction" text="关闭" />
             </items>
@@ -25,7 +26,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <TableView fx:id="databaseTableView" maxHeight="Infinity" maxWidth="Infinity" prefHeight="594.0" prefWidth="800.0"  VBox.vgrow="ALWAYS">
+      <TableView fx:id="databaseTableView" maxHeight="Infinity" maxWidth="Infinity" prefHeight="594.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="idCol" prefWidth="42.0" style="-fx-alignment: CENTER;" text="ID" />
           <TableColumn fx:id="ipCol" prefWidth="148.0" style="-fx-alignment: CENTER;" text="IP" />

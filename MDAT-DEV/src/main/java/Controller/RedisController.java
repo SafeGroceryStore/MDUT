@@ -92,8 +92,6 @@ public class RedisController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initComboBox();
-
-
         ControllersFactory.controllers.put(this.getClass().getSimpleName(), this);
         // 尝试连接
         Runnable runner = () -> {
@@ -124,46 +122,69 @@ public class RedisController implements Initializable {
 
     @FXML
     void redisScheduledTasks(ActionEvent event) {
-        this.redisDao.crontab(redisCronTaskInput.getText());
+        Runnable runner = () -> {
+            this.redisDao.crontab(redisCronTaskInput.getText());
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
+
     }
 
     @FXML
     void redisReplaceSSHKey(ActionEvent event) {
-        this.redisDao.sshkey(redisPublicKeyInput.getText());
+        Runnable runner = () -> {
+            this.redisDao.sshkey(redisPublicKeyInput.getText());
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
     }
 
     @FXML
     void redisSlave(ActionEvent event) {
         String vpsAddress = redisVPSAddressTextField.getText();
         String vpsPort = redisVPSPortTextField.getText();
-
-        if (!(vpsAddress.equals("") && vpsPort.equals(""))) {
-            int timeout = Integer.parseInt(redisVPSTimeOutTextField.getText()) * 1000;
-            try {
-                this.redisDao.rogue(vpsAddress, vpsPort, timeout);
-            } catch (Exception e) {
-                MessageUtil.showExceptionMessage(e, e.getMessage());
+        Runnable runner = () -> {
+            if (!(vpsAddress.equals("") && vpsPort.equals(""))) {
+                int timeout = Integer.parseInt(redisVPSTimeOutTextField.getText()) * 1000;
+                try {
+                    this.redisDao.rogue(vpsAddress, vpsPort, timeout);
+                } catch (Exception e) {
+                    MessageUtil.showExceptionMessage(e, e.getMessage());
+                }
+            } else {
+                MessageUtil.showErrorMessage("错误", "请输入vps地址和端口");
             }
-        } else {
-            MessageUtil.showErrorMessage("错误", "请输入vps地址和端口");
-        }
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
     }
 
     @FXML
     void redisClear(ActionEvent event) {
-        this.redisDao.clearn();
+        Runnable runner = () -> {
+            this.redisDao.clearn();
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
     }
 
     @FXML
     void redisEvalCommand(ActionEvent event) {
-        String command = this.redisCommandTextField.getText();
-        String code = redisEncodeCombox.getValue();
-        if (code == null) {
-            MessageUtil.showErrorMessage("错误", "请选择编码类型");
-            return;
-        }
-        String result = this.redisDao.eval(command, code);
-        redisOutputTextFArea.setText(result);
+        Runnable runner = () -> {
+            String command = this.redisCommandTextField.getText();
+            String code = redisEncodeCombox.getValue();
+            if (code == null) {
+                MessageUtil.showErrorMessage("错误", "请选择编码类型");
+                return;
+            }
+            String result = this.redisDao.eval(command, code);
+            Platform.runLater(() -> {
+                redisOutputTextFArea.setText(result);
+            });
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
+
     }
 
     /**

@@ -138,7 +138,7 @@ public class MssqlDao {
     }
 
     /**
-     * 激活 xpcmdshell
+     * 激活 oap
      */
     public void activateOAP(){
         try {

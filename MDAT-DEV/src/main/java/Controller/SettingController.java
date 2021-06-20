@@ -98,6 +98,7 @@ public class SettingController implements Initializable {
             //
             // 获取 conf.properties 内容并且加载到对应变量
             String autoUpdate = (String) configs.getValue("Global.AutoUpdate",yamlToMap);
+            String StartWarn = (String) configs.getValue("Global.StartWarn",yamlToMap);
 
             String mysqlDriver = (String) configs.getValue("Mysql.Driver",yamlToMap);
             String mysqlClassName = (String) configs.getValue("Mysql.ClassName",yamlToMap);
@@ -120,6 +121,12 @@ public class SettingController implements Initializable {
                 autoUpdateBox.setSelected(false);
             }else {
                 autoUpdateBox.setSelected(true);
+            }
+            // 判断是否需要弹出用户须知
+            if("false".equals(StartWarn)){
+                warnBox.setSelected(false);
+            }else {
+                warnBox.setSelected(true);
             }
             // 输出到对应的 Text 框
             mysqlText.setText(mysqlDriver);

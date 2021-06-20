@@ -6,7 +6,7 @@
 
     <groupId>org.mdut</groupId>
     <artifactId>MDUT-Dev</artifactId>
-    <version>2.0.3-SNAPSHOT</version>
+    <version>2.0.4-SNAPSHOT</version>
 
     <build>
         <plugins>

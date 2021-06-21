@@ -41,9 +41,13 @@ public class RedisDao {
      * @return
      * @throws SQLException
      */
-    public void testConnection() {
-        if (CONN == null) {
-            new Jedis(ip, port, timeout);
+    public void testConnection()  {
+        CONN = new Jedis(ip, port, timeout);
+        if (password.length() != 0) {
+            CONN.auth(password);
+        }
+        if (CONN != null) {
+            CONN.close();
         }
     }
 
@@ -195,5 +199,9 @@ public class RedisDao {
         CONN.del("xxcron");
         redisController.redisLogTextFArea.appendText(Utils.log("delete exp key success"));
 
+    }
+
+    public static void main(String[] args) throws SQLException {
+        new RedisDao("1.1.1.1","9999","123455","1").getConnection();
     }
 }

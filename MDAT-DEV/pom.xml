@@ -6,7 +6,7 @@
 
     <groupId>org.mdut</groupId>
     <artifactId>MDUT-Dev</artifactId>
-    <version>2.0.2-SNAPSHOT</version>
+    <version>2.0.4-SNAPSHOT</version>
 
     <build>
         <plugins>
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
-            <version>3.7.2</version>
+            <version>3.34.0</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>

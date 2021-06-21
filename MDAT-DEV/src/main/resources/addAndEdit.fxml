@@ -38,7 +38,7 @@
                         <TextField fx:id="userNameText" layoutX="72.0" layoutY="310.0" prefHeight="27.0" prefWidth="402.0" />
                         <TextField fx:id="passwordText" layoutX="72.0" layoutY="350.0" prefHeight="27.0" prefWidth="402.0" />
                         <TextField fx:id="databaseText" layoutX="72.0" layoutY="390.0" prefHeight="27.0" prefWidth="402.0" />
-                        <TextField fx:id="timeOutText" layoutX="72.0" layoutY="430.0" prefHeight="27.0" prefWidth="402.0" text="30" />
+                        <TextField fx:id="timeOutText" layoutX="72.0" layoutY="430.0" prefHeight="27.0" prefWidth="402.0" text="5" />
                         <TextArea fx:id="memoText" layoutX="72.0" layoutY="471.0" prefHeight="200.0" prefWidth="400.0" />
                         <Button fx:id="testConnectBtn" layoutX="10.0" layoutY="694.0" mnemonicParsing="false" onAction="#TestConnectAction" text="测试" />
                         <Button fx:id="saveBtn" layoutX="430.0" layoutY="694.0" mnemonicParsing="false" onAction="#SaveAction" text="保存" />

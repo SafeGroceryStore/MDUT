@@ -13,7 +13,10 @@
                <children>
                   <MenuButton fx:id="MenuButton_CreateFunction" ellipsisString="" mnemonicParsing="false" text="初始化功能" HBox.hgrow="ALWAYS">
                     <items>
-                       <MenuItem fx:id="CreateShellUtil" mnemonicParsing="false" onAction="#CreateShellUtil" text="初始化ShellUtil 函数" />
+                       <MenuItem fx:id="CreateShellUtil" mnemonicParsing="false" onAction="#CreateShellUtil"
+                                 text="初始化 ShellUtil 函数" />
+                        <MenuItem fx:id="CreateFileUtil" mnemonicParsing="false" onAction="#CreateFileUtil"
+                                  text="初始化 FilellUtil 函数" />
                     </items>
                   </MenuButton>
                   <Button fx:id="Button_DeleteFuction" mnemonicParsing="false" onAction="#DeleteFuction" text="清除痕迹" />
@@ -76,10 +79,11 @@
           </Tab>
           <Tab text="文件管理">
                <content>
-                  <VBox disable="true" prefHeight="700.0" prefWidth="900.0">
+                  <VBox prefHeight="700.0" prefWidth="900.0">
                      <children>
-                        <HBox disable="true" prefHeight="51.0" prefWidth="800.0" spacing="10.0">
+                        <HBox prefHeight="51.0" prefWidth="800.0" spacing="10.0">
                            <children>
+                              <Button fx:id="StartFileManagerBtn" mnemonicParsing="false" onAction="#StartFileManager" text="开启文件管理" />
                               <Label text="路径：">
                                  <padding>
                                     <Insets top="6.0" />
@@ -88,6 +92,7 @@
                               <TextField fx:id="TextField_FilePath" maxWidth="Infinity" prefHeight="27.0" prefWidth="480.0" HBox.hgrow="ALWAYS" />
                               <Button fx:id="Button_ReadPath" mnemonicParsing="false" onAction="#ReadPath" text="读取" />
                               <Button fx:id="Button_Return" mnemonicParsing="false" onAction="#Return" text="返回上一层" />
+                              <ComboBox fx:id="ComboBox_OracleFileTypeCode" prefHeight="27.0" prefWidth="103.0" promptText="编码" />
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
@@ -96,19 +101,28 @@
                               <Insets />
                            </VBox.margin>
                         </HBox>
-                        <SplitPane disable="true" dividerPositions="0.23" prefHeight="474.0" prefWidth="780.0" VBox.vgrow="ALWAYS">
+                        <SplitPane dividerPositions="0.23" prefHeight="474.0" prefWidth="780.0" VBox.vgrow="ALWAYS">
                           <items>
                               <TreeView fx:id="TreeView_PathTree" prefHeight="200.0" prefWidth="200.0" />
                               <TableView fx:id="TableView_Filetable" prefHeight="537.0" prefWidth="564.0">
                                  <contextMenu>
                                     <ContextMenu>
                                       <items>
-                                        <MenuItem fx:id="MenuItem_normalupload" mnemonicParsing="false" onAction="#normalUpload" text="上传" />
-                                          <MenuItem fx:id="MenuItem_normaldeletefile" mnemonicParsing="false" onAction="#normalDelete" text="删除" />
-                                          <MenuItem fx:id="MenuItem_normalmkdir" mnemonicParsing="false" onAction="#normalmkdir" text="新建文件夹" />
+                                        <MenuItem fx:id="MenuItem_upload" mnemonicParsing="false" onAction="#Upload" text="上传" />
+                                          <MenuItem fx:id="MenuItem_download" mnemonicParsing="false" onAction="#download" text="下载" />
+                                          <MenuItem fx:id="MenuItem_deletefile" mnemonicParsing="false" onAction="#Delete" text="删除文件" />
+                                          <MenuItem fx:id="MenuItem_refresh" mnemonicParsing="false" onAction="#Refresh" text="刷新" />
                                       </items>
                                     </ContextMenu>
                                  </contextMenu>
+                                 <columns>
+                                    <TableColumn fx:id="fileIconCol" prefWidth="23.0" />
+                                    <TableColumn fx:id="fileNameCol" prefWidth="173.0" text="文件名" />
+                                    <TableColumn fx:id="fileStartTimeCol" minWidth="0.0" prefWidth="159.0" text="创建时间" />
+                                    <TableColumn fx:id="fileSizeCol" prefWidth="127.0" text="文件大小" />
+                                    <TableColumn fx:id="filePermissionCol" prefWidth="188.0" text="文件权限" />
+                                    <TableColumn fx:id="fileTypeCol" prefWidth="50.0" visible="false" />
+                                 </columns>
                               </TableView>
                           </items>
                            <VBox.margin>

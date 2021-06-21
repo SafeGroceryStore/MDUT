@@ -17,6 +17,7 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <CheckBox fx:id="autoUpdateBox" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="软件启动更新检查" />
+                        <CheckBox fx:id="warnBox" layoutX="14.0" layoutY="44.0" mnemonicParsing="false" selected="true" text="是否软件启动提示" />
                      </children>
                   </AnchorPane>
             </content>

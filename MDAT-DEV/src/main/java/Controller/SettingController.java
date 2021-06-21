@@ -21,6 +21,9 @@ public class SettingController implements Initializable {
 
 
     @FXML
+    private CheckBox warnBox;
+
+    @FXML
     private Button mssqlBtn;
 
     @FXML
@@ -95,6 +98,7 @@ public class SettingController implements Initializable {
             //
             // 获取 conf.properties 内容并且加载到对应变量
             String autoUpdate = (String) configs.getValue("Global.AutoUpdate",yamlToMap);
+            String StartWarn = (String) configs.getValue("Global.StartWarn",yamlToMap);
 
             String mysqlDriver = (String) configs.getValue("Mysql.Driver",yamlToMap);
             String mysqlClassName = (String) configs.getValue("Mysql.ClassName",yamlToMap);
@@ -117,6 +121,12 @@ public class SettingController implements Initializable {
                 autoUpdateBox.setSelected(false);
             }else {
                 autoUpdateBox.setSelected(true);
+            }
+            // 判断是否需要弹出用户须知
+            if("false".equals(StartWarn)){
+                warnBox.setSelected(false);
+            }else {
+                warnBox.setSelected(true);
             }
             // 输出到对应的 Text 框
             mysqlText.setText(mysqlDriver);
@@ -200,12 +210,14 @@ public class SettingController implements Initializable {
         String postgreSqlJDBCUrl = postgreSqlJDBCUrlText.getText();
 
         String autoupdatebox = autoUpdateBox.isSelected() ? "true" : "false";
+        String warnebox = warnBox.isSelected() ? "true" : "false";
         YamlConfigs configs = new YamlConfigs();
         Map<String, Object> yamlToMap = configs.getYamlToMap("config.yaml");
         try {
-            // configs.updateYaml("sys.cpu.name", "Intel Core i7", "config.yaml");
             // 修改配置文件对应的值
             configs.updateYaml("Global.AutoUpdate",autoupdatebox, "config.yaml");
+            configs.updateYaml("Global.StartWarn",warnebox, "config.yaml");
+
 
             configs.updateYaml("Mysql.Driver",mysqltext, "config.yaml");
             configs.updateYaml("Mysql.ClassName",mysqlClassName, "config.yaml");

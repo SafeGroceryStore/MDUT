@@ -20,7 +20,7 @@ public class Utils {
      * @return
      */
     public static String getCurrentVersion() {
-        return "2.0.2";
+        return "2.0.4";
     }
 
     /**
@@ -288,9 +288,37 @@ public class Utils {
 
     }
 
+    /**
+     * 分割盘符，在windows下时候需要分割盘符，linux则直接返回
+     * @param str
+     * @return
+     */
+    public static ArrayList<String> splitDisk(String str){
+        ArrayList<String> res = new ArrayList<String>();
+        str = str.replace("\n","");
+        // 有 : 则代表是 windows，就需要分割盘符
+        if(str.contains(":")){
+            String[] disk = str.split(":");
+            for (String i : disk){
+                res.add(i);
+            }
+        }else {
+            res.add(str);
+        }
+        return res;
+    }
+
+    public static ArrayList<String> splitFiles(String str){
+        ArrayList<String> res = new ArrayList<String>();
+        String[] files = str.split("\n");
+        for (String file : files){
+            res.add(file);
+        }
+        return res;
+    }
+
+
     public static void main(String[] args) throws IOException {
 
-//        String s = binToHexString("/Users/ch1ng/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support/com.tencent.xinWeChat/2.0b4.0.9/770eda2c1d02f3ce849961e7c746a25d/Message/MessageTemp/874e2e874e9428053cd8c51569337e5d/File/udf.dll");
-        System.out.println(getSelfPath());
     }
 }

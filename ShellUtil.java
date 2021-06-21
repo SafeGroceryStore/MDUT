@@ -16,39 +16,16 @@ public class ShellUtil extends Object{
         }
         return res;
     }
-    public static String exec(String command,String encoding) {
+
+    public static String exec(String command, String encoding) {
         StringBuffer result = new StringBuffer();
-        BufferedReader br = null;
-        InputStreamReader isr = null;
-        InputStream fis = null;
-        Process p = null;
-        if (encoding == null || encoding.equals("")) {
-            encoding = "utf-8";
-        }
         try {
-            p = Runtime.getRuntime().exec(command);
-            p.waitFor();
-            if (p.exitValue() == 0) {
-                fis = p.getInputStream();
-            } else {
-                fis = p.getErrorStream();
-            }
-            isr = new InputStreamReader(fis,encoding);
-            br = new BufferedReader(isr);
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                result.append(line + "\n");
-            }
+            BufferedReader myReader = new BufferedReader(new InputStreamReader(Runtime.getRuntime().exec(command).getInputStream(), encoding));
+            String stemp = "";
+            while ((stemp = myReader.readLine()) != null) result.append(stemp + "\n");
+            myReader.close();
         } catch (Exception e) {
-            result.append(e.getMessage());
-        }finally {
-            try {
-                br.close();
-                isr.close();
-                p.destroy();
-            } catch (IOException e) {
-                result.append(e.getMessage());
-            }
+            result.append(e.toString());
         }
         return result.toString();
     }

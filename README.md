@@ -37,5 +37,13 @@ MDUT (Multiple Database Utilization Tools) is a Chinese database cross platform 
 ## PS
 After the release of `v2.0`, the subsequent update speed will slow down, please understand. However, the project will continue to be updated,and I hope you can also participate in the project. So let's work together! :)
 
+## Other
+### 404StarLink 2.0 - Galaxy
+
+![](https://github.com/knownsec/404StarLink-Project/raw/master/logo.png)
+
+Multiple Database Utilization Tools has joined 404Team [404StarLink 2.0 - Galaxy](https://github.com/knownsec/404StarLink2.0-Galaxy)
+
+
 ## Law
 > This tool can only be used in enterprise security construction with sufficient legal authorization. In the process of using this tool, you should ensure that all your behaviors comply with local laws and regulations. If you have any illegal behavior in the process of using this tool, you will bear all consequences. All developers and contributors of this tool will not bear any legal and joint liability. Please do not install and use this tool unless you have fully read, understood and accepted all the terms of this agreement. Your use or your acceptance of this agreement in any other way, express or implied, shall be deemed to have read and agreed to be bound by this agreement.

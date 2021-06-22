@@ -39,11 +39,13 @@ MDUT 全称 Multiple Database Utilization Tools，是一款中文的数据库跨
 发布 `v2.0` 之后后续更新速度会变慢，望谅解。但项目会一直更新下去，也希望各位也可以参与到项目里一起发光发热! :) Thanks all
 
 ## 其它
-### 星链计划2.0
+### 404StarLink 2.0 - Galaxy
 
 ![](https://github.com/knownsec/404StarLink-Project/raw/master/logo.png)
 
-Multiple Database Utilization Tools 已经加入 404Team [404StarLink 2.0 - Galaxy](https://github.com/knownsec/404StarLink2.0-Galaxy)
+Multiple Database Utilization Tools 是 404Team 星链计划2.0 中的一环，如果对 
+Multiple Database Utilization Tools 有任何疑问又或是想要找小伙伴交流，可以参考星链计划的加群方式。
+https://github.com/knownsec/404StarLink2.0-Galaxy#community
 
 
 ## 法律

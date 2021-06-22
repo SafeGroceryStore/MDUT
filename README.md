@@ -42,7 +42,9 @@ After the release of `v2.0`, the subsequent update speed will slow down, please 
 
 ![](https://github.com/knownsec/404StarLink-Project/raw/master/logo.png)
 
-Multiple Database Utilization Tools has joined 404Team [404StarLink 2.0 - Galaxy](https://github.com/knownsec/404StarLink2.0-Galaxy)
+Multiple Database Utilization Tools is part of the 404Team Starlink Project 2.0. If you correct
+If you have any questions about Multiple Database Utilization Tools, or if you want to talk to a small partner, you can refer to the Starlink Project's way of adding groups.
+https://github.com/knownsec/404StarLink2.0-Galaxy#community
 
 
 ## Law

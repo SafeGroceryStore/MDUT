@@ -42,8 +42,7 @@ public class MssqlDao {
         DRIVER = (String) configs.getValue("Mssql.ClassName",yamlToMap);
         // 进行时间转换
         //timeout = String.valueOf(Integer.parseInt(timeout) * 1000);
-        JDBCURL = JDBCURL + ";loginTimeout=" + timeout + ";socketTimeout=" + timeout;
-        JDBCURL = MessageFormat.format(JDBCURL,ip,port,database);
+        JDBCURL = MessageFormat.format(JDBCURL,ip,port,database,timeout);
         USERNAME = username;
         PASSWORD = password;
         // 动态加载

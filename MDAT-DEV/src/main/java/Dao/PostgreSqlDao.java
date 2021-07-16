@@ -48,10 +48,8 @@ public class PostgreSqlDao {
         JARFILE = (String) configs.getValue("PostgreSql.Driver",yamlToMap);
         JDBCURL = (String) configs.getValue("PostgreSql.JDBCUrl",yamlToMap);
         DRIVER = (String) configs.getValue("PostgreSql.ClassName",yamlToMap);
-        // 进行时间转换
-        //timeout = String.valueOf(Integer.parseInt(timeout) * 1000);
-        JDBCURL = JDBCURL + "?loginTimeout=" + timeout + "&socketTimeout=" + timeout;
-        JDBCURL = MessageFormat.format(JDBCURL, ip, port, database);
+        //JDBCURL = JDBCURL + "?loginTimeout=" + timeout + "&socketTimeout=" + timeout;
+        JDBCURL = MessageFormat.format(JDBCURL, ip, port, database,timeout);
         USERNAME = username;
         PASSWORD = password;
         // 动态加载

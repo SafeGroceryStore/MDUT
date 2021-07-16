@@ -268,16 +268,16 @@ public class MainController implements Initializable {
             data = String.format(data,
                     path + File.separator + "Driver" + File.separator + "mysql.jar",
                     "com.mysql.cj.jdbc.Driver",
-                    "jdbc:mysql://{0}:{1}/{2}?characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true",
+                    "jdbc:mysql://{0}:{1}/{2}?connectTimeout={3}&socketTimeout={3}&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true",
                     path + File.separator + "Driver" + File.separator + "mssql.jar",
                     "net.sourceforge.jtds.jdbc.Driver",
-                    "jdbc:jtds:sqlserver://{0}:{1}/{2}",
+                    "jdbc:jtds:sqlserver://{0}:{1}/{2};loginTimeout={3};socketTimeout={3}",
                     path + File.separator + "Driver" + File.separator + "oracle.jar",
                     "oracle.jdbc.driver.OracleDriver",
                     "jdbc:oracle:thin:@{0}:{1}:{2}",
                     path + File.separator + "Driver" + File.separator + "postgresql.jar",
                     "org.postgresql.Driver",
-                    "jdbc:postgresql://{0}:{1}/{2}"
+                    "jdbc:postgresql://{0}:{1}/{2}?loginTimeout={3}&socketTimeout={3}"
             );
             // FileWriter(File file, boolean append)，append为true时为追加模式，false或缺省则为覆盖模式
             osw = new OutputStreamWriter(new FileOutputStream(checkFile), "UTF-8");

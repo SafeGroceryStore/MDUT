@@ -99,12 +99,6 @@ public class AddAndEditController implements Initializable {
      */
     public JSONArray databaseList;
 
-    @FXML
-    private ImageView httpLogo;
-
-    @FXML
-    private ImageView normalLogo;
-
     /**
      * 临时变量
      */
@@ -154,8 +148,6 @@ public class AddAndEditController implements Initializable {
         initCheckBox();
         // 初始化ChoicekBox监听事件
         initChoiceBox();
-        httpLogo.setImage(new Image(getClass().getResourceAsStream("/images/internet.png")));
-        normalLogo.setImage(new Image(getClass().getResourceAsStream("/images/database.png")));
 
     }
 

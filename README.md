@@ -46,6 +46,9 @@ Multiple Database Utilization Tools is part of the 404Team Starlink Project 2.0.
 If you have any questions about Multiple Database Utilization Tools, or if you want to talk to a small partner, you can refer to the Starlink Project's way of adding groups.
 https://github.com/knownsec/404StarLink2.0-Galaxy#community
 
+## Stargazers
+[![Stargazers over time](https://starchart.cc/SafeGroceryStore/MDUT.svg)](https://starchart.cc/SafeGroceryStore/MDUT.svg)
+
 
 ## Law
 > This tool can only be used in enterprise security construction with sufficient legal authorization. In the process of using this tool, you should ensure that all your behaviors comply with local laws and regulations. If you have any illegal behavior in the process of using this tool, you will bear all consequences. All developers and contributors of this tool will not bear any legal and joint liability. Please do not install and use this tool unless you have fully read, understood and accepted all the terms of this agreement. Your use or your acceptance of this agreement in any other way, express or implied, shall be deemed to have read and agreed to be bound by this agreement.

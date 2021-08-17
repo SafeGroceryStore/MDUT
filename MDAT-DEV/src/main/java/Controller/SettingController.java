@@ -97,7 +97,6 @@ public class SettingController implements Initializable {
             Map<String, Object> yamlToMap = configs.getYamlToMap("config.yaml");
             //
             // 获取 conf.properties 内容并且加载到对应变量
-            String autoUpdate = (String) configs.getValue("Global.AutoUpdate",yamlToMap);
             String StartWarn = (String) configs.getValue("Global.StartWarn",yamlToMap);
 
             String mysqlDriver = (String) configs.getValue("Mysql.Driver",yamlToMap);
@@ -116,12 +115,6 @@ public class SettingController implements Initializable {
             String posetgreSqlDriver = (String) configs.getValue("PostgreSql.Driver",yamlToMap);
             String posetgreSqlClassName = (String) configs.getValue("PostgreSql.ClassName",yamlToMap);
             String posetgreSqlJDBCUrl = (String) configs.getValue("PostgreSql.JDBCUrl",yamlToMap);
-            // 判断是否需要自启更新
-            if("false".equals(autoUpdate)){
-                autoUpdateBox.setSelected(false);
-            }else {
-                autoUpdateBox.setSelected(true);
-            }
             // 判断是否需要弹出用户须知
             if("false".equals(StartWarn)){
                 warnBox.setSelected(false);
@@ -209,13 +202,13 @@ public class SettingController implements Initializable {
         String postgreSqlClassName = postgreSqlClassNameText.getText();
         String postgreSqlJDBCUrl = postgreSqlJDBCUrlText.getText();
 
-        String autoupdatebox = autoUpdateBox.isSelected() ? "true" : "false";
+        //String autoupdatebox = autoUpdateBox.isSelected() ? "true" : "false";
         String warnebox = warnBox.isSelected() ? "true" : "false";
         YamlConfigs configs = new YamlConfigs();
         Map<String, Object> yamlToMap = configs.getYamlToMap("config.yaml");
         try {
             // 修改配置文件对应的值
-            configs.updateYaml("Global.AutoUpdate",autoupdatebox, "config.yaml");
+            //configs.updateYaml("Global.AutoUpdate",autoupdatebox, "config.yaml");
             configs.updateYaml("Global.StartWarn",warnebox, "config.yaml");
 
 

@@ -1,5 +1,7 @@
 package Util;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.*;
 import java.sql.Driver;
 import java.sql.SQLException;
@@ -14,13 +16,12 @@ import java.sql.DriverManager;
  */
 public class Utils {
 
-
     /**
      * 当前软件版本
      * @return
      */
     public static String getCurrentVersion() {
-        return "2.0.5";
+        return "v2.0.6";
     }
 
     /**
@@ -94,6 +95,16 @@ public class Utils {
         return sb.toString();
     }
 
+    /**
+     * 获取当前时间
+     * @return
+     */
+    public static String currentTime() {
+        Date date = new Date();
+        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
+        String time = df.format(date);
+        return time;
+    }
     /**
      * 日志格式化
      * @param info
@@ -318,7 +329,37 @@ public class Utils {
     }
 
 
-    public static void main(String[] args) throws IOException {
-
+    /**
+     * 检测是否需要更新
+     * @return
+     */
+    public static JSONObject checkVersion() {
+        String update = "false";
+        String currentVersion = Utils.getCurrentVersion();
+        String url = "https://api.github.com/repos/SafeGroceryStore/MDUT/releases/latest";
+        //获取json数据
+        String jsonStringData = HttpsClientUtil.sendHtpps(url);
+        //解析 json
+        JSONObject jsonData = JSONObject.parseObject(jsonStringData);
+        //获取当前最新版本
+        String newVersion = jsonData.getString("tag_name");
+        String downloadUrl = "";
+        String name = "";
+        //检查版本号是否相同，如果不相同代表有更新，将下载链接解析回来
+        //同时设置 update 为 true
+        if(!newVersion.equals(currentVersion)){
+            String tempDate = jsonData.getJSONArray("assets").getString(0);
+            downloadUrl =  JSONObject.parseObject(tempDate).getString("browser_download_url");
+            name =  JSONObject.parseObject(tempDate).getString("name");
+            update = "true";
+        }
+        // 将结果转成 JSONObject 格式方便解析
+        JSONObject resultData = new JSONObject();
+        resultData.put("isupdate",update);
+        resultData.put("version",newVersion);
+        resultData.put("name",name);
+        resultData.put("downloadurl",downloadUrl);
+        return resultData;
     }
+
 }

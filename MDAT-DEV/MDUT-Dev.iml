@@ -19,5 +19,6 @@
     <orderEntry type="library" name="Maven: org.apache.commons:commons-pool2:2.6.2" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: com.oracle.ojdbc:orai18n:19.3.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.76" level="project" />
   </component>
 </module>

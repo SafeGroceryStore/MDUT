@@ -345,12 +345,15 @@ public class Utils {
         String newVersion = jsonData.getString("tag_name");
         String downloadUrl = "";
         String name = "";
-        //检查版本号是否相同，如果不相同代表有更新，将下载链接解析回来
+        String body = "";
+        //检查版本号是否相同，如果等于 -1 就代表有版本更新，将下载链接解析回来
         //同时设置 update 为 true
-        if(!newVersion.equals(currentVersion)){
+        int verComp = compareVersion(currentVersion.replace("v",""),newVersion.replace("v",""));
+        if(verComp == -1){
             String tempDate = jsonData.getJSONArray("assets").getString(0);
             downloadUrl =  JSONObject.parseObject(tempDate).getString("browser_download_url");
             name =  JSONObject.parseObject(tempDate).getString("name");
+            body = jsonData.getString("body");
             update = "true";
         }
         // 将结果转成 JSONObject 格式方便解析
@@ -358,8 +361,54 @@ public class Utils {
         resultData.put("isupdate",update);
         resultData.put("version",newVersion);
         resultData.put("name",name);
+        resultData.put("body",body);
         resultData.put("downloadurl",downloadUrl);
         return resultData;
+    }
+
+    /**
+     * 比较版本大小
+     *
+     * 说明：支n位基础版本号+1位子版本号
+     * 示例：1.0.2>1.0.1 , 1.0.1.1>1.0.1
+     * 来源：https://www.cnblogs.com/hdwang/p/8603061.html
+     * @param version1 版本1
+     * @param version2 版本2
+     * @return 0:相同 1:curVer 大于 newVer -1:curVer 小于 newVer
+     */
+    public static int compareVersion(String curVer, String newVer) {
+        if (curVer.equals(newVer)) {
+            //版本相同
+            return 0;
+        }
+        String[] v1Array = curVer.split("\\.");
+        String[] v2Array = newVer.split("\\.");
+        int v1Len = v1Array.length;
+        int v2Len = v2Array.length;
+        //基础版本号位数（取长度小的）
+        int baseLen = 0;
+        if(v1Len > v2Len){
+            baseLen = v2Len;
+        }else{
+            baseLen = v1Len;
+        }
+        //基础版本号比较
+        for(int i=0;i<baseLen;i++){
+            //同位版本号相同
+            if(v1Array[i].equals(v2Array[i])){
+                //比较下一位
+                continue;
+            }else{
+                return Integer.parseInt(v1Array[i])>Integer.parseInt(v2Array[i]) ? 1 : -1;
+            }
+        }
+        //基础版本相同，再比较子版本号
+        if(v1Len != v2Len){
+            return v1Len > v2Len ? 1:-1;
+        }else {
+            //基础版本相同，无子版本号
+            return 0;
+        }
     }
 
 }

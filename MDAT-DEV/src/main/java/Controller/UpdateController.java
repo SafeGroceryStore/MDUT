@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,6 +21,9 @@ import Util.HttpsDownloadUtils;
  * @date 2021/8/16
  */
 public class UpdateController implements Initializable {
+
+    @FXML
+    private TextArea updateLogTextArea;
 
     @FXML
     private Label currentVersionLabel;
@@ -95,6 +99,7 @@ public class UpdateController implements Initializable {
                     Platform.runLater(() -> {
                         newVersionLabel.setText("最新版本: " + versionData.getString("version"));
                         updateMsgLabel.setText("新版本已发布！请点击下载按钮下载更新");
+                        updateLogTextArea.setText(versionData.getString("body"));
                         downloadBtn.setDisable(false);
                     });
                 }else {

@@ -372,8 +372,8 @@ public class Utils {
      * 说明：支n位基础版本号+1位子版本号
      * 示例：1.0.2>1.0.1 , 1.0.1.1>1.0.1
      * 来源：https://www.cnblogs.com/hdwang/p/8603061.html
-     * @param version1 版本1
-     * @param version2 版本2
+     * @param curVer 当前版本
+     * @param newVer 新版版本
      * @return 0:相同 1:curVer 大于 newVer -1:curVer 小于 newVer
      */
     public static int compareVersion(String curVer, String newVer) {

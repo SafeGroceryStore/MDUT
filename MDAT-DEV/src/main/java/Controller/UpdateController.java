@@ -11,6 +11,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import Util.Utils;
@@ -64,10 +66,10 @@ public class UpdateController implements Initializable {
                 String downloadUrl = versionData.getString("downloadurl");
                 String name = versionData.getString("name");
                 String time = Utils.currentTime();
-                String currentPath = Utils.getSelfPath();
+                String currentPath = Utils.getSelfPath() + File.separator;
                 HttpsDownloadUtils.downloadFile(downloadUrl, currentPath + time + "-" + name);
                 Platform.runLater(() -> {
-                    updateMsgLabel.setText("下载完成!");
+                    updateMsgLabel.setText("下载完成！请手动解压替换！");
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> {

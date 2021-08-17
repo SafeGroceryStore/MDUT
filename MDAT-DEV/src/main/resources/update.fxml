@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="260.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.UpdateController">
+   <children>
+      <Button fx:id="downloadBtn" layoutX="229.0" layoutY="219.0" mnemonicParsing="false" onAction="#downloadAction" text="下载" />
+      <Button fx:id="cancelBtn" layoutX="283.0" layoutY="219.0" mnemonicParsing="false" onAction="#cancelAction" text="取消" />
+      <Label fx:id="updateMsgLabel" layoutX="13.0" layoutY="199.0" prefHeight="17.0" prefWidth="314.0" />
+      <Label fx:id="currentVersionLabel" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="249.0" text="当前版本: " />
+      <Label fx:id="newVersionLabel" layoutX="14.0" layoutY="40.0" prefHeight="17.0" prefWidth="249.0" text="最新版本: " />
+      <Button fx:id="checkVersionBtn" layoutX="149.0" layoutY="219.0" mnemonicParsing="false" onAction="#checkVersion" text="检查更新" />
+      <TextArea fx:id="updateLogTextArea" layoutX="13.0" layoutY="90.0" prefHeight="103.0" prefWidth="314.0" wrapText="true" />
+      <Label fx:id="newVersionLabel1" layoutX="14.0" layoutY="66.0" prefHeight="17.0" prefWidth="70.0" text="更新详情:" />
+   </children>
+</AnchorPane>

@@ -38,7 +38,7 @@
                         <Button fx:id="testConnectBtn" layoutX="14.0" layoutY="514.0" mnemonicParsing="false" onAction="#TestConnectAction" text="测试" />
                         <Button fx:id="saveBtn" layoutX="433.0" layoutY="514.0" mnemonicParsing="false" onAction="#SaveAction" text="保存" />
                         <Button fx:id="cancelBtn" layoutX="372.0" layoutY="514.0" mnemonicParsing="false" onAction="#CancelAction" text="取消" />
-                        <Label fx:id="infoLaberl" layoutX="73.0" layoutY="519.0" prefHeight="17.0" prefWidth="0.0" />
+                        <Label fx:id="infoLaberl" layoutX="73.0" layoutY="519.0" prefHeight="17.0" prefWidth="106.0" />
                      </children>
                   </AnchorPane>
                </content>

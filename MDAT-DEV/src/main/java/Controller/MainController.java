@@ -2,11 +2,9 @@ package Controller;
 
 import Dao.ManagerDao;
 import Entity.DatabaseDateEntity;
-import Util.HttpsClientUtil;
 import Util.MessageUtil;
 import Util.Utils;
 import Util.YamlConfigs;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -95,8 +93,6 @@ public class MainController implements Initializable {
         initConfigFile();
         // 免责声明
         initAlert();
-        // 自启更新
-        initAutoUpdate();
         initTableView();
         // 初始化时保存当前 Controller 实例
         ControllersFactory.controllers.put(this.getClass().getSimpleName(), this);
@@ -151,62 +147,7 @@ public class MainController implements Initializable {
 
     }
 
-    /**
-     * 通过配置文件来判断软件启动是否自动检查更新
-     */
-    public void initAutoUpdate() {
-        try {
 
-            YamlConfigs configs = new YamlConfigs();
-            Map<String, Object> yamlToMap = configs.getYamlToMap("config.yaml");
-            String updateStatus = (String) configs.getValue("Global.AutoUpdate",yamlToMap);
-            if ("false".equals(updateStatus)) {
-                return;
-            } else {
-                Runnable runner = () -> {
-                    try {
-                        if(checkVersion()){
-                            Platform.runLater(() -> {
-                                infoLab.setText("新版本已发布！请前往 Github 下载！");
-                                MessageUtil.showInfoMessage("提示","新版本已发布！请前往 Github 下载！");
-                            });
-                        }else {
-                            Platform.runLater(() -> {
-                                infoLab.setText("当前版本已经最新！");
-                            });
-                        }
-                    } catch (Exception e) {
-                        Platform.runLater(() -> {
-                            MessageUtil.showExceptionMessage(e, e.getMessage());
-                            infoLab.setText("检查失败！请检查网络是否通畅！");
-                        });
-                    }
-                };
-                Thread workThrad = new Thread(runner);
-                workThrad.start();
-            }
-        } catch (Exception e) {
-            Platform.runLater(() -> {
-                MessageUtil.showExceptionMessage(e, e.getMessage());
-            });
-
-        }
-    }
-
-    /**
-     * 检测更新
-     * @return
-     */
-    public boolean checkVersion() {
-        boolean update = false;
-        String currentVersion = Utils.getCurrentVersion();
-        String url = "https://gitee.com/ch1nggggg/mdat/raw/master/ver.txt";
-        String newVersion = HttpsClientUtil.sendHtpps(url);
-        if(!newVersion.equals(currentVersion)){
-            update = true;
-        }
-        return update;
-    }
     /**
      * 免责声明
      */
@@ -237,7 +178,6 @@ public class MainController implements Initializable {
      */
     public void initConfigFile() {
         String data = "Global:\n" +
-                "    AutoUpdate: 'false'\n" +
                 "    StartWarn: 'true'\n" +
                 "Mysql:\n" +
                 "    Driver: %s\n" +
@@ -264,7 +204,7 @@ public class MainController implements Initializable {
             } else {
                 checkFile.createNewFile();// 创建目标文件
             }
-            // {0} - IP , {1} - 端口 ，{2} - 数据库名
+            // {0} - IP , {1} - 端口 ，{2} - 数据库名，{3} - 超时时间
             data = String.format(data,
                     path + File.separator + "Driver" + File.separator + "mysql.jar",
                     "com.mysql.cj.jdbc.Driver",
@@ -329,27 +269,17 @@ public class MainController implements Initializable {
      */
     @FXML
     void updateAction(ActionEvent event) {
-        Runnable runner = () -> {
-            try {
-                if(checkVersion()){
-                    Platform.runLater(() -> {
-                        infoLab.setText("新版本已发布！请前往 Github 下载！");
-                        MessageUtil.showInfoMessage("提示","新版本已发布！请前往 Github 下载！");
-                    });
-                }else {
-                    Platform.runLater(() -> {
-                        infoLab.setText("当前版本已经最新！");
-                    });
-                }
-            } catch (Exception e) {
-                Platform.runLater(() -> {
-                    MessageUtil.showExceptionMessage(e, e.getMessage());
-                    infoLab.setText("检查失败！请检查网络是否通畅！");
-                });
-            }
-        };
-        Thread workThrad = new Thread(runner);
-        workThrad.start();
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/update.fxml"));
+            Stage primaryStage = new Stage();
+            primaryStage.setTitle("更新");
+            primaryStage.setScene(new Scene(root));
+            primaryStage.setResizable(false);
+            primaryStage.show();
+        } catch (Exception e) {
+            MessageUtil.showExceptionMessage(e, e.getMessage());
+            //e.printStackTrace();
+        }
     }
 
     @FXML

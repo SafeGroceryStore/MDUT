@@ -201,7 +201,4 @@ public class RedisDao {
 
     }
 
-    public static void main(String[] args) throws SQLException {
-        new RedisDao("1.1.1.1","9999","123455","1").getConnection();
-    }
 }

@@ -15,6 +15,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.json.JSONObject;
+
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +91,8 @@ public class MysqlController implements Initializable {
         // 尝试连接
         Runnable runner = () -> {
             try {
-                this.mysqlDao = new MysqlDao(this.dataObj.getString("ipaddress"), this.dataObj.getString("port"), this.dataObj.getString("database"), this.dataObj.getString("username"), this.dataObj.getString("password"), this.dataObj.getString("timeout"));
+                this.mysqlDao = new MysqlDao(this.dataObj.getString("ipaddress"), this.dataObj.getString("port"),
+                         this.dataObj.getString("database"), this.dataObj.getString("username"), this.dataObj.getString("password"), this.dataObj.getString("timeout"));
                 this.mysqlDao.getConnection();
                 Platform.runLater(() -> {
                     mysqlLogTextArea.appendText(Utils.log("连接成功！"));
@@ -110,7 +113,6 @@ public class MysqlController implements Initializable {
         Thread workThrad = new Thread(runner);
         this.workList.add(workThrad);
         workThrad.start();
-
     }
 
     /**

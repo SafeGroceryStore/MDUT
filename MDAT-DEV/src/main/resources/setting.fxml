@@ -16,7 +16,8 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <CheckBox fx:id="warnBox" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" selected="true" text="是否关闭用户须知" />
+                        <CheckBox fx:id="warnBox" layoutX="14.0" layoutY="14.0" mnemonicParsing="false"
+                                  selected="true" text="启动时是否提示用户须知" />
                      </children>
                   </AnchorPane>
             </content>

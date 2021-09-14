@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.*;
 
 
+/**
+ * @author ch1ng
+ */
 public class YamlConfigs {
 
     private final static DumperOptions OPTIONS = new DumperOptions();
@@ -150,18 +153,4 @@ public class YamlConfigs {
         return false;
     }
 
-
-    public static void main(String[] args) {
-//
-//        YamlConfigs configs = new YamlConfigs();
-//
-//        Map<String, Object> yamlToMap = configs.getYamlToMap("conf/config.yaml");
-//
-//        System.out.println(yamlToMap);
-//
-//        boolean b = configs.updateYaml("sys.cpu.name", "Intel Core i7", "conf/config.yaml");
-//        System.out.println(b);
-//
-//        System.out.println(configs.getYamlToMap("conf/config.yaml"));
-    }
 }

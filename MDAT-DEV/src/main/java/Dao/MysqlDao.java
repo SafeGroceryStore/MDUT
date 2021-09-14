@@ -373,6 +373,9 @@ public class MysqlDao {
         String rmplugin = null;
 
         try {
+            // 删除恶意函数
+            this.removeEvilFunc();
+            mysqlController.mysqlLogTextArea.appendText(Utils.log("卸载所有恶意函数"));
             String tempPath = remoteOutfile + "*.temp";
             if (mysqlPlatform.startsWith("Win")) {
                 rmplugin = "del /f " + tempPath;
@@ -380,7 +383,7 @@ public class MysqlDao {
                 rmplugin = "rm -f " + tempPath;
             }
             eval(rmplugin, "UTF-8");
-
+            mysqlController.mysqlLogTextArea.appendText(Utils.log("删除服务器UDF遗留文件"));
 //            if(tempFiles.size() > 0) {
 //                Iterator<String> it = tempFiles.iterator();
 //                while (it.hasNext()) {
@@ -397,13 +400,6 @@ public class MysqlDao {
 //
 //                // 重新初始化
 //                tempFiles = new ArrayList<String>();
-
-            mysqlController.mysqlLogTextArea.appendText(Utils.log("删除服务器UDF遗留文件"));
-
-            // 删除恶意函数
-            this.removeEvilFunc();
-            mysqlController.mysqlLogTextArea.appendText(Utils.log("卸载所有恶意函数"));
-
         } catch (Exception e) {
             MessageUtil.showExceptionMessage(e, e.getMessage());
         }

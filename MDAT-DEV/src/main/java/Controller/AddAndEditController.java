@@ -225,7 +225,6 @@ public class AddAndEditController implements Initializable {
 
     @FXML
     void TestConnectAction(ActionEvent event) {
-
         String ip = ipAddressText.getText();
         String port = portText.getText();
         String username = userNameText.getText();

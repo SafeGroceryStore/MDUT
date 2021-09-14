@@ -47,10 +47,10 @@
                <content>
                   <AnchorPane prefHeight="816.0" prefWidth="494.0">
                      <children>
-                        <CheckBox fx:id="usedHttpTunnelCheckBox" disable="true" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="是否使用 HTTP 通道" />
+                        <CheckBox fx:id="usedHttpTunnelCheckBox" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="是否使用 HTTP 通道" />
                         <Label layoutX="14.0" layoutY="49.0" text="通道地址:" />
                         <TextField fx:id="urlText" disable="true" layoutX="83.0" layoutY="44.0" prefHeight="27.0" prefWidth="397.0" />
-                        <CheckBox fx:id="usedProxyCheckBox" disable="true" layoutX="14.0" layoutY="137.0" mnemonicParsing="false" text="是否使用代理" />
+                        <CheckBox fx:id="usedProxyCheckBox" layoutX="14.0" layoutY="137.0" mnemonicParsing="false" text="是否使用代理" />
                         <TextField fx:id="proxyAddressText" disable="true" layoutX="83.0" layoutY="205.0" prefHeight="27.0" prefWidth="397.0" />
                         <Label layoutX="14.0" layoutY="210.0" text="地址:" />
                         <Label layoutX="14.0" layoutY="248.0" text="端口:" />

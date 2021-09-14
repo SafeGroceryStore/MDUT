@@ -1,6 +1,7 @@
 package Controller;
 
 
+import Util.HttpUtil;
 import Util.MessageUtil;
 import com.alibaba.fastjson.JSONObject;
 import javafx.application.Platform;
@@ -16,7 +17,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import Util.Utils;
-import Util.HttpsDownloadUtils;
 
 /**
  * @author ch1ng
@@ -67,10 +67,11 @@ public class UpdateController implements Initializable {
                 String name = versionData.getString("name");
                 String time = Utils.currentTime();
                 String currentPath = Utils.getSelfPath() + File.separator;
-                HttpsDownloadUtils.downloadFile(downloadUrl, currentPath + time + "-" + name);
-                Platform.runLater(() -> {
-                    updateMsgLabel.setText("下载完成！请手动解压替换！");
-                });
+                if(HttpUtil.downloadFile(downloadUrl, currentPath + time + "-" + name)){
+                    Platform.runLater(() -> {
+                        updateMsgLabel.setText("下载完成！请手动解压替换！");
+                    });
+                }
             } catch (Exception e) {
                 Platform.runLater(() -> {
                     MessageUtil.showExceptionMessage(e, e.getMessage());

@@ -333,12 +333,12 @@ public class Utils {
      * 检测是否需要更新
      * @return
      */
-    public static JSONObject checkVersion() {
+    public static JSONObject checkVersion() throws Exception {
         String update = "false";
         String currentVersion = Utils.getCurrentVersion();
         String url = "https://api.github.com/repos/SafeGroceryStore/MDUT/releases/latest";
         //获取json数据
-        String jsonStringData = HttpsClientUtil.sendHtpps(url);
+        String jsonStringData = HttpUtil.httpReuest(url,"GET","","","");
         //解析 json
         JSONObject jsonData = JSONObject.parseObject(jsonStringData);
         //获取当前最新版本

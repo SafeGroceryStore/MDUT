@@ -11,7 +11,7 @@
 * 修订插件命名规则
 
 ### 其他
-* 文档更新 PostgreSql UDF 插件编写链接 (thx @gh0stkey)
+* 文档更新 PostgreSql UDF 插件编写链接 (thx @huahua)
 * v2.0.6 之后不再强制要求先下载 v2.0 版，下载即用
 
 ## 2021/08/17 - `v2.0.6`

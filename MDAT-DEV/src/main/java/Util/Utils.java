@@ -1,8 +1,10 @@
 package Util;
 
 import com.alibaba.fastjson.JSONObject;
+import org.pegdown.PegDownProcessor;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.Driver;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -409,6 +411,24 @@ public class Utils {
             //基础版本相同，无子版本号
             return 0;
         }
+    }
+
+    /**
+     * 解析 MarkDown 语法，转换成 HTML 语法
+     * @param markdownString
+     * @throws IOException
+     */
+    public static String generateHtml(String markdownString) throws IOException {
+        InputStream is = new ByteArrayInputStream(markdownString.getBytes(StandardCharsets.UTF_8));
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String line = null;
+        String mdContent = "";
+        while ((line = br.readLine()) != null) {
+            mdContent += line + "\r\n";
+        }
+        PegDownProcessor pdp = new PegDownProcessor(Integer.MAX_VALUE);
+        String htmlContent = pdp.markdownToHtml(mdContent);
+        return htmlContent;
     }
 
 }

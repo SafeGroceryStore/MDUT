@@ -23,7 +23,7 @@ public class Utils {
      * @return
      */
     public static String getCurrentVersion() {
-        return "v2.0.7";
+        return "v2.0.8";
     }
 
     /**
@@ -424,7 +424,7 @@ public class Utils {
         String line = null;
         String mdContent = "";
         while ((line = br.readLine()) != null) {
-            mdContent += line + "\r\n";
+            mdContent += line + "\n";
         }
         PegDownProcessor pdp = new PegDownProcessor(Integer.MAX_VALUE);
         String htmlContent = pdp.markdownToHtml(mdContent);

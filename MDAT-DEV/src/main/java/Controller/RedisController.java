@@ -197,7 +197,7 @@ public class RedisController implements Initializable {
                 "GBK"
         );
         // 初始化下拉框
-        redisEncodeCombox.setPromptText("编码");
+        redisEncodeCombox.setPromptText("UTF-8");
         redisEncodeCombox.setItems(postgreSqlTypeCodeoptions);
     }
 }

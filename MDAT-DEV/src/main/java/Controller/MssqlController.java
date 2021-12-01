@@ -226,7 +226,7 @@ public class MssqlController implements Initializable {
                 "GBK"
         );
         // 初始化下拉框
-        ComboBox_EncodeType.setPromptText("编码");
+        ComboBox_EncodeType.setPromptText("UTF-8");
         ComboBox_EncodeType.setItems(mssqlTypeCodeoptions);
     }
 

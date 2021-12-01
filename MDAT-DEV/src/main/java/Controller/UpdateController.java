@@ -10,10 +10,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import Util.Utils;
@@ -25,7 +26,7 @@ import Util.Utils;
 public class UpdateController implements Initializable {
 
     @FXML
-    private TextArea updateLogTextArea;
+    private WebView updateLogWebView;
 
     @FXML
     private Label currentVersionLabel;
@@ -102,7 +103,10 @@ public class UpdateController implements Initializable {
                     Platform.runLater(() -> {
                         newVersionLabel.setText("最新版本: " + versionData.getString("version"));
                         updateMsgLabel.setText("新版本已发布！请点击下载按钮下载更新");
-                        updateLogTextArea.setText(versionData.getString("body"));
+                        try {
+                            String body = Utils.generateHtml(versionData.getString("body"));
+                            updateLogWebView.getEngine().loadContent(body);
+                        } catch (IOException e) { }
                         downloadBtn.setDisable(false);
                     });
                 }else {

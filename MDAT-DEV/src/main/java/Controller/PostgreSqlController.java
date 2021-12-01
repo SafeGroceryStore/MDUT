@@ -111,7 +111,7 @@ public class PostgreSqlController implements Initializable {
                 "GBK"
         );
         // 初始化下拉框
-        postgreSqlEncodeCombox.setPromptText("编码");
+        postgreSqlEncodeCombox.setPromptText("UTF-8");
         postgreSqlEncodeCombox.setItems(postgreSqlTypeCodeoptions);
     }
 

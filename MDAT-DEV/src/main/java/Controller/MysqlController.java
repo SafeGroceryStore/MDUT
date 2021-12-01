@@ -125,7 +125,7 @@ public class MysqlController implements Initializable {
                 "GBK"
         );
         // 初始化下拉框
-        MysqlEncode.setPromptText("编码");
+        MysqlEncode.setPromptText("UTF-8");
         MysqlEncode.setItems(OracleTypeCodeoptions);
     }
 

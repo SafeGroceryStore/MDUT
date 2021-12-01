@@ -299,7 +299,7 @@ public class MssqlDao {
             excute("if OBJECT_ID(N'oashellresult',N'U') is not null\n" +
                     "\tDROP TABLE oashellresult;","");
             mssqlController.mssqlLogTextArea.appendText(Utils.log("oashellresult 表删除成功！"));
-            excute("if (exists (select * from sys.objects where name = 'kitmain'))drop proc kitmain;\n" +
+            excute("if (exists (select * from dbo.sysobjects where name = 'kitmain'))drop proc kitmain;\n" +
                     "if (exists (select * from sys.assemblies where name='MDATKit'))drop assembly MDATKit;\n","");
             mssqlController.mssqlLogTextArea.appendText(Utils.log("CLR 删除成功！"));
         } catch (SQLException e) {
@@ -329,7 +329,7 @@ public class MssqlDao {
      */
     public void initCLR(){
         try {
-            String checksql = "if (exists (select * from sys.objects where name = 'kitmain'))drop proc kitmain;\n" +
+            String checksql = "if (exists (select * from dbo.sysobjects where name = 'kitmain'))drop proc kitmain;\n" +
                     "if (exists (select * from sys.assemblies where name='MDATKit'))drop assembly MDATKit;\n";
             excute(checksql,"");
             // 获取插件目录
@@ -355,7 +355,7 @@ public class MssqlDao {
      */
     public boolean checkCLR(){
         try {
-            String checksql1 = "if (exists (select * from sys.objects where name = 'kitmain')) select '1' as res;" ;
+            String checksql1 = "if (exists (select * from dbo.sysobjects where name = 'kitmain')) select '1' as res;" ;
             //String checksql2 = "if (exists (select * from sys.assemblies where name='MDATKit')) select '1' as res;" ;
             String c1 = excute(checksql1,"");
             //String c2 = excute(checksql2,"");
@@ -483,7 +483,7 @@ public class MssqlDao {
         String filesql = String.format("if OBJECT_ID(N'DirectoryTree',N'U') is not null\n" +
                 "    DROP TABLE DirectoryTree;\n" +
                 "CREATE TABLE DirectoryTree (subdirectory varchar(8000),depth int,isfile bit);\n" +
-                "INSERT DirectoryTree (subdirectory,depth,isfile) EXEC master.sys.xp_dirtree N'%s',1,1;",path);
+                "INSERT DirectoryTree (subdirectory,depth,isfile) EXEC master.dbo.xp_dirtree N'%s',1,1;",path);
         String selectfile = "SELECT * FROM DirectoryTree";
         ArrayList<String> res = new ArrayList<>();
         try {

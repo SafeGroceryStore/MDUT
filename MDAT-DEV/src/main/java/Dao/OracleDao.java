@@ -320,7 +320,7 @@ public class OracleDao {
             String GRANT_JAVA_EXEC = "begin dbms_java.grant_permission( 'PUBLIC', 'SYS:java.io.FilePermission', '<<ALL FILES>>', 'read,write,execute,delete' );end;";
             // 赋予文件操作属性权限
             // 参考 https://docs.oracle.com/javase/8/docs/technotes/guides/security/spec/security-spec.doc3.html
-            String GRANT_JAVA_EXEC1 = "begin dbms_java.grant_permission('PUBLIC', 'SYS:java.util.PropertyPermission', '*', ''read,write,execute,delete' );end;";
+            String GRANT_JAVA_EXEC1 = "begin dbms_java.grant_permission('PUBLIC', 'SYS:java.util.PropertyPermission', '*', 'read,write,execute,delete' );end;";
             String CREATE_FUNCTION = "create or replace function filerun(methodName varchar2,params varchar2,encoding" +
                     " varchar2) return varchar2 as language java name 'FileUtil.run(java.lang.String,java.lang.String,java.lang.String) return java.lang.String';";
             CREATE_SOURCE = String.format(CREATE_SOURCE, OracleCodeUtils.FILEUTILSOURCE);

@@ -288,17 +288,15 @@ public class OracleDao {
             String CREATE_SOURCE = "DECLARE v_command VARCHAR2(32767);BEGIN v_command :='create or replace and compile java source named \"ShellUtil\" as %s';EXECUTE IMMEDIATE v_command;END;";
             String GRANT_JAVA_EXEC = "begin dbms_java.grant_permission( 'PUBLIC', 'SYS:java.io.FilePermission', '<<ALL FILES>>', 'read,write,execute,delete' );end;";
             // 赋予命令执行权限
-            String GRANT_JAVA_EXEC1 = "begin dbms_java.grant_permission('PUBLIC','SYS:java.lang.RuntimePermission', 'writeFileDescriptor', '');end;";
-            String GRANT_JAVA_EXEC2 = "begin dbms_java.grant_permission('PUBLIC','SYS:java.lang.RuntimePermission', 'readFileDescriptor', '');end;";
+            String GRANT_JAVA_EXEC2 = "begin dbms_java.grant_permission('PUBLIC','SYS:java.lang.RuntimePermission', '*', '');end;";
             // 赋予网络连接允许权限
             // 参考 https://docs.oracle.com/javase/8/docs/technotes/guides/security/spec/security-spec.doc3.html
-            String GRANT_JAVA_EXEC3 = "begin dbms_java.grant_permission('PUBLIC','SYS:java.net.SocketPermission', '*', 'accept,connect,listen');end;";
+            String GRANT_JAVA_EXEC3 = "begin dbms_java.grant_permission('PUBLIC','SYS:java.net.SocketPermission', '*', 'accept, connect, listen, resolve');end;";
             String CREATE_FUNCTION = "create or replace function shellrun(methodName varchar2,params varchar2,encoding varchar2) return varchar2 as language java name 'ShellUtil.run(java.lang.String,java.lang.String,java.lang.String) return java.lang.String';";
             CREATE_SOURCE = String.format(CREATE_SOURCE, OracleCodeUtils.SHELLUTILSOURCE);
             executeSql(CREATE_SOURCE);
             oracleController.oracleLogTextArea.appendText(Utils.log("导入 JAVA 代码成功！"));
             executeSql(GRANT_JAVA_EXEC);
-            executeSql(GRANT_JAVA_EXEC1);
             executeSql(GRANT_JAVA_EXEC2);
             executeSql(GRANT_JAVA_EXEC3);
             oracleController.oracleLogTextArea.appendText(Utils.log("赋权成功！"));

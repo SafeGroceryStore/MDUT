@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.pegdown.PegDownProcessor;
 
 import java.io.*;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.sql.Driver;
 import java.sql.SQLException;
@@ -192,27 +194,74 @@ public class Utils {
     }
 
 
-    /**
-     * 获取文件的 hex 值。
-     * @param path
-     * @return
-     * @throws Exception
+    /*
+     * 字节数组转16进制字符串
      */
-    public static String binToHexString(String path) {
-        StringBuffer sb = new StringBuffer();
-        DataInputStream input = null;
-        try {
-            input = new DataInputStream(new FileInputStream(path));
-            while (input.available() > 0) {
-                String hex = String.format("%02x", input.readByte() & 0xFF);
-                sb.append(hex);
+    public static String bytes2HexString(byte[] bytes) {
+        StringBuilder hexString = new StringBuilder();
+
+        for (int i = 0; i < bytes.length; i++) {
+            String hex = Integer.toHexString(0xFF & bytes[i]);
+            if (hex.length() == 1) {
+                hexString.append('0');
             }
-        } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e,e.getMessage());
+            hexString.append(hex);
         }
-        //System.out.println(sb.toString());
-        return sb.toString();
+
+        return hexString.toString().toUpperCase();
     }
+
+
+    /**
+     * 读取文件内容转 Byte 数组
+     * @param filename
+     * @return
+     */
+    public static byte[] toByteArray(String filename) {
+        FileChannel fc = null;
+        byte[] result = null;
+        try {
+            fc = new RandomAccessFile(filename, "r").getChannel();
+            MappedByteBuffer byteBuffer = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size()).load();
+            //System.out.println(byteBuffer.isLoaded());
+            result = new byte[(int) fc.size()];
+            if (byteBuffer.remaining() > 0) {
+                byteBuffer.get(result, 0, byteBuffer.remaining());
+            }
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fc.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    ///**
+    // * 获取文件的 hex 值。
+    // * @param path
+    // * @return
+    // * @throws Exception
+    // */
+    //public static String binToHexString(String path) {
+    //    StringBuffer sb = new StringBuffer();
+    //    DataInputStream input = null;
+    //    try {
+    //        input = new DataInputStream(new FileInputStream(path));
+    //        while (input.available() > 0) {
+    //            String hex = String.format("%02x", input.readByte() & 0xFF);
+    //            sb.append(hex);
+    //        }
+    //    } catch (Exception e) {
+    //        MessageUtil.showExceptionMessage(e,e.getMessage());
+    //    }
+    //    //System.out.println(sb.toString());
+    //    return sb.toString();
+    //}
 
     /**
      * 返回路径上一个目录

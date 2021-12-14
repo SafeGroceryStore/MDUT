@@ -762,7 +762,9 @@ public class MssqlController implements Initializable {
                     mssqlLogTextArea.appendText(Utils.log("正在上传请稍等..."));
                 });
                 String res = null;
-                res = Utils.binToHexString(file.getAbsolutePath());
+                //res = Utils.binToHexString(file.getAbsolutePath());
+                res = Utils.bytes2HexString(Utils.toByteArray(file.getAbsolutePath()));
+
                 this.mssqlDao.normalUpload(TextField_FilePath.getText()+file.getName(),res);
                 showFilesOnTable(TextField_FilePath.getText());
             };
@@ -883,7 +885,7 @@ public class MssqlController implements Initializable {
                     mssqlLogTextArea.appendText(Utils.log("正在上传请稍等..."));
                 });
                 String res = null;
-                res = Utils.binToHexString(file.getAbsolutePath());
+                res = Utils.bytes2HexString(Utils.toByteArray(file.getAbsolutePath()));
                 try {
                     this.mssqlDao.clrupload(TextField_FilePath.getText()+file.getName(),res);
                 } catch (SQLException e) {

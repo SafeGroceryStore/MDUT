@@ -270,6 +270,7 @@ public class OracleController implements Initializable {
         ComboBox_OracleFileTypeCode.setItems(OracleTypeCodeoptions);
         ComboBox_OracleFileTypeCode.setValue("UTF-8");
         ComboBox_OracleTypeCode.setItems(OracleTypeCodeoptions);
+        ComboBox_OracleTypeCode.setValue("UTF-8");
     }
     /**
      * 初始化 tableview 的所有绑定与事件
@@ -607,7 +608,7 @@ public class OracleController implements Initializable {
                     oracleLogTextArea.appendText(Utils.log("正在上传请稍等..."));
                 });
                 String res = null;
-                res = Utils.binToHexString(file.getAbsolutePath());
+                res = Utils.bytes2HexString(Utils.toByteArray(file.getAbsolutePath()));
                 this.oracleDao.upload(TextField_FilePath.getText()+file.getName(),res);
                 showFilesOnTable(TextField_FilePath.getText(),"");
             };

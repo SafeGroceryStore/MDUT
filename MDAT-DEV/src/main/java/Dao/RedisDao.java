@@ -21,6 +21,7 @@ public class RedisDao {
 
     public static Jedis CONN;
     public static List<String> dir;
+    public static String slaveReadOnlyFlag;
 
     private String ip;
     private int port;
@@ -41,7 +42,7 @@ public class RedisDao {
      * @return
      * @throws SQLException
      */
-    public void testConnection()  {
+    public void testConnection() {
         CONN = new Jedis(ip, port, timeout);
         if (password.length() != 0) {
             CONN.auth(password);
@@ -68,6 +69,7 @@ public class RedisDao {
     public void getInfo() {
         String info = CONN.info();
         dir = CONN.configGet("dir");
+
         List<String> dbfilename = CONN.configGet("dbfilename");
         String orginDir = StringUtils.join(dir, ": ");
         String orginDbfilename = StringUtils.join(dbfilename, ": ");
@@ -130,6 +132,12 @@ public class RedisDao {
 
         redisController.redisLogTextFArea.appendText(Utils.log("Setting dbfilename..."));
 
+        List<String> slaveReadOnlyList = CONN.configGet("slave-read-only");
+        slaveReadOnlyFlag = slaveReadOnlyList.get(1);
+
+        redisController.redisLogTextFArea.appendText(Utils.log("slave-read-only -> no ..."));
+        CONN.configSet("slave-read-only", "no");
+
         // 配置so文件
         CONN.configSet("dbfilename", "exp.so");
 
@@ -179,9 +187,12 @@ public class RedisDao {
      * 2. 关闭主从
      * 3. 卸载导入so函数
      */
-    public void clearn() {
+    public void clean() {
         CONN.configSet("dir", dir.get(1));
         redisController.redisLogTextFArea.appendText(Utils.log("reset dir success"));
+
+        CONN.configSet("slave-read-only", slaveReadOnlyFlag);
+        redisController.redisLogTextFArea.appendText(Utils.log("reset slave-read-only success"));
 
         CONN.configSet("dbfilename", "dump.rdb");
         redisController.redisLogTextFArea.appendText(Utils.log("reset dbfilename success"));

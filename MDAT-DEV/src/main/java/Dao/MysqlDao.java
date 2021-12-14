@@ -352,12 +352,12 @@ public class MysqlDao {
 
     public void removeEvilFunc() {
         try {
-            String clearnSql = "drop function if exists sys_eval;";
-            PreparedStatement st1 = CONN.prepareStatement(clearnSql);
+            String cleanSql = "drop function if exists sys_eval;";
+            PreparedStatement st1 = CONN.prepareStatement(cleanSql);
             st1.execute();
 
-            String clearnSql1 = "drop function if exists backshell;";
-            PreparedStatement st2 = CONN.prepareStatement(clearnSql1);
+            String cleanSql1 = "drop function if exists backshell;";
+            PreparedStatement st2 = CONN.prepareStatement(cleanSql1);
             st2.execute();
         } catch (Exception e) {
             MessageUtil.showExceptionMessage(e, e.getMessage());
@@ -369,7 +369,7 @@ public class MysqlDao {
      *
      * @throws SQLException
      */
-    public void clearnudf() {
+    public void cleanudf() {
         String rmplugin = null;
 
         try {

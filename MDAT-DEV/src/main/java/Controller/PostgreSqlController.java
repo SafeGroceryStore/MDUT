@@ -127,7 +127,7 @@ public class PostgreSqlController implements Initializable {
     }
 
     @FXML
-    void postgreSqlClearn(ActionEvent event) {
+    void postgreSqlclean(ActionEvent event) {
         this.postgreDao.clear();
     }
 

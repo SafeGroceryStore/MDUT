@@ -24,7 +24,7 @@
                <children>
                   <Button fx:id="mysqludf" mnemonicParsing="false" onAction="#mysqludf" text="UDF提权" />
                   <Button fx:id="mysqlntfs" mnemonicParsing="false" onAction="#mysqlntfs" text="NTFS新建目录(win)" />
-                  <Button fx:id="mysqlclearn" layoutX="276.0" layoutY="22.0" mnemonicParsing="false" onAction="#mysqlclearn" text="痕迹清理" />
+                  <Button fx:id="mysqlclean" layoutX="276.0" layoutY="22.0" mnemonicParsing="false" onAction="#mysqlclean" text="痕迹清理" />
                </children>
             </HBox>
          </content>

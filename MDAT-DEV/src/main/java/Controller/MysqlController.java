@@ -41,7 +41,7 @@ public class MysqlController implements Initializable {
     private TextField reversePortTextField;
 
     @FXML
-    private Button mysqlclearn;
+    private Button mysqlclean;
 
     @FXML
     private TextArea mysqloutput;
@@ -147,8 +147,8 @@ public class MysqlController implements Initializable {
     }
 
     @FXML
-    void mysqlclearn(ActionEvent event) {
-        this.mysqlDao.clearnudf();
+    void mysqlclean(ActionEvent event) {
+        this.mysqlDao.cleanudf();
     }
 
     @FXML

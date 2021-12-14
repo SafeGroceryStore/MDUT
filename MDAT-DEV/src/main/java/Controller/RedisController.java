@@ -162,7 +162,7 @@ public class RedisController implements Initializable {
     @FXML
     void redisClear(ActionEvent event) {
         Runnable runner = () -> {
-            this.redisDao.clearn();
+            this.redisDao.clean();
         };
         Thread workThrad = new Thread(runner);
         workThrad.start();

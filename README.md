@@ -52,3 +52,6 @@ https://github.com/knownsec/404StarLink2.0-Galaxy#community
 
 ## Law
 > This tool can only be used in enterprise security construction with sufficient legal authorization. In the process of using this tool, you should ensure that all your behaviors comply with local laws and regulations. If you have any illegal behavior in the process of using this tool, you will bear all consequences. All developers and contributors of this tool will not bear any legal and joint liability. Please do not install and use this tool unless you have fully read, understood and accepted all the terms of this agreement. Your use or your acceptance of this agreement in any other way, express or implied, shall be deemed to have read and agreed to be bound by this agreement.
+
+## Sponsor
+![](/image/3521639573330_.pic.jpg)

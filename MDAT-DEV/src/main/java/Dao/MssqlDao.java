@@ -514,7 +514,7 @@ public class MssqlDao {
         String res = "";
         path = path.replace("'","''");
         String sql = "declare @o int, @f int, @t int, @ret int\n" +
-                "declare @line varchar(8000),@alllines varchar(8000)\n" +
+                "declare @line varchar(8000),@alllines varchar(max)\n" +
                 "set @alllines =''\n" +
                 "exec sp_oacreate 'scripting.filesystemobject', @o out\n" +
                 "exec sp_oamethod @o, 'opentextfile', @f out, N'%s', 1\n" +
@@ -524,7 +524,7 @@ public class MssqlDao {
                 "set @alllines = @alllines + @line + '\n'\n" +
                 "exec @ret = sp_oamethod @f, 'readline', @line out\n" +
                 "end\n" +
-                "select distinct convert(varbinary, @alllines) as lines";
+                "select distinct convert(varbinary(max), @alllines) as lines";
         sql = String.format(sql,path);
         try {
             stmt = CONN.createStatement();

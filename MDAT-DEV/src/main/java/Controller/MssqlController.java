@@ -442,6 +442,17 @@ public class MssqlController implements Initializable {
         Thread workThrad = new Thread(runner);
         workThrad.start();
     }
+    @FXML
+    void activatereadlargefile(ActionEvent event) {
+        Runnable runner = () -> {
+            Platform.runLater(() -> {
+                mssqlLogTextArea.appendText(Utils.log("正在激活，请稍等..."));
+            });
+            this.mssqlDao.activateReadLargeFile();
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
+    }
 
     @FXML
     void activateclr(ActionEvent event) {

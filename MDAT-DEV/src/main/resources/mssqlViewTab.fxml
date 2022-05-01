@@ -25,6 +25,7 @@
                       <MenuItem mnemonicParsing="false" onAction="#activatexpcmdshell" text="XPCMDSHELL" />
                       <MenuItem mnemonicParsing="false" onAction="#activateoap" text="Ole Automation Procedures" />
                         <MenuItem mnemonicParsing="false" onAction="#activateclr" text="CLR" />
+                        <MenuItem mnemonicParsing="false" onAction="#activatereadlargefile" text="Read Large File Procedures" />
                     </items>
                   </MenuButton>
                   <Button fx:id="Button_getAdminPassword" mnemonicParsing="false" onAction="#getAdminPassword" text="获取管理员密码" />

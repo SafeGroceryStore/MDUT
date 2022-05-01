@@ -150,6 +150,35 @@ public class MssqlDao {
         }
 
     }
+    /*
+
+     */
+
+    public void activateReadLargeFile(){
+        try {
+            excute("CREATE PROC [dbo].[read_large_file]  \n" +
+                    "    @os_file_name NVARCHAR(256) \n" +
+                    "   ,@text_file varbinary(MAX) OUTPUT  \n" +
+                    "AS  \n" +
+                    "DECLARE @sql NVARCHAR(MAX) \n" +
+                    "      , @parmsdeclare NVARCHAR(4000)  \n" +
+                    "SET NOCOUNT ON  \n" +
+                    "SET @sql = 'select @text_file=(select * from openrowset ( \n" +
+                    "           bulk ''' + @os_file_name + ''' \n" +
+                    "           ,SINGLE_BLOB) x \n" +
+                    "           )' \n" +
+                    "SET @parmsdeclare = '@text_file varbinary(max) OUTPUT'  \n" +
+                    "EXEC sp_executesql @stmt = @sql \n" +
+                    "                 , @params = @parmsdeclare \n" +
+                    "                 , @text_file = @text_file OUTPUT","");
+            mssqlController.mssqlLogTextArea.appendText(Utils.log("Read Large File 激活成功！"));
+        } catch (Exception e) {
+            Platform.runLater(() ->{
+                MessageUtil.showExceptionMessage(e,e.getMessage());
+            });
+        }
+
+    }
 
     /**
      * xpcmdshell 执行命令
@@ -513,18 +542,9 @@ public class MssqlDao {
     public String normalDownload(String path) throws SQLException {
         String res = "";
         path = path.replace("'","''");
-        String sql = "declare @o int, @f int, @t int, @ret int\n" +
-                "declare @line varchar(8000),@alllines varchar(8000)\n" +
-                "set @alllines =''\n" +
-                "exec sp_oacreate 'scripting.filesystemobject', @o out\n" +
-                "exec sp_oamethod @o, 'opentextfile', @f out, N'%s', 1\n" +
-                "exec @ret = sp_oamethod @f, 'readline', @line out\n" +
-                "while (@ret = 0)\n" +
-                "begin\n" +
-                "set @alllines = @alllines + @line + '\n'\n" +
-                "exec @ret = sp_oamethod @f, 'readline', @line out\n" +
-                "end\n" +
-                "select distinct convert(varbinary, @alllines) as lines";
+        String sql = "DECLARE @t varbinary(MAX) \n" +
+                "EXEC read_large_file '%s', @t output \n" +
+                "SELECT @t AS lines";
         sql = String.format(sql,path);
         try {
             stmt = CONN.createStatement();

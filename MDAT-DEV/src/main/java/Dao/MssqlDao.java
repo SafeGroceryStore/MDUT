@@ -524,7 +524,7 @@ public class MssqlDao {
                 "set @alllines = @alllines + @line + '\n'\n" +
                 "exec @ret = sp_oamethod @f, 'readline', @line out\n" +
                 "end\n" +
-                "select distinct convert(varbinary, @alllines) as lines";
+                "select distinct convert(varbinary(max), @alllines) as lines";
         sql = String.format(sql,path);
         try {
             stmt = CONN.createStatement();

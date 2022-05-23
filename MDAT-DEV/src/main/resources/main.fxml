@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainController">
    <children>
       <MenuBar VBox.vgrow="ALWAYS">
         <menus>
@@ -20,10 +24,16 @@
           </Menu>
           <Menu mnemonicParsing="false" text="帮助">
             <items>
+                  <MenuItem fx:id="document" mnemonicParsing="false" onAction="#documentAction" text="使用文档" />
               <MenuItem fx:id="update" mnemonicParsing="false" onAction="#updateAction" text="更新" />
                   <MenuItem fx:id="about" mnemonicParsing="false" onAction="#aboutAction" text="关于" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="HTTP 通道">
+               <items>
+                  <MenuItem fx:id="createTunnel" mnemonicParsing="false" onAction="#createTunnelAction" text="生成通道脚本" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
       <TableView fx:id="databaseTableView" maxHeight="Infinity" maxWidth="Infinity" prefHeight="594.0" prefWidth="800.0" VBox.vgrow="ALWAYS">

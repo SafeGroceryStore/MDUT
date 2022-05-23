@@ -1,6 +1,8 @@
 package Controller;
 
+import Dao.MysqlHttpDao;
 import Dao.PostgreSqlDao;
+import Dao.PostgreSqlHttpDao;
 import Entity.ControllersFactory;
 import Util.MessageUtil;
 import Util.Utils;
@@ -56,6 +58,8 @@ public class PostgreSqlController implements Initializable {
 
     private List workList = new ArrayList();
 
+    private PostgreSqlHttpDao postgreSqlHttpDao;
+
     public List getWorkList() {
         return this.workList;
     }
@@ -78,22 +82,34 @@ public class PostgreSqlController implements Initializable {
         // 尝试连接
         Runnable runner = () -> {
             try {
-                this.postgreDao = new PostgreSqlDao(this.dataObj.getString("ipaddress"), this.dataObj.getString("port"), this.dataObj.getString("database"), this.dataObj.getString("username"), this.dataObj.getString("password"), this.dataObj.getString("timeout"));
-                this.postgreDao.getConnection();
-                Platform.runLater(() -> {
-                    postgreSqlLogTextArea.appendText(Utils.log("连接成功！"));
-                    // 获取信息输出
-                    this.postgreDao.getInfo();
-                });
+
+                if("false".equals(this.dataObj.getString("ishttp"))){
+                    this.postgreDao = new PostgreSqlDao(this.dataObj.getString("ipaddress"), this.dataObj.getString("port"), this.dataObj.getString("database"), this.dataObj.getString("username"), this.dataObj.getString("password"), this.dataObj.getString("timeout"));
+                    this.postgreDao.getConnection();
+                    Platform.runLater(() -> {
+                        postgreSqlLogTextArea.appendText(Utils.log("连接成功！"));
+                        // 获取信息输出
+                        this.postgreDao.getInfo();
+                    });
+                }else {
+                    Platform.runLater(() -> {
+                        this.postgreSqlHttpDao = new PostgreSqlHttpDao(this.dataObj);
+                        this.postgreSqlHttpDao.getConnection();
+                        this.postgreSqlHttpDao.getInfo();
+                    });
+                }
+
             } catch (Exception e) {
-                Platform.runLater(() -> {
-                    postgreSqlLogTextArea.appendText(Utils.log("连接失败！"));
-                    MessageUtil.showExceptionMessage(e, e.getMessage());
-                    try {
-                        this.postgreDao.closeConnection();
-                    } catch (Exception ex) {
-                    }
-                });
+                if("false".equals(this.dataObj.getString("ishttp"))){
+                    Platform.runLater(() -> {
+                        postgreSqlLogTextArea.appendText(Utils.log("连接失败！"));
+                        MessageUtil.showExceptionMessage(e, e.getMessage());
+                        try {
+                            this.postgreDao.closeConnection();
+                        } catch (Exception ex) {
+                        }
+                    });
+                }
             }
         };
         Thread workThrad = new Thread(runner);
@@ -111,39 +127,77 @@ public class PostgreSqlController implements Initializable {
                 "GBK"
         );
         // 初始化下拉框
-        postgreSqlEncodeCombox.setPromptText("UTF-8");
+        postgreSqlEncodeCombox.setValue("UTF-8");
         postgreSqlEncodeCombox.setItems(postgreSqlTypeCodeoptions);
     }
 
 
     @FXML
     void postgreSqlSystem(ActionEvent event) {
-        this.postgreDao.createEval();
+        Runnable runner = () -> {
+            if("false".equals(this.dataObj.getString("ishttp"))){
+                this.postgreDao.createEval();
+            }else {
+                this.postgreSqlHttpDao.createEval();
+            }
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
     }
 
     @FXML
     void postgreSqlcUdf(ActionEvent event) {
-        this.postgreDao.udf();
+        Runnable runner = () -> {
+            if("false".equals(this.dataObj.getString("ishttp"))){
+                this.postgreDao.udf();
+            }else {
+                this.postgreSqlHttpDao.udf();
+            }
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
+
     }
 
     @FXML
     void postgreSqlclean(ActionEvent event) {
-        this.postgreDao.clear();
+        Runnable runner = () -> {
+            if("false".equals(this.dataObj.getString("ishttp"))){
+                this.postgreDao.clear();
+            }else {
+                this.postgreSqlHttpDao.clear();
+            }
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
+
     }
 
     @FXML
     void postgreSqlEval(ActionEvent event) {
-        try {
-            String command = postgreSqlCommandText.getText();
-            String code = postgreSqlEncodeCombox.getValue();
-            if(code == null){
-                MessageUtil.showErrorMessage("错误","请选择编码类型");
-                return;
+
+        Runnable runner = () -> {
+            try {
+                String command = postgreSqlCommandText.getText();
+                String code = postgreSqlEncodeCombox.getValue();
+                if(code == null){
+                    MessageUtil.showErrorMessage("请选择编码类型");
+                    return;
+                }
+                if("false".equals(this.dataObj.getString("ishttp"))){
+                    String result = this.postgreDao.eval(command,code);
+                    postgreSqlOutputTextArea.setText(result);
+                }else {
+                    String result = this.postgreSqlHttpDao.eval(command,code);
+                    postgreSqlOutputTextArea.setText(result);
+                }
+            } catch (Exception e) {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
             }
-            String result = this.postgreDao.eval(command,code);
-            postgreSqlOutputTextArea.setText(result);
-        } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
-        }
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
+
+
     }
 }

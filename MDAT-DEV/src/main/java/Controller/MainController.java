@@ -19,18 +19,22 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.*;
 import java.net.URL;
-
 import java.util.*;
-
 import Entity.ControllersFactory;
 
 /**
  * @author ch1ng
  */
 public class MainController implements Initializable {
+
+
+    @FXML
+    private MenuItem createTunnel;
+
+    @FXML
+    private MenuItem document;
 
     @FXML
     private MenuItem resetConfigFile;
@@ -156,7 +160,7 @@ public class MainController implements Initializable {
         Map<String, Object> yamlToMap = configs.getYamlToMap("config.yaml");
         String Status = (String) configs.getValue("Global.StartWarn",yamlToMap);
         if ("true".equals(Status)) {
-            MessageUtil.showErrorMessage("用户须知", "特别提醒，使用该工具必须遵守国家有关的政策和法律，如刑法、国家安全法、保密法、计算机信息系统安全保护条例等，保护国家利益，保护国家安全，对于违法使用该工具而引起的一切责任，由用户负全部责任。一旦您使用了本程序，将视为您已清楚了解上列全部声明并且完全同意。本程序仅供合法的渗透测试以及爱好者参考学习。");
+            MessageUtil.showErrorMessage( "特别提醒，使用该工具必须遵守国家有关的政策和法律，如刑法、国家安全法、保密法、计算机信息系统安全保护条例等，保护国家利益，保护国家安全，对于违法使用该工具而引起的一切责任，由用户负全部责任。一旦您使用了本程序，将视为您已清楚了解上列全部声明并且完全同意。本程序仅供合法的渗透测试以及爱好者参考学习。");
         }
     }
 
@@ -210,8 +214,12 @@ public class MainController implements Initializable {
                     "com.mysql.cj.jdbc.Driver",
                     "jdbc:mysql://{0}:{1}/{2}?connectTimeout={3}&socketTimeout={3}&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true",
                     path + File.separator + "Driver" + File.separator + "mssql.jar",
-                    "net.sourceforge.jtds.jdbc.Driver",
-                    "jdbc:jtds:sqlserver://{0}:{1}/{2};loginTimeout={3};socketTimeout={3}",
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://{0}:{1};databaseName={2};loginTimeout={3};" +
+                            "cancelQueryTimeout={3};queryTimeout={3};" +
+                            "lockTimeout={3}",
+                    //"net.sourceforge.jtds.jdbc.Driver",
+                    // "jdbc:jtds:sqlserver://{0}:{1}/{2};loginTimeout={3};socketTimeout={3}",
                     path + File.separator + "Driver" + File.separator + "oracle.jar",
                     "oracle.jdbc.driver.OracleDriver",
                     "jdbc:oracle:thin:@{0}:{1}:{2}",
@@ -683,6 +691,31 @@ public class MainController implements Initializable {
                 initConfigFile();
                 infoLab.setText("重新生成配置文件成功!");
             }
+        } catch (Exception e) {
+            MessageUtil.showExceptionMessage(e, e.getMessage());
+        }
+    }
+
+    @FXML
+    void documentAction(ActionEvent event) {
+        try {
+            Utils.openBrowse("https://www.yuque.com/u21224612/nezuig");
+        } catch (Exception e) {
+            MessageUtil.showExceptionMessage(e, e.getMessage());
+        }
+    }
+
+    @FXML
+    void createTunnelAction(ActionEvent event) {
+        try {
+            Stage st = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/tunnel.fxml"));
+            Parent sceneMain = loader.load();
+            Scene scene = new Scene(sceneMain);
+            st.setScene(scene);
+            st.setResizable(false);
+            st.setTitle("HTTP 通道");
+            st.show();
         } catch (Exception e) {
             MessageUtil.showExceptionMessage(e, e.getMessage());
         }

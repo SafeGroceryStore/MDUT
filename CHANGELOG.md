@@ -1,6 +1,25 @@
 # 更新日志
 > 有空会补补BUG、添添新功能。
 
+## 2022/05/24 - `v2.1.0`
+### 核心
+* 增加 HTTP 隧道功能(Redis暂不支持)
+* 优化逻辑代码
+* 加长默认超时时间
+
+### Mssql
+* 修复下载文件 Bug
+* 删除获取管理员密码功能
+* 增加一键恢复所有组件功能
+* 修正 CLR Hex String
+
+### Oracle
+* 更改 JAVA Util 导入方式
+* 优化 JAVA ShellUtil 代码
+
+### Redis
+* 添加 slave-read-only 功能 (Thx @xslzlccc)
+
 ## 2021/12/01 - `v2.0.8`
 ### 核心
 * 修复 Mssql 连接 2000 时候的语句兼容性问题

@@ -493,6 +493,10 @@ public class OracleDao {
         String sql = String.format(OracleSqlUtil.getFilesSql,path,code);
         try {
             tempres = executeSql(sql);
+            if(tempres.contains("ERROR://")){
+                oracleController.oracleLogTextArea.appendText(Utils.log("获取所有文件失败！错误："+ tempres.replace("ERROR://","")));
+                return res;
+            }
             res = splitFiles(tempres);
         } catch (Exception e) {
             Platform.runLater(() ->{

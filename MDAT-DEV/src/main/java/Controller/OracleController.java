@@ -415,6 +415,7 @@ public class OracleController implements Initializable {
 
                 if("null".equals(arrayFiles.get(0))){
                     oracleLogTextArea.appendText(Utils.log("路径读取失败！可能当前路径没有文件！"));
+                    return;
                 }else {
                     for (int i = 0; i < arrayFiles.size(); i++) {
                         String file = arrayFiles.get(i);

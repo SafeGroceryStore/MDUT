@@ -13,7 +13,7 @@
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.34.0" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20201115" level="project" />
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.28" level="project" />
-    <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.20" level="project" />
+    <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.22" level="project" />
     <orderEntry type="library" name="Maven: org.pegdown:pegdown:1.6.0" level="project" />
     <orderEntry type="library" name="Maven: org.parboiled:parboiled-java:1.1.7" level="project" />
     <orderEntry type="library" name="Maven: org.parboiled:parboiled-core:1.1.7" level="project" />
@@ -27,5 +27,14 @@
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: com.oracle.ojdbc:orai18n:19.3.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.76" level="project" />
+    <orderEntry type="library" name="Maven: com.ejlchina:okhttps:3.3.0" level="project" />
+    <orderEntry type="library" name="Maven: com.ejlchina:data-core:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okhttp3:okhttp:3.14.9" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.17.5" level="project" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.8" level="project" />
+    <orderEntry type="library" name="Maven: io.jsonwebtoken:jjwt:0.9.1" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.6" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.6" level="project" />
   </component>
 </module>

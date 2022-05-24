@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="589.0" prefWidth="494.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AddAndEditController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="589.0" prefWidth="494.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AddAndEditController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
@@ -33,7 +41,7 @@
                         <TextField fx:id="userNameText" layoutX="77.0" layoutY="139.0" prefHeight="27.0" prefWidth="402.0" />
                         <TextField fx:id="passwordText" layoutX="77.0" layoutY="179.0" prefHeight="27.0" prefWidth="402.0" />
                         <TextField fx:id="databaseText" layoutX="77.0" layoutY="219.0" prefHeight="27.0" prefWidth="402.0" />
-                        <TextField fx:id="timeOutText" layoutX="77.0" layoutY="259.0" prefHeight="27.0" prefWidth="402.0" text="5" />
+                        <TextField fx:id="timeOutText" layoutX="77.0" layoutY="259.0" prefHeight="27.0" prefWidth="402.0" text="60" />
                         <TextArea fx:id="memoText" layoutX="77.0" layoutY="300.0" prefHeight="200.0" prefWidth="400.0" />
                         <Button fx:id="testConnectBtn" layoutX="14.0" layoutY="514.0" mnemonicParsing="false" onAction="#TestConnectAction" text="测试" />
                         <Button fx:id="saveBtn" layoutX="433.0" layoutY="514.0" mnemonicParsing="false" onAction="#SaveAction" text="保存" />
@@ -50,7 +58,7 @@
                         <CheckBox fx:id="usedHttpTunnelCheckBox" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="是否使用 HTTP 通道" />
                         <Label layoutX="14.0" layoutY="49.0" text="通道地址:" />
                         <TextField fx:id="urlText" disable="true" layoutX="83.0" layoutY="44.0" prefHeight="27.0" prefWidth="397.0" />
-                        <CheckBox fx:id="usedProxyCheckBox" layoutX="14.0" layoutY="137.0" mnemonicParsing="false" text="是否使用代理" />
+                        <CheckBox fx:id="usedProxyCheckBox" disable="true" layoutX="14.0" layoutY="137.0" mnemonicParsing="false" text="是否使用代理(非HTTP模式无效)" />
                         <TextField fx:id="proxyAddressText" disable="true" layoutX="83.0" layoutY="205.0" prefHeight="27.0" prefWidth="397.0" />
                         <Label layoutX="14.0" layoutY="210.0" text="地址:" />
                         <Label layoutX="14.0" layoutY="248.0" text="端口:" />
@@ -61,9 +69,8 @@
                         <Label layoutX="14.0" layoutY="325.0" text="密码:" />
                         <Label layoutX="14.0" layoutY="173.0" text="类型:" />
                         <ChoiceBox fx:id="proxyTypeChBox" disable="true" layoutX="83.0" layoutY="168.0" prefHeight="27.0" prefWidth="397.0" />
-                        <TextField fx:id="keyText" disable="true" layoutX="83.0" layoutY="80.0" prefHeight="27.0" prefWidth="316.0" />
+                        <TextField fx:id="keyText" disable="true" layoutX="83.0" layoutY="80.0" prefHeight="27.0" prefWidth="397.0" />
                         <Label layoutX="14.0" layoutY="85.0" text="加密密钥:" />
-                        <Button fx:id="generateBtn" disable="true" layoutX="410.0" layoutY="80.0" mnemonicParsing="false" onAction="#GenerateAction" text="随机生成" />
                         <Label layoutX="14.0" layoutY="364.0" text="自定义请求头:" />
                         <TextArea fx:id="HttpHeadersTextA" disable="true" layoutX="13.0" layoutY="386.0" prefHeight="146.0" prefWidth="468.0" />
                      </children>

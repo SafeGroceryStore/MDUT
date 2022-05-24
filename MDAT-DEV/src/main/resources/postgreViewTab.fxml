@@ -20,7 +20,7 @@
                <children>
                   <Button fx:id="postgreSqlSystemBtn" layoutX="22.0" layoutY="22.0" mnemonicParsing="false" onAction="#postgreSqlSystem" text="创建命令函数[libc] &lt;= 8.2" />
                   <Button fx:id="postgreSqlcUdfBtn" mnemonicParsing="false" onAction="#postgreSqlcUdf" text="UDF提权" />
-                  <Button fx:id="postgreSqlcCearnBtn" layoutX="276.0" layoutY="22.0" mnemonicParsing="false" onAction="#postgreSqlClearn" text="痕迹清理" />
+                  <Button fx:id="postgreSqlcCearnBtn" layoutX="276.0" layoutY="22.0" mnemonicParsing="false" onAction="#postgreSqlclean" text="痕迹清理" />
                </children>
             </HBox>
          </content>

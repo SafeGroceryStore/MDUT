@@ -228,7 +228,7 @@ public class SettingController implements Initializable {
             configs.updateYaml("PostgreSql.ClassName",postgreSqlClassName, "config.yaml");
             configs.updateYaml("PostgreSql.JDBCUrl",postgreSqlJDBCUrl, "config.yaml");
 
-            MessageUtil.showInfoMessage("提示","保存成功！");
+            MessageUtil.showInfoMessage("保存成功！");
         } catch (Exception e) {
             MessageUtil.showExceptionMessage(e,e.getMessage());
         }

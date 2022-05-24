@@ -10,8 +10,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -206,7 +204,13 @@ public class AddAndEditController implements Initializable {
                 urlText.setDisable(!newValue);
                 keyText.setDisable(!newValue);
                 HttpHeadersTextA.setDisable(!newValue);
-                generateBtn.setDisable(!newValue);
+                //generateBtn.setDisable(!newValue);
+                usedProxyCheckBox.setDisable(!newValue);
+                proxyTypeChBox.setDisable(!newValue);
+                proxyAddressText.setDisable(!newValue);
+                proxyPortText.setDisable(!newValue);
+                proxyUserNameText.setDisable(!newValue);
+                proxyPasswordText.setDisable(!newValue);
             }
         });
         // 监听 Proxy 勾选状态，如果勾选则代表使用 Proxy 代理
@@ -232,23 +236,72 @@ public class AddAndEditController implements Initializable {
         String database = databaseText.getText();
         String timeout = timeOutText.getText();
         String tempDatabaseType = databaseTypeChBox.getValue();
+
+        String isHttp =  usedHttpTunnelCheckBox.isSelected() ? "true" : "false";
+        String url =  urlText.getText();
+        String key = keyText.getText();
+        String isProxy = usedProxyCheckBox.isSelected() ? "true" : "false";
+        String proxyType = proxyTypeChBox.getValue();
+        String proxyAddress = proxyAddressText.getText();
+        String proxyPort = proxyPortText.getText();
+        String proxyUser = proxyUserNameText.getText();
+        String proxyPassword = proxyPasswordText.getText();
+        String HttpHeaders = HttpHeadersTextA.getText();
+
+        JSONObject tempData = new JSONObject();
+        tempData.put("ipaddress",ip);
+        tempData.put("port",port);
+        tempData.put("username",username);
+        tempData.put("password",password);
+        tempData.put("database",database);
+        tempData.put("timeout",timeout);
+        tempData.put("ishttp",isHttp);
+        tempData.put("url",url);
+        tempData.put("encryptionkey",key);
+        tempData.put("isproxy",isProxy);
+        tempData.put("proxytype",proxyType);
+        tempData.put("proxyaddress",proxyAddress);
+        tempData.put("proxyport",proxyPort);
+        tempData.put("proxyusername",proxyUser);
+        tempData.put("proxypassword",proxyPassword);
+        tempData.put("httpheaders",HttpHeaders);
+
+
         switch (tempDatabaseType) {
             case "Mysql":
                 infoLaberl.setText("正在连接...请稍等");
                 Runnable runnerMysql = () -> {
-                    try {
-                        MysqlDao mysqlDao = new MysqlDao(ip, port, database, username, password, timeout);
-                        // 测试连接
-                        mysqlDao.testConnection();
-                        Platform.runLater(() -> {
-                            infoLaberl.setText("连接成功");
-                        });
-                    } catch (Exception e) {
-                        Platform.runLater(() -> {
-                            infoLaberl.setText("连接失败");
-                            MessageUtil.showExceptionMessage(e, e.getMessage());
-                        });
+                    testConnectBtn.setDisable(true);
+                    if("false".equals(isHttp)){
+                        try {
+                            MysqlDao mysqlDao = new MysqlDao(ip, port, database, username, password, timeout);
+                            // 测试连接
+                            mysqlDao.testConnection();
+                            Platform.runLater(() -> {
+                                infoLaberl.setText("连接成功");
+                            });
+                        } catch (Exception e) {
+                            Platform.runLater(() -> {
+                                infoLaberl.setText("连接失败");
+                                MessageUtil.showExceptionMessage(e, e.getMessage());
+                            });
+                        }
+                    }else {
+                        MysqlHttpDao mysqlHttpDao = new MysqlHttpDao(tempData);
+                        String res = mysqlHttpDao.testConnection();
+                        if (res.equals("连接成功")){
+                            Platform.runLater(() -> {
+                                infoLaberl.setText("连接成功");
+                            });
+                        }else {
+                            Platform.runLater(() -> {
+                                infoLaberl.setText("连接失败");
+                                MessageUtil.showErrorMessage( res);
+                            });
+                        }
                     }
+                    testConnectBtn.setDisable(false);
+
                 };
                 Thread workThradMysql = new Thread(runnerMysql);
                 //this.workList.add(workThrad);
@@ -257,19 +310,36 @@ public class AddAndEditController implements Initializable {
             case "PostgreSql":
                 infoLaberl.setText("正在连接...请稍等");
                 Runnable runnerPostgre = () -> {
-                    try {
-                        PostgreSqlDao postgreSqlDao = new PostgreSqlDao(ip, port, database, username, password, timeout);
-                        // 测试连接
-                        postgreSqlDao.testConnection();
-                        Platform.runLater(() -> {
-                            infoLaberl.setText("连接成功");
-                        });
-                    } catch (Exception e) {
-                        Platform.runLater(() -> {
-                            infoLaberl.setText("连接失败");
-                            MessageUtil.showExceptionMessage(e, e.getMessage());
-                        });
+                    testConnectBtn.setDisable(true);
+                    if("false".equals(isHttp)){
+                        try {
+                            PostgreSqlDao postgreSqlDao = new PostgreSqlDao(ip, port, database, username, password, timeout);
+                            // 测试连接
+                            postgreSqlDao.testConnection();
+                            Platform.runLater(() -> {
+                                infoLaberl.setText("连接成功");
+                            });
+                        } catch (Exception e) {
+                            Platform.runLater(() -> {
+                                infoLaberl.setText("连接失败");
+                                MessageUtil.showExceptionMessage(e, e.getMessage());
+                            });
+                        }
+                    }else {
+                        PostgreSqlHttpDao postgreSqlHttpDao = new PostgreSqlHttpDao(tempData);
+                        String res = postgreSqlHttpDao.testConnection();
+                        if (res.equals("连接成功")){
+                            Platform.runLater(() -> {
+                                infoLaberl.setText("连接成功");
+                            });
+                        }else {
+                            Platform.runLater(() -> {
+                                infoLaberl.setText("连接失败");
+                                MessageUtil.showErrorMessage(res);
+                            });
+                        }
                     }
+                    testConnectBtn.setDisable(false);
                 };
                 Thread workThradPostgre = new Thread(runnerPostgre);
                 //this.workList.add(workThrad);
@@ -278,19 +348,37 @@ public class AddAndEditController implements Initializable {
             case "Mssql":
                 infoLaberl.setText("正在连接...请稍等");
                 Runnable runnerMssql = () -> {
-                    try {
-                        MssqlDao mssqlDao = new MssqlDao(ip, port, database, username, password, timeout);
-                        // 测试连接
-                        mssqlDao.testConnection();
-                        Platform.runLater(() -> {
-                            infoLaberl.setText("连接成功");
-                        });
-                    } catch (Exception e) {
-                        Platform.runLater(() -> {
-                            infoLaberl.setText("连接失败");
-                            MessageUtil.showExceptionMessage(e, e.getMessage());
-                        });
+                    testConnectBtn.setDisable(true);
+                    if("false".equals(isHttp)){
+                        try {
+                            MssqlDao mssqlDao = new MssqlDao(ip, port, database, username, password, timeout);
+                            // 测试连接
+                            mssqlDao.testConnection();
+                            Platform.runLater(() -> {
+                                infoLaberl.setText("连接成功");
+                            });
+                        } catch (Exception e) {
+                            Platform.runLater(() -> {
+                                infoLaberl.setText("连接失败");
+                                MessageUtil.showExceptionMessage(e, e.getMessage());
+                            });
+                        }
+                    }else {
+                        MssqlHttpDao mssqlHttpDao = new MssqlHttpDao(tempData);
+                        String res = mssqlHttpDao.testConnection();
+                        if (res.equals("连接成功")){
+                            Platform.runLater(() -> {
+                                infoLaberl.setText("连接成功");
+                            });
+                        }else {
+                            Platform.runLater(() -> {
+                                infoLaberl.setText("连接失败");
+                                MessageUtil.showErrorMessage(res);
+                            });
+                        }
                     }
+
+                    testConnectBtn.setDisable(false);
                 };
                 Thread workThradMssql = new Thread(runnerMssql);
                 //this.workList.add(workThrad);
@@ -299,6 +387,7 @@ public class AddAndEditController implements Initializable {
             case "Redis":
                 infoLaberl.setText("正在连接...请稍等");
                 Runnable runnerRedis = () -> {
+                    testConnectBtn.setDisable(true);
                     try {
                         RedisDao redisDao = new RedisDao(ip, port, password, timeout);
                         // 测试连接
@@ -312,6 +401,7 @@ public class AddAndEditController implements Initializable {
                             MessageUtil.showExceptionMessage(e, e.getMessage());
                         });
                     }
+                    testConnectBtn.setDisable(false);
                 };
                 Thread workThradRedis = new Thread(runnerRedis);
                 //this.workList.add(workThrad);
@@ -320,19 +410,37 @@ public class AddAndEditController implements Initializable {
             case "Oracle":
                 infoLaberl.setText("正在连接...请稍等");
                     Runnable runnerOracle = () -> {
-                        try {
-                            OracleDao oracleDao = new OracleDao(ip, port, database, username, password, timeout);
-                            // 测试连接
-                            oracleDao.testConnection();
-                            Platform.runLater(() -> {
-                                infoLaberl.setText("连接成功");
-                            });
-                        } catch (Exception e) {
-                            Platform.runLater(() -> {
-                                infoLaberl.setText("连接失败");
-                                MessageUtil.showExceptionMessage(e, e.getMessage());
-                            });
+                        testConnectBtn.setDisable(true);
+                        if("false".equals(isHttp)){
+                            try {
+                                OracleDao oracleDao = new OracleDao(ip, port, database, username, password, timeout);
+                                // 测试连接
+                                oracleDao.testConnection();
+                                Platform.runLater(() -> {
+                                    infoLaberl.setText("连接成功");
+                                });
+                            } catch (Exception e) {
+                                Platform.runLater(() -> {
+                                    infoLaberl.setText("连接失败");
+                                    MessageUtil.showExceptionMessage(e, e.getMessage());
+                                });
+                            }
+                        }else {
+                            OracleHttpDao oracleHttpDao = new OracleHttpDao(tempData);
+                            String res = oracleHttpDao.testConnection();
+                            if (res.equals("连接成功")){
+                                Platform.runLater(() -> {
+                                    infoLaberl.setText("连接成功");
+                                });
+                            }else {
+                                Platform.runLater(() -> {
+                                    infoLaberl.setText("连接失败");
+                                    MessageUtil.showErrorMessage(res);
+                                });
+                            }
                         }
+
+                        testConnectBtn.setDisable(false);
                     };
                     Thread workThradOracle = new Thread(runnerOracle);
                     //this.workList.add(workThrad);
@@ -404,7 +512,7 @@ public class AddAndEditController implements Initializable {
                 connecttype,
                 tempID + ""
         );
-        MessageUtil.showInfoMessage("提示", "保存成功");
+        MessageUtil.showInfoMessage( "保存成功");
         // 关闭窗口
         Stage stage = (Stage) cancelBtn.getScene().getWindow();
         stage.close();
@@ -459,7 +567,7 @@ public class AddAndEditController implements Initializable {
                 connecttype,
                 addtime
         );
-        MessageUtil.showInfoMessage("提示", "添加成功");
+        MessageUtil.showInfoMessage( "添加成功");
         // 关闭窗口
         Stage stage = (Stage) cancelBtn.getScene().getWindow();
         stage.close();
@@ -471,11 +579,6 @@ public class AddAndEditController implements Initializable {
     void CancelAction(ActionEvent event) {
         Stage stage = (Stage) cancelBtn.getScene().getWindow();
         stage.close();
-    }
-
-    @FXML
-    void GenerateAction(ActionEvent event) {
-        keyText.setText(Utils.getRandomString());
     }
 
 }

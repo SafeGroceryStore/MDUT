@@ -71,6 +71,7 @@ public class FileUtil extends Object {
             s += sF;
             r = new String(s.getBytes(fileCode), encoding);
         }catch (Exception e){
+            r = "ERROR://" +  e.toString();
         }
         return r;
     }
@@ -80,6 +81,7 @@ public class FileUtil extends Object {
         try {
             result = directory.getAbsolutePath();
         } catch (Exception e) {
+            result = "ERROR://" + e.toString();
         }
         return result;
     }
@@ -94,7 +96,7 @@ public class FileUtil extends Object {
                 sb.append(hex);
             }
         } catch (Exception e) {
-            sb.append(e.toString());
+            sb.append("ERROR://" + e.toString());
         }
         //System.out.println(sb.toString());
         return sb.toString();
@@ -113,7 +115,7 @@ public class FileUtil extends Object {
             }
             os.close();
         } catch (Exception e) {
-
+            r = "ERROR://" + e.toString();
         }
         return r;
     }
@@ -131,10 +133,6 @@ public class FileUtil extends Object {
             sb.append("error");
         }
         return sb.toString();
-    }
-
-    public static void main(String[] args) {
-        System.out.println(listfile("/",""));
     }
 
 }

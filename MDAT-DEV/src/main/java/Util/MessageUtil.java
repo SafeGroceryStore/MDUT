@@ -22,7 +22,7 @@ public class MessageUtil {
      */
     public static void showExceptionMessage(Exception ex,String contentText) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("错误");
+        alert.setTitle("Multiple Database Utilization Tools 提示");
         alert.setHeaderText("");
         alert.setContentText(contentText);
         StringWriter sw = new StringWriter();
@@ -52,16 +52,15 @@ public class MessageUtil {
 
     /**
      * 报错美化输出
-     * @param title 提示标题
      * @param msg 提示内容
      */
-    public static void showErrorMessage(String title, String msg) {
+    public static void showErrorMessage(String msg) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         Window window = alert.getDialogPane().getScene().getWindow();
         window.setOnCloseRequest((event) -> {
             window.hide();
         });
-        alert.setTitle(title);
+        alert.setTitle("Multiple Database Utilization Tools 提示");
         alert.setHeaderText("");
         alert.setContentText(msg);
         alert.showAndWait();
@@ -69,16 +68,15 @@ public class MessageUtil {
 
     /**
      * 信息美化输出
-     * @param title 提示标题
      * @param msg 提示内容
      */
-    public static void showInfoMessage(String title, String msg) {
+    public static void showInfoMessage(String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         Window window = alert.getDialogPane().getScene().getWindow();
         window.setOnCloseRequest((event) -> {
             window.hide();
         });
-        alert.setTitle(title);
+        alert.setTitle("Multiple Database Utilization Tools 提示");
         alert.setHeaderText("");
         alert.setContentText(msg);
         alert.showAndWait();

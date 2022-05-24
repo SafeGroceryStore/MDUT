@@ -152,7 +152,7 @@ public class RedisController implements Initializable {
                     MessageUtil.showExceptionMessage(e, e.getMessage());
                 }
             } else {
-                MessageUtil.showErrorMessage("错误", "请输入vps地址和端口");
+                MessageUtil.showErrorMessage( "请输入vps地址和端口");
             }
         };
         Thread workThrad = new Thread(runner);
@@ -162,7 +162,7 @@ public class RedisController implements Initializable {
     @FXML
     void redisClear(ActionEvent event) {
         Runnable runner = () -> {
-            this.redisDao.clearn();
+            this.redisDao.clean();
         };
         Thread workThrad = new Thread(runner);
         workThrad.start();
@@ -174,7 +174,7 @@ public class RedisController implements Initializable {
             String command = this.redisCommandTextField.getText();
             String code = redisEncodeCombox.getValue();
             if (code == null) {
-                MessageUtil.showErrorMessage("错误", "请选择编码类型");
+                MessageUtil.showErrorMessage( "请选择编码类型");
                 return;
             }
             String result = this.redisDao.eval(command, code);

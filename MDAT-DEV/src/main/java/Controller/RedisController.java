@@ -101,7 +101,6 @@ public class RedisController implements Initializable {
                 Platform.runLater(() -> {
                     // 获取信息输出
                     this.redisDao.getInfo();
-
                     redisLogTextFArea.appendText(Utils.log("连接成功！"));
                 });
             } catch (Exception e) {
@@ -149,10 +148,16 @@ public class RedisController implements Initializable {
                 try {
                     this.redisDao.rogue(vpsAddress, vpsPort, timeout);
                 } catch (Exception e) {
-                    MessageUtil.showExceptionMessage(e, e.getMessage());
+                    Platform.runLater(() -> {
+                        MessageUtil.showExceptionMessage(e, e.getMessage());
+                    });
+
                 }
             } else {
-                MessageUtil.showErrorMessage( "请输入vps地址和端口");
+                Platform.runLater(() -> {
+                    MessageUtil.showErrorMessage( "请输入vps地址和端口");
+                });
+
             }
         };
         Thread workThrad = new Thread(runner);
@@ -174,7 +179,9 @@ public class RedisController implements Initializable {
             String command = this.redisCommandTextField.getText();
             String code = redisEncodeCombox.getValue();
             if (code == null) {
-                MessageUtil.showErrorMessage( "请选择编码类型");
+                Platform.runLater(() -> {
+                    MessageUtil.showErrorMessage( "请选择编码类型");
+                });
                 return;
             }
             String result = this.redisDao.eval(command, code);

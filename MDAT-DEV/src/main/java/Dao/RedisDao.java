@@ -4,6 +4,7 @@ import Controller.RedisController;
 import Entity.ControllersFactory;
 import Util.MessageUtil;
 import Util.Utils;
+import javafx.application.Platform;
 import redis.clients.jedis.Jedis;
 import org.apache.commons.lang.StringUtils;
 import redis.clients.jedis.commands.ProtocolCommand;
@@ -52,32 +53,35 @@ public class RedisDao {
         }
     }
 
-    public void getConnection() throws SQLException {
+    public void getConnection() throws Exception{
         CONN = new Jedis(ip, port, timeout);
         if (password.length() != 0) {
             CONN.auth(password);
         }
 
+
+
     }
 
-    public void closeConnection() throws SQLException {
+    public void closeConnection() throws Exception {
         if (CONN != null) {
             CONN.close();
         }
     }
 
-    public void getInfo() {
+    public void getInfo() throws Exception{
         String info = CONN.info();
         dir = CONN.configGet("dir");
 
         List<String> dbfilename = CONN.configGet("dbfilename");
         String orginDir = StringUtils.join(dir, ": ");
         String orginDbfilename = StringUtils.join(dbfilename, ": ");
-        redisController.redisLogTextFArea.appendText(Utils.log(orginDir));
-        redisController.redisLogTextFArea.appendText(Utils.log(orginDbfilename));
-        redisController.redisLogTextFArea.appendText(Utils.log("4.X redis 可使用主从备份请注意查看版本信息"));
-
-        redisController.redisOutputTextFArea.setText(info);
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log(orginDir));
+            redisController.redisLogTextFArea.appendText(Utils.log(orginDbfilename));
+            redisController.redisLogTextFArea.appendText(Utils.log("4.x,5.x 可使用主从备份请注意查看版本信息"));
+            redisController.redisOutputTextFArea.setText(info);
+        });
     }
 
     public void redisavedb(String dir, String dbfilename) {

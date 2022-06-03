@@ -99,10 +99,10 @@ public class RedisController implements Initializable {
                 this.redisDao = new RedisDao(this.dataObj.getString("ipaddress"), this.dataObj.getString("port"), this.dataObj.getString("password"), this.dataObj.getString("timeout"));
                 this.redisDao.getConnection();
                 Platform.runLater(() -> {
-                    // 获取信息输出
-                    this.redisDao.getInfo();
                     redisLogTextFArea.appendText(Utils.log("连接成功！"));
                 });
+                // 获取信息输出
+                this.redisDao.getInfo();
             } catch (Exception e) {
                 Platform.runLater(() -> {
                     redisLogTextFArea.appendText(Utils.log("连接失败！"));

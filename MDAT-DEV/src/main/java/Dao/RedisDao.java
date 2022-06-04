@@ -85,7 +85,7 @@ public class RedisDao {
             redisController.redisLogTextFArea.appendText(Utils.log("当前系统: " + OS));
             redisController.redisLogTextFArea.appendText(Utils.log("当前系统位数: " + arch));
             redisController.redisLogTextFArea.appendText(Utils.log("当前 Redis 版本: " + redisVersion));
-            redisController.redisLogTextFArea.appendText(Utils.log("4.x,5.x 可使用主从同步请注意查看版本信息"));
+            redisController.redisLogTextFArea.appendText(Utils.log("4.x >= Version <= 5.0.5 可使用主从同步请注意查看版本信息"));
             redisController.redisOutputTextFArea.setText(info);
         });
     }

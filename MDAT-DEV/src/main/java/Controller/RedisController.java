@@ -98,11 +98,11 @@ public class RedisController implements Initializable {
             try {
                 this.redisDao = new RedisDao(this.dataObj.getString("ipaddress"), this.dataObj.getString("port"), this.dataObj.getString("password"), this.dataObj.getString("timeout"));
                 this.redisDao.getConnection();
+                this.redisDao.getInfo();
                 Platform.runLater(() -> {
                     redisLogTextFArea.appendText(Utils.log("连接成功！"));
                 });
                 // 获取信息输出
-                this.redisDao.getInfo();
             } catch (Exception e) {
                 Platform.runLater(() -> {
                     redisLogTextFArea.appendText(Utils.log("连接失败！"));
@@ -205,6 +205,7 @@ public class RedisController implements Initializable {
         );
         // 初始化下拉框
         redisEncodeCombox.setPromptText("UTF-8");
+        redisEncodeCombox.setValue("UTF-8");
         redisEncodeCombox.setItems(postgreSqlTypeCodeoptions);
     }
 }

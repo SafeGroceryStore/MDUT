@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -151,7 +152,8 @@ public class RedisController implements Initializable {
                     Platform.runLater(() -> {
                         MessageUtil.showExceptionMessage(e, e.getMessage());
                     });
-
+                }finally {
+                    RedisDao.CONN.slaveofNoOne();
                 }
             } else {
                 Platform.runLater(() -> {

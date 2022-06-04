@@ -61,9 +61,6 @@ public class RedisDao {
         if (password.length() != 0) {
             CONN.auth(password);
         }
-
-
-
     }
 
     public void closeConnection() throws Exception {

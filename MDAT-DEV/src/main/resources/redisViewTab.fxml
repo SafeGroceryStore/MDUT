@@ -127,16 +127,58 @@
                            <content>
                               <VBox prefHeight="200.0" prefWidth="100.0">
                                  <children>
+                                    <HBox alignment="CENTER" prefHeight="45.0" prefWidth="888.0">
+                                       <children>
+                                          <Label prefHeight="17.0" prefWidth="14.0" text="IP">
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                             <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                          <TextField fx:id="redisRevIPaddressTextField" prefHeight="25.0" prefWidth="169.0">
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                             <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                          <Label text="端口">
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                             <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                          <TextField fx:id="redisRevPortTextField" prefHeight="25.0" prefWidth="58.0">
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                             <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                          <Button fx:id="redisRevBtn" mnemonicParsing="false" onAction="#redisRev" prefHeight="25.0" prefWidth="70.0" text="Run">
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                             <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                       </children>
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                    </HBox>
                                     <TextArea fx:id="redisPublicKeyInput1" prefHeight="345.0" prefWidth="888.0" text="[root@VM-8-16-centos ~]# ncat -lvvp 9999&#10;Ncat: Version 7.91 ( https://nmap.org/ncat )&#10;Ncat: Listening on :::9999&#10;Ncat: Listening on 0.0.0.0:9999&#10;&#10;or&#10;&#10;[root@VM-8-16-centos ~]# nc -lvvp 9999&#10;Ncat: Version 7.50 ( https://nmap.org/ncat )&#10;Ncat: Listening on :::9999&#10;Ncat: Listening on 0.0.0.0:9999&#10;">
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
                                     </TextArea>
-                                    <Button fx:id="redisReplaceSSHKeyBtn1" maxWidth="Infinity" mnemonicParsing="false" onAction="#redisReplaceSSHKey" prefHeight="27.0" prefWidth="890.0" text="Run">
-                                       <VBox.margin>
-                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                       </VBox.margin>
-                                    </Button>
                                  </children>
                               </VBox>
                            </content>

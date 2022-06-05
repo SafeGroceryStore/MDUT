@@ -15,9 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.json.JSONObject;
-
 import java.net.URL;
-import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -66,6 +64,15 @@ public class RedisController implements Initializable {
 
     @FXML
     private TextField redisVPSTimeOutTextField;
+
+    @FXML
+    private Button redisRevBtn;
+
+    @FXML
+    private TextField redisRevIPaddressTextField;
+
+    @FXML
+    private TextField redisRevPortTextField;
 
     /**
      * 存储从 PostgreSqlDao 传递过来的 postgreSqlDao 使用
@@ -209,5 +216,10 @@ public class RedisController implements Initializable {
         redisEncodeCombox.setPromptText("UTF-8");
         redisEncodeCombox.setValue("UTF-8");
         redisEncodeCombox.setItems(postgreSqlTypeCodeoptions);
+    }
+
+    @FXML
+    void redisRev(ActionEvent event) {
+
     }
 }

@@ -51,10 +51,10 @@ public class RedisDao {
         if (password.length() != 0) {
             CONN.auth(password);
         }
+        CONN.info();
         if (CONN != null) {
             CONN.close();
         }
-        CONN.info();
     }
 
     public void getConnection() throws Exception{

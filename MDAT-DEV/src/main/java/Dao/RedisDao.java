@@ -54,6 +54,7 @@ public class RedisDao {
         if (CONN != null) {
             CONN.close();
         }
+        CONN.info();
     }
 
     public void getConnection() throws Exception{

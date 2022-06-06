@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="771.0" prefWidth="898.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.RedisController">
+<VBox prefHeight="771.0" prefWidth="898.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.RedisController">
    <children>
       <TitledPane animated="false" collapsible="false" prefWidth="790.0" text="功能选择">
          <content>
@@ -137,7 +137,7 @@
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </HBox.margin>
                                           </Label>
-                                          <TextField fx:id="redisRevIPaddressTextField" prefHeight="25.0" prefWidth="169.0">
+                                          <TextField fx:id="redisRevIPTextField" prefHeight="25.0" prefWidth="169.0">
                                              <opaqueInsets>
                                                 <Insets />
                                              </opaqueInsets>

@@ -132,7 +132,7 @@ public class Utils {
      * @return
      */
     public static String getCurrentVersion() {
-        return "v2.1.0";
+        return "v2.1.1";
     }
 
     /**

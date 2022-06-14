@@ -106,7 +106,7 @@
                               <TextField fx:id="TextField_FilePath" maxWidth="Infinity" prefHeight="27.0" prefWidth="480.0" HBox.hgrow="ALWAYS" />
                               <Button fx:id="Button_ReadPath" mnemonicParsing="false" onAction="#ReadPath" text="读取" />
                               <Button fx:id="Button_Return" mnemonicParsing="false" onAction="#Return" text="返回上一层" />
-                              <ComboBox fx:id="ComboBox_OracleFileTypeCode" prefHeight="27.0" prefWidth="103.0" promptText="编码" />
+                              <ComboBox fx:id="ComboBox_OracleFileTypeCode" promptText="编码" />
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />

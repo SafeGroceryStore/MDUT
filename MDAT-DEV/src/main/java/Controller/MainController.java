@@ -260,6 +260,7 @@ public class MainController implements Initializable {
             Parent root = FXMLLoader.load(getClass().getResource("/setting.fxml"));
             Stage primaryStage = new Stage();
             primaryStage.setTitle("设置");
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             primaryStage.setScene(new Scene(root));
             primaryStage.setResizable(false);
             primaryStage.show();
@@ -324,6 +325,7 @@ public class MainController implements Initializable {
             Parent root = FXMLLoader.load(getClass().getResource("/addAndEdit.fxml"));
             Stage primaryStage = new Stage();
             primaryStage.setTitle("添加");
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             primaryStage.setScene(new Scene(root));
             primaryStage.setResizable(false);
             primaryStage.show();
@@ -353,6 +355,7 @@ public class MainController implements Initializable {
 
             Scene scene = new Scene(sceneMain);
             st.setScene(scene);
+            st.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             st.setResizable(false);
             st.setTitle("编辑");
             st.show();
@@ -719,10 +722,11 @@ public class MainController implements Initializable {
     void createTunnelAction(ActionEvent event) {
         try {
             Stage st = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/tunnel.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/tunnelGeneration.fxml"));
             Parent sceneMain = loader.load();
             Scene scene = new Scene(sceneMain);
             st.setScene(scene);
+            st.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             st.setResizable(false);
             st.setTitle("HTTP 通道");
             st.show();

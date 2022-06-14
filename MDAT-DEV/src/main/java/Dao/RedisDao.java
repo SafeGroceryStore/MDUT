@@ -77,7 +77,7 @@ public class RedisDao {
         redisVersion = Utils.regularMatch("redis_version:(.*)", info);
         arch = Utils.regularMatch("arch_bits:(.*)", info);
 
-        List<String> dbfilename = CONN.configGet("dbfilename");
+        //List<String> dbfilename = CONN.configGet("dbfilename");
         //String orginDir = StringUtils.join(dir, ": ");
         //String orginDbfilename = StringUtils.join(dbfilename, ": ");
         Platform.runLater(() -> {
@@ -118,27 +118,29 @@ public class RedisDao {
         List<String> crondirs = Arrays.asList("/var/spool/cron/", "/var/spool/cron/crontab/", "/var/spool/cron/crontabs/");
         for (String dir : crondirs) {
             try {
+                String randomString = Utils.getRandomString();
                 CONN.set("xxcron", "\n\n" + cronText + "\n\n");
                 CONN.configSet("dir", dir);
-                CONN.configSet("dbfilename", "root");
+                CONN.configSet("dbfilename", randomString);
                 CONN.save();
                 Platform.runLater(() -> {
-                    redisController.redisLogTextFArea.appendText(Utils.log(dir + "root 写入 CRON 计划任务成功！"));
+                    redisController.redisLogTextFArea.appendText(Utils.log(dir + randomString  + " 写入 CRON " +
+                            "计划任务成功！"));
                 });
                 break;
             } catch (Exception e) {
                 Platform.runLater(() -> {
-                    redisController.redisLogTextFArea.appendText(Utils.log("crontab unknown error"));
+                    redisController.redisLogTextFArea.appendText(Utils.log(" 写入 CRON 计划任务失败！"));
                     redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
                 });
             }
         }
     }
 
-    public void sshkey(String sshRsa) {
+    public void sshkey(String sshRsa,String Path) {
         try {
             CONN.set("xxssh", "\n\n" + sshRsa + "\n\n");
-            CONN.configSet("dir", "/root/.ssh/");
+            CONN.configSet("dir", Path);
             CONN.configSet("dbfilename", "authorized_keys");
             CONN.save();
             Platform.runLater(() -> {

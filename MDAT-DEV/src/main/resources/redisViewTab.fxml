@@ -11,7 +11,6 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <VBox prefHeight="771.0" prefWidth="898.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.RedisController">
    <children>
@@ -110,13 +109,20 @@
                            <content>
                               <VBox prefHeight="200.0" prefWidth="100.0">
                                  <children>
+                                    <Label text="路径">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextField fx:id="redisKeyPathInput" text="/root/.ssh/">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </TextField>
                                     <Label text="公钥">
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
                                        </VBox.margin>
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
                                     </Label>
                                     <TextArea fx:id="redisPublicKeyInput" prefHeight="345.0" prefWidth="888.0" text="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDk4MhTlzMjBPTrN199hfxwFywjuqwv0d7PTjrC7Al8q0C/LIyZvVnqGmcTNKTeer9ch9ST2SmPGBni7EuvPEzAXB9z4deDRy1d8Fn8sDqC2HJ/xiwKNWjmmCxmbngUHrXBSAC8dGYrS3yZvdvKY6IUpesEnDh7duepf1Y3l7lEwSjK469zD07RhnhbAAIYbBgV5PY9F1N7AjzQbXpSRcw5FykbDMKKr0aulE4G6y0EqH9X3ToXPKWJNrg7WMyY6+HM0IXAfHp8RCm3pR2y973jH7ATuWVJWsCl311SHd2ozKLopvTpOfJJp35qQir967KKKUPAirTQD8SaAXMZFi+7 root@localhost.localdomain" wrapText="true">
                                        <VBox.margin>
@@ -124,9 +130,6 @@
                                        </VBox.margin>
                                     </TextArea>
                                     <Label text="私钥(空密码)">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>

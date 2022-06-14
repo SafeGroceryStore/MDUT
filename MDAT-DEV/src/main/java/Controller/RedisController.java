@@ -75,6 +75,10 @@ public class RedisController implements Initializable {
     @FXML
     private TextField redisRevPortTextField;
 
+
+    @FXML
+    private TextField redisKeyPathInput;
+
     /**
      * 存储从 PostgreSqlDao 传递过来的 postgreSqlDao 使用
      */
@@ -141,7 +145,7 @@ public class RedisController implements Initializable {
     @FXML
     void redisReplaceSSHKey(ActionEvent event) {
         Runnable runner = () -> {
-            this.redisDao.sshkey(redisPublicKeyInput.getText());
+            this.redisDao.sshkey(redisPublicKeyInput.getText(),redisKeyPathInput.getText());
         };
         Thread workThrad = new Thread(runner);
         workThrad.start();

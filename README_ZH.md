@@ -44,8 +44,9 @@ Multiple Database Utilization Tools 是 404Team 星链计划2.0 中的一环，�
 Multiple Database Utilization Tools 有任何疑问又或是想要找小伙伴交流，可以参考星链计划的加群方式。
 https://github.com/knownsec/404StarLink2.0-Galaxy#community
 
-## Stargazers
-[![Stargazers over time](https://starchart.cc/SafeGroceryStore/MDUT.svg)](https://starchart.cc/SafeGroceryStore/MDUT.svg)
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/SafeGroceryStore/MDUT.svg)](https://starchart.cc/SafeGroceryStore/MDUT)
+
 
 
 ## 法律

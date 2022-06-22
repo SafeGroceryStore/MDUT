@@ -44,8 +44,8 @@ Multiple Database Utilization Tools is part of the 404Team Starlink Project 2.0.
 If you have any questions about Multiple Database Utilization Tools, or if you want to talk to a small partner, you can refer to the Starlink Project's way of adding groups.
 https://github.com/knownsec/404StarLink2.0-Galaxy#community
 
-## Stargazers
-[![Stargazers over time](https://starchart.cc/SafeGroceryStore/MDUT.svg)](https://starchart.cc/SafeGroceryStore/MDUT.svg)
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/SafeGroceryStore/MDUT.svg)](https://starchart.cc/SafeGroceryStore/MDUT)
 
 
 ## Law

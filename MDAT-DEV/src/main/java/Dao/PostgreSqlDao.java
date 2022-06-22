@@ -6,6 +6,7 @@ import Util.MessageUtil;
 import Util.PostgreSqlUtil;
 import Util.Utils;
 import Util.YamlConfigs;
+import javafx.application.Platform;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -103,14 +104,20 @@ public class PostgreSqlDao {
                     String libSql = MessageFormat.format(PostgreSqlUtil.libSql, libFile);
                     PreparedStatement st = CONN.prepareStatement(libSql);
                     st.executeQuery();
-                    postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("版本 <=8.2 创建 system 函数成功," +
-                            "使用 copy 获取回显,无法回显请 OOB"));
+                    Platform.runLater(() -> {
+                        postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("版本 <=8.2 创建 system 函数成功," +
+                                "使用 copy 获取回显,无法回显请 OOB"));
+                    });
                 } catch (Exception e) {
-                    MessageUtil.showExceptionMessage(e, e.getMessage());
+                    Platform.runLater(() -> {
+                        MessageUtil.showExceptionMessage(e, e.getMessage());
+                    });
                 }
             }
         } catch (Exception e) {
-            postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log(e.getMessage()));
+            Platform.runLater(() -> {
+                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log(e.getMessage()));
+            });
         }
     }
 
@@ -132,7 +139,9 @@ public class PostgreSqlDao {
             }
 
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
     }
 
@@ -168,8 +177,10 @@ public class PostgreSqlDao {
             st3.execute();
             postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("UDF 库写入成功,请尝试执行系统命令"));
         } catch (Exception e) {
-            postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("错误！" + e.getMessage()));
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
+
         }
     }
 
@@ -202,7 +213,9 @@ public class PostgreSqlDao {
             return resultStr.toString();
 
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         } finally {
             String tmp1Sql = PostgreSqlUtil.dropTempTableSql;
             PreparedStatement st4 = CONN.prepareStatement(tmp1Sql);
@@ -220,7 +233,9 @@ public class PostgreSqlDao {
                 return new String(rs.getBytes(1), code);
             }
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
         return "";
     }
@@ -260,7 +275,9 @@ public class PostgreSqlDao {
             return resultStr.toString();
 
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
         return null;
     }
@@ -286,9 +303,13 @@ public class PostgreSqlDao {
             PreparedStatement st = CONN.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
 
-            postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("清除函数"));
+            Platform.runLater(() -> {
+                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("清除函数"));
+            });
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
 
     }
@@ -324,9 +345,11 @@ public class PostgreSqlDao {
                     systemVersionNum = "64";
                 }
 
+                Platform.runLater(() -> {
+                    postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log(String.format("预判服务器类型：%s 服务器版本: %s", systemplatform, systemVersionNum)));
+                    postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log(String.format("PostgreSql 版本：%s", version)));
+                });
 
-                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log(String.format("预判服务器类型：%s 服务器版本: %s", systemplatform, systemVersionNum)));
-                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log(String.format("PostgreSql 版本：%s", version)));
             }
 
             // 获取具体版本
@@ -355,21 +378,31 @@ public class PostgreSqlDao {
 
             if (versionNumber <= 8.2) {
                 evalType = "low";
-                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("版本小于 8.2 可直接创建 system 函数"));
+                Platform.runLater(() -> {
+                    postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("版本小于 8.2 可直接创建 system 函数"));
+                });
             } else if (versionNumber > 8.2 && versionNumber < 9.3) {
                 evalType = "udf";
                 // 设置本地文件目录
                 String path = Utils.getSelfPath() + File.separator + "Plugins" + File.separator + "PostgreSql" + File.separator + versionNumber.toString() + "_" + systemplatform + "_" + systemVersionNum + "_hex.txt";
                 pluginFile = Utils.readFile(path).replace("\n", "");
-                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("版本可以尝试进行 UDF 提权"));
+                Platform.runLater(() -> {
+                    postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("版本可以尝试进行 UDF 提权"));
+                });
             } else if (versionNumber >= 9.3) {
                 evalType = "cve";
-                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("9.3 以上版本默认使用 CVE-2019-9193"));
+                Platform.runLater(() -> {
+                    postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("9.3 以上版本默认使用 CVE-2019-9193"));
+                });
             } else {
-                postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("该版本尚未编译UDF或无法提权"));
+                Platform.runLater(() -> {
+                    postgreSqlController.postgreSqlLogTextArea.appendText(Utils.log("该版本尚未编译UDF或无法提权"));
+                });
             }
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
     }
 }

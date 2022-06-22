@@ -107,6 +107,9 @@ public class PostgreSqlController implements Initializable {
                         try {
                             this.postgreDao.closeConnection();
                         } catch (Exception ex) {
+                            Platform.runLater(() -> {
+                                MessageUtil.showExceptionMessage(e, e.getMessage());
+                            });
                         }
                     });
                 }
@@ -192,7 +195,9 @@ public class PostgreSqlController implements Initializable {
                     postgreSqlOutputTextArea.setText(result);
                 }
             } catch (Exception e) {
-                MessageUtil.showExceptionMessage(e, e.getMessage());
+                Platform.runLater(() -> {
+                    MessageUtil.showExceptionMessage(e, e.getMessage());
+                });
             }
         };
         Thread workThrad = new Thread(runner);

@@ -6,6 +6,7 @@ package Util;
  */
 import org.apache.commons.codec.binary.Base64;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class Base64XOR {
 
@@ -114,11 +115,4 @@ public class Base64XOR {
         return out;
     }
 
-
-
-
-    public static void main(String[] args) throws Exception {
-        System.out.println(decode("dl9e","GmmKk79X"));
-        //System.out.println(base64Decode1("MTIz"));
-    }
 }

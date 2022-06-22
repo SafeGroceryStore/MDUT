@@ -14,6 +14,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.sql.DriverManager;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 工具类 - Exception 全部往上层抛
@@ -130,7 +132,7 @@ public class Utils {
      * @return
      */
     public static String getCurrentVersion() {
-        return "v2.1.0";
+        return "v2.1.1";
     }
 
     /**
@@ -661,4 +663,12 @@ public class Utils {
         }
     }
 
+    public static String regularMatch(String regex, String text){
+        Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(text);
+        if(matcher.find()){
+            return matcher.group(1);
+        }
+        return "Error!";
+    }
 }

@@ -138,6 +138,21 @@ public class OracleController implements Initializable {
     @FXML
     private TableColumn<?, ?> fileIconCol;
 
+    @FXML
+    private Button singleUploadBtn;
+
+    @FXML
+    private Button browseFileBth;
+
+    @FXML
+    private TextField remoteFileTextField;
+
+    @FXML
+    private TextField localFileTextField;
+
+    //@FXML
+    //private Button singleUploadBtn;
+
 
     /**
      * 存储从 MssqlDao 传递过来的 mssqlDao 使用
@@ -815,4 +830,56 @@ public class OracleController implements Initializable {
         Thread workThrad = new Thread(runnable);
         workThrad.start();
     }
+
+    @FXML
+    void browseFile(ActionEvent event) {
+        Stage stage = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(stage);
+        if(file != null){
+            localFileTextField.setText(file.getAbsolutePath());
+        }
+    }
+
+    @FXML
+    void singleUpload(ActionEvent event) {
+        String localFile = localFileTextField.getText();
+        String remoteFile = remoteFileTextField.getText();
+        if("".equals(remoteFile)){
+            oracleLogTextArea.appendText(Utils.log("当前目录不存在！"));
+            return;
+        }
+        Runnable runnable = () -> {
+            Platform.runLater(() ->{
+                oracleLogTextArea.appendText(Utils.log("正在上传请稍等..."));
+            });
+            String res = null;
+            res = Utils.bytes2HexString(Utils.toByteArray(localFile));
+            if("false".equals(this.dataObj.getString("ishttp"))) {
+                this.oracleDao.upload(remoteFile,res);
+            }else {
+                this.oracleHttpDao.upload(remoteFile,res);
+            }
+        };
+        Thread workThrad = new Thread(runnable);
+        workThrad.start();
+    }
+
+
+    //@FXML
+    //void singleUploadAction(ActionEvent event) {
+    //    Parent root = null;
+    //    try {
+    //        root = FXMLLoader.load(getClass().getResource("/oracleSingleUploadViewTab.fxml"));
+    //        Stage primaryStage = new Stage();
+    //        primaryStage.setTitle("添加");
+    //        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
+    //        primaryStage.setScene(new Scene(root));
+    //        primaryStage.setResizable(false);
+    //        primaryStage.show();
+    //    } catch (IOException e) {
+    //        MessageUtil.showExceptionMessage(e, e.getMessage());
+    //    }
+    //
+    //}
 }

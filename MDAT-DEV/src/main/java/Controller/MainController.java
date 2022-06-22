@@ -160,7 +160,17 @@ public class MainController implements Initializable {
         Map<String, Object> yamlToMap = configs.getYamlToMap("config.yaml");
         String Status = (String) configs.getValue("Global.StartWarn",yamlToMap);
         if ("true".equals(Status)) {
-            MessageUtil.showErrorMessage( "特别提醒，使用该工具必须遵守国家有关的政策和法律，如刑法、国家安全法、保密法、计算机信息系统安全保护条例等，保护国家利益，保护国家安全，对于违法使用该工具而引起的一切责任，由用户负全部责任。一旦您使用了本程序，将视为您已清楚了解上列全部声明并且完全同意。本程序仅供合法的渗透测试以及爱好者参考学习。");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("特别提示");
+            alert.setHeaderText("用户协议");
+            alert.setContentText("使用该工具必须遵守国家有关的政策和法律，如刑法、国家安全法、保密法、计算机信息系统安全保护条例等，保护国家利益，保护国家安全，对于违法使用该工具而引起的一切责任，由用户负全部责任。一旦您使用了本程序，将视为您已清楚了解上列全部声明并且完全同意。本程序仅供合法的渗透测试以及爱好者参考学习。");
+            ButtonType buttonTypeAgree = new ButtonType("同意");
+            ButtonType buttonTypeCancel = new ButtonType("不同意", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alert.getButtonTypes().setAll(buttonTypeAgree,buttonTypeCancel);
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.get() != buttonTypeAgree){
+                System.exit(0);
+            }
         }
     }
 
@@ -214,12 +224,12 @@ public class MainController implements Initializable {
                     "com.mysql.cj.jdbc.Driver",
                     "jdbc:mysql://{0}:{1}/{2}?connectTimeout={3}&socketTimeout={3}&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true",
                     path + File.separator + "Driver" + File.separator + "mssql.jar",
-                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
-                    "jdbc:sqlserver://{0}:{1};databaseName={2};loginTimeout={3};" +
-                            "cancelQueryTimeout={3};queryTimeout={3};" +
-                            "lockTimeout={3}",
-                    //"net.sourceforge.jtds.jdbc.Driver",
-                    // "jdbc:jtds:sqlserver://{0}:{1}/{2};loginTimeout={3};socketTimeout={3}",
+                    //"com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    //"jdbc:sqlserver://{0}:{1};databaseName={2};loginTimeout={3};" +
+                    //        "cancelQueryTimeout={3};queryTimeout={3};" +
+                    //        "lockTimeout={3}",
+                    "net.sourceforge.jtds.jdbc.Driver",
+                    "jdbc:jtds:sqlserver://{0}:{1}/{2};loginTimeout={3};socketTimeout={3}",
                     path + File.separator + "Driver" + File.separator + "oracle.jar",
                     "oracle.jdbc.driver.OracleDriver",
                     "jdbc:oracle:thin:@{0}:{1}:{2}",
@@ -250,6 +260,7 @@ public class MainController implements Initializable {
             Parent root = FXMLLoader.load(getClass().getResource("/setting.fxml"));
             Stage primaryStage = new Stage();
             primaryStage.setTitle("设置");
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             primaryStage.setScene(new Scene(root));
             primaryStage.setResizable(false);
             primaryStage.show();
@@ -314,6 +325,7 @@ public class MainController implements Initializable {
             Parent root = FXMLLoader.load(getClass().getResource("/addAndEdit.fxml"));
             Stage primaryStage = new Stage();
             primaryStage.setTitle("添加");
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             primaryStage.setScene(new Scene(root));
             primaryStage.setResizable(false);
             primaryStage.show();
@@ -343,6 +355,7 @@ public class MainController implements Initializable {
 
             Scene scene = new Scene(sceneMain);
             st.setScene(scene);
+            st.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             st.setResizable(false);
             st.setTitle("编辑");
             st.show();
@@ -709,10 +722,11 @@ public class MainController implements Initializable {
     void createTunnelAction(ActionEvent event) {
         try {
             Stage st = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/tunnel.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/tunnelGeneration.fxml"));
             Parent sceneMain = loader.load();
             Scene scene = new Scene(sceneMain);
             st.setScene(scene);
+            st.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
             st.setResizable(false);
             st.setTitle("HTTP 通道");
             st.show();

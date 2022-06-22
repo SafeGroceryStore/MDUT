@@ -106,7 +106,7 @@
                               <TextField fx:id="TextField_FilePath" maxWidth="Infinity" prefHeight="27.0" prefWidth="480.0" HBox.hgrow="ALWAYS" />
                               <Button fx:id="Button_ReadPath" mnemonicParsing="false" onAction="#ReadPath" text="读取" />
                               <Button fx:id="Button_Return" mnemonicParsing="false" onAction="#Return" text="返回上一层" />
-                              <ComboBox fx:id="ComboBox_OracleFileTypeCode" prefHeight="27.0" prefWidth="103.0" promptText="编码" />
+                              <ComboBox fx:id="ComboBox_OracleFileTypeCode" promptText="编码" />
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
@@ -147,6 +147,65 @@
                   </VBox>
                </content>
           </Tab>
+            <Tab text="文件上传">
+               <content>
+                  <VBox prefHeight="476.0" prefWidth="788.0">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                     <children>
+                        <TitledPane animated="false" collapsible="false" prefHeight="87.0" prefWidth="965.0" text="文件信息">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="5.0" />
+                           </padding>
+                           <content>
+                              <HBox prefHeight="101.0" prefWidth="963.0" spacing="8.0">
+                                 <children>
+                                    <Label text="本地文件">
+                                       <HBox.margin>
+                                          <Insets top="3.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <TextField fx:id="localFileTextField" maxWidth="Infinity" prefHeight="27.0" prefWidth="329.0" HBox.hgrow="ALWAYS">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </TextField>
+                                    <Button fx:id="browseFileBth" mnemonicParsing="false" onAction="#browseFile" prefHeight="27.0" prefWidth="86.0" text="浏览" />
+                                    <Label text="上传目录">
+                                       <HBox.margin>
+                                          <Insets top="3.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <TextField fx:id="remoteFileTextField" maxWidth="Infinity" prefHeight="27.0" prefWidth="269.0" promptText="eg: /tmp/test.txt" HBox.hgrow="ALWAYS">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </TextField>
+                                    <Button fx:id="singleUploadBtn" mnemonicParsing="false" onAction="#singleUpload" prefHeight="27.0" prefWidth="86.0" text="上传">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                           </content>
+                        </TitledPane>
+                        <TitledPane animated="false" collapsible="false" prefHeight="445.0" prefWidth="965.0" text="提示">
+                           <padding>
+                              <Insets bottom="5.0" />
+                           </padding>
+                           <content>
+                              <TextArea prefHeight="200.0" prefWidth="200.0" text="该功能是为了解决导入 FileUtil 成功之后，由于 Oracle 未知的权限错误原因导致的无法列目录导致上传功能无法正常使用而独立出来的一个单独功能。" />
+                           </content>
+                        </TitledPane>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
             <Tab text="反弹 Shell">
                <content>
                   <VBox prefHeight="476.0" prefWidth="788.0">
@@ -225,7 +284,7 @@
             <Insets bottom="5.0" />
          </padding>
          <content>
-            <TextArea fx:id="oracleLogTextArea" prefHeight="137.0" prefWidth="973.0" />
+            <TextArea fx:id="oracleLogTextArea" prefHeight="137.0" prefWidth="973.0" wrapText="true" />
          </content>
       </TitledPane>
    </children>

@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.mdut</groupId>
-    <artifactId>MDUT-Dev</artifactId>
-    <version>2.0.4-SNAPSHOT</version>
+    <artifactId>Multiple.Database.Utilization.Tools</artifactId>
+    <version>2.1.1</version>
 
     <build>
         <plugins>

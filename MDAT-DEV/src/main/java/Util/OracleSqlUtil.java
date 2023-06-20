@@ -15,7 +15,7 @@ public class OracleSqlUtil {
     public static String ShellUtilGRANT_JAVA_EXECSql = "begin dbms_java.grant_permission( 'PUBLIC', 'SYS:java.io.FilePermission', '<<ALL FILES>>', 'read,write,execute,delete' );end;";
     public static String ShellUtilGRANT_JAVA_EXEC2Sql = "begin dbms_java.grant_permission('PUBLIC','SYS:java.lang.RuntimePermission', '*', '');end;";
     public static String ShellUtilGRANT_JAVA_EXEC3Sql = "begin dbms_java.grant_permission('PUBLIC','SYS:java.net.SocketPermission', '*', 'accept, connect, listen, resolve');end;";
-    public static String ShellUtilCREATE_FUNCTIONSql = "create or replace function shellrun(methodName varchar2,params varchar2,encoding varchar2) return varchar2 as language java name 'ShellUtil.run(java.lang.String,java.lang.String,java.lang.String) return java.lang.String';";
+    public static String ShellUtilCREATE_FUNCTIONSql = "begin execute immediate 'create or replace function shellrun(methodName varchar2,params varchar2,encoding varchar2) return varchar2 as language java name ''ShellUtil.run(java.lang.String,java.lang.String,java.lang.String) return java.lang.String'';';end;";
     public static String FileUtilCREATE_SOURCESql = "DECLARE v_command VARCHAR2(32767);BEGIN v_command :='create or replace and compile java source named \"FileUtil\" as %s';EXECUTE IMMEDIATE v_command;END;";
     public static String FileUtilGRANT_JAVA_EXECSql = "begin dbms_java.grant_permission( 'PUBLIC', 'SYS:java.io.FilePermission', '<<ALL FILES>>', 'read,write,execute,delete' );end;";
     public static String FileUtilGRANT_JAVA_EXEC1Sql = "begin dbms_java.grant_permission('PUBLIC', 'SYS:java.util.PropertyPermission', '*', 'read,write' );end;";

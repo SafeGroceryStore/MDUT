@@ -63,7 +63,8 @@
 | Windows | `.exe` / `.zip` |
 | macOS (Intel) | `.dmg` / `.zip` |
 | macOS (Apple Silicon) | `.dmg` / `.zip` |
-| Linux | `.AppImage` / `.zip` |
+
+> 暂不支持 Linux。
 
 ## 技术栈
 

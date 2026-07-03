@@ -63,7 +63,8 @@ Download pre-built binaries from the [Releases](../../releases) page:
 | Windows | `.exe` / `.zip` |
 | macOS (Intel) | `.dmg` / `.zip` |
 | macOS (Apple Silicon) | `.dmg` / `.zip` |
-| Linux | `.AppImage` / `.zip` |
+
+> Linux is not supported yet.
 
 ## Tech Stack
 

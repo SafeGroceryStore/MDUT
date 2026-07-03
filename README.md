@@ -84,29 +84,19 @@ Download pre-built binaries from the [Releases](../../releases) page:
 - [Node.js 20+](https://nodejs.org/)
 - [Wails CLI](https://wails.io/docs/gettingstarted/installation)
 
-### Dev Mode
-
-```bash
-wails dev
-```
-
-### Production Build
-
-```bash
-# Current platform
-wails build
-
-# Cross-platform build with version
-./scripts/build.sh all -v v3.0.0
-```
-
 ## Thanks
 
 [j1anFen](https://jianfensec.com/) / [冰蝎](https://github.com/rebeyond/Behinder) / [ODAT](https://github.com/quentinhardy/odat) / [MSDAT](https://github.com/quentinhardy/msdat) / SQLTOOLS - 深度撞击 / [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) / [WarSQLKit](https://github.com/mindspoof/MSSQL-Fileless-Rootkit-WarSQLKit)
 
-## Stargazers over time
+## Star History
 
-[![Stargazers over time](https://starchart.cc/SafeGroceryStore/MDUT.svg)](https://starchart.cc/SafeGroceryStore/MDUT)
+<a href="https://www.star-history.com/?repos=SafeGroceryStore%2FMDUT&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left" />
+ </picture>
+</a>
 
 ## Disclaimer
 

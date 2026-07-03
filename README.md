@@ -91,7 +91,7 @@ Download pre-built binaries from the [Releases](../../releases) page:
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left)](https://www.star-history.com/?repos=SafetGroceryStore%2FMDUT&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/svg?repos=SafeGroceryStore/MDUT&type=Date)](https://star-history.com/#SafeGroceryStore/MDUT&Date)
 
 ## Disclaimer
 

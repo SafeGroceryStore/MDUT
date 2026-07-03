@@ -1,5 +1,45 @@
 # 更新日志
-> 有空会补补BUG、添添新功能。
+
+## 2025/07/04 - `v3.0.0-beta.1`
+### 核心
+* 项目使用 Go + Wails v2 + React/TypeScript 全面重写
+* 所有数据库驱动替换为纯 Go 实现，零 CGO 依赖
+* 单二进制文件发布，内嵌前端资源，无需额外运行环境
+* 支持 Windows / macOS (Intel + Apple Silicon) / Linux 全平台
+* 全新现代化 UI（shadcn/ui + Tailwind CSS v4，暗色/亮色主题）
+* 内置 Monaco Editor SQL 查询编辑器
+* 中文/英文国际化支持（i18next）
+* 全数据库类型支持 SOCKS5 代理穿透
+* 本地 SQLite 持久化存储连接配置
+
+### MySQL
+* 支持 UDF 提权与命令执行
+* 文件管理器
+* 反弹 Shell
+* Shellcode 执行
+* SOCKS5 正向代理
+
+### MSSQL
+* 支持 xp_cmdshell、OLE Automation、Agent Job 三种执行策略
+* 文件管理器
+* 环境探测与一键部署
+
+### PostgreSQL
+* 支持 UDF 提权与命令执行
+* 文件管理器
+
+### Oracle
+* 支持 Java Source / Scheduler 两种执行策略
+* 文件管理器
+* 反弹 Shell
+* SOCKS5 正向代理
+
+### Redis
+* 支持 Module 部署（Rogue Server）
+* 命令执行
+* 文件管理器（RDB 写入）
+
+---
 
 ## 2022/05/24 - `v2.1.1`
 ### 核心

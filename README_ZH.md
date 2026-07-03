@@ -1,56 +1,113 @@
-![](https://i.loli.net/2021/05/10/bX6FP4shupnBoDJ.png)
-# MDUT
-[![Author](https://img.shields.io/badge/author-Ch1ng-red.svg?style=flat-square)](https://github.com/ch1ngg)
-[![Author](https://img.shields.io/badge/author-j1anFen-red.svg?style=flat-square)](https://github.com/j1anFen)
-[![Stargazers](https://img.shields.io/github/stars/SafeGroceryStore/MDUT.svg?style=flat-square)](https://github.com/SafeGroceryStore/MDUT/stargazers)
-[![Fork](https://img.shields.io/github/forks/SafeGroceryStore/MDUT.svg?style=flat-square)](https://github.com/SafeGroceryStore/MDUT/ork)
+<div align="center">
+
+<img src="./build/appicon.png" width="200" />
+
+# MDUT — Multiple Database Utilization Tools
+
+跨平台桌面数据库利用与管理工具
+
+[![Go](https://img.shields.io/badge/Go-1.25%2B-blue)](https://golang.org)
+[![Wails](https://img.shields.io/badge/Wails-v2.12-ff4d4d)](https://wails.io)
+[![React](https://img.shields.io/badge/React-18.3-61dafb)](https://react.dev)
 [![License](https://img.shields.io/github/license/SafeGroceryStore/MDUT.svg?style=flat-square)](https://github.com/SafeGroceryStore/MDUT/blob/main/LICENSE)
+[![Stargazers](https://img.shields.io/github/stars/SafeGroceryStore/MDUT.svg?style=flat-square)](https://github.com/SafeGroceryStore/MDUT/stargazers)
 
-MDUT 全称 Multiple Database Utilization Tools，是一款中文的数据库跨平台利用工具，集合了多种主流的数据库类型。基于前人 SQLTOOLS 的基础开发了这套程序(向 SQLTOOLS 致敬)，旨在将常见的数据库利用手段集合在一个程序中，打破各种数据库利用工具需要各种环境导致使用相当不便的隔阂。此外工具以 JAVAFx 作为 GUI 操作界面，界面美观。同时程序还支持多数据库同时操作，每种数据库都相互独立，极大方便了网络安全工作者的使用。
+</div>
 
-[English](./README.md) / [文档](https://www.yuque.com/u21224612/nezuig) / [更新日志](./CHANGELOG.md)
-## 截图
-![image.png](https://i.loli.net/2021/05/11/c1M6YqZNAOnjmfp.png)
+---
 
-## 目录结构
+[English](./README.md) / [更新日志](./CHANGELOG.md)
+
+## 简介
+
+**MDUT**（Multiple Database Utilization Tools）是一款跨平台桌面数据库管理与利用工具，基于 **Go + Wails v2 + React/TypeScript** 全新重写。支持多种主流数据库的图形化管理，并集成高级利用功能模块，专为授权安全测试场景设计。
+
+- 🖥️ **纯 Go 驱动** — 所有数据库驱动均为纯 Go 实现，零 CGO，支持单二进制交叉编译
+- 🔒 **零依赖运行** — 内置前端资源，单文件即可运行
+- 🌐 **代理支持** — 全数据库类型支持 SOCKS5 代理穿透
+- 🎨 **现代化 UI** — 基于 React 18 + Tailwind CSS v4 + shadcn/ui 的暗色/亮色双主题
+- 🌍 **多语言** — 内置中文/英文国际化支持
+- 📝 **SQL 编辑器** — Monaco Editor，支持语法高亮和多结果集
+
+## 支持的数据库
+
+- **MySQL** 5.5+ / 8.0+（含 MariaDB）
+- **Microsoft SQL Server** 2005+
+- **PostgreSQL** 8.2+
+- **Oracle** 11g+
+- **Redis** 4.0+
+
+## 功能特性
+
+| 功能 | MySQL | MSSQL | PostgreSQL | Oracle | Redis |
+|------|:-----:|:-----:|:----------:|:------:|:-----:|
+| 数据库连接与管理 | ✅ | ✅ | ✅ | ✅ | ✅ |
+| SQL 查询编辑器（Monaco） | ✅ | ✅ | ✅ | ✅ | — |
+| 数据表浏览与编辑 | ✅ | ✅ | ✅ | ✅ | — |
+| 数据库结构查看 | ✅ | ✅ | ✅ | ✅ | — |
+| 命令执行（UDF/CLR/Java） | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 文件管理器 | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 反弹 Shell | ✅ | — | — | ✅ | — |
+| Shellcode 执行 | ✅ | — | — | — | — |
+| SOCKS5 正向代理 | ✅ | — | — | ✅ | — |
+| RDB 写入（Redis 专属） | — | — | — | — | ✅ |
+
+> **MSSQL** 当前支持 xp_cmdshell、OLE Automation、Agent Job 三种执行策略。
+
+## 下载
+
+从 [Releases](../../releases) 页面下载对应平台的安装包：
+
+| 平台 | 格式 |
+|------|------|
+| Windows | `.exe` / `.zip` |
+| macOS (Intel) | `.dmg` / `.zip` |
+| macOS (Apple Silicon) | `.dmg` / `.zip` |
+| Linux | `.AppImage` / `.zip` |
+
+## 技术栈
+
+| 层级 | 技术 |
+|------|------|
+| 后端 | Go 1.25, Wails v2.12 |
+| 前端 | React 18.3, TypeScript 5.7, Vite 5.4, Tailwind CSS v4, shadcn/ui |
+| 状态管理 | Zustand 5.0 |
+| 编辑器 | Monaco Editor |
+| 国际化 | i18next |
+| 本地存储 | SQLite（纯 Go） |
+
+## 开发
+
+### 前置要求
+
+- [Go 1.25+](https://golang.org/dl/)
+- [Node.js 20+](https://nodejs.org/)
+- [Wails CLI](https://wails.io/docs/gettingstarted/installation)
+
+### 开发模式
+
+```bash
+wails dev
 ```
-.
-├── CHANGELOG.md
-├── MDAT-DEV // MDUT 源码
-├── MDUTSqlKit
-│   └── MDATKit.zip // CLR 源码
-├── README.md
-├── README_ZH.md
-├── redis-cus-rogue.py // Redis 主从脚本
+
+### 生产构建
+
+```bash
+# 当前平台
+wails build
+
+# 全平台构建（指定版本）
+./scripts/build.sh all -v v3.0.0
 ```
-
-
-## TODO
-~~1. HTTP Tunnel~~
 
 ## 致谢
-[j1anFen](https://jianfensec.com/) / [冰蝎](https://github.com/rebeyond/Behinder) / [ODAT](https://github.com/quentinhardy/odat) / [MSDAT](https://github.com/quentinhardy/msdat) / SQLTOOLS - 深度撞击
- / [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) / [WarSQLKit](https://github.com/mindspoof/MSSQL-Fileless-Rootkit-WarSQLKit)
 
-## 随写
-发布 `v2.0` 之后后续更新速度会变慢，望谅解。但项目会一直更新下去，也希望各位也可以参与到项目里一起发光发热! :) Thanks all
-
-## 其它
-### 404StarLink 2.0 - Galaxy
-
-![](https://github.com/knownsec/404StarLink-Project/raw/master/logo.png)
-
-Multiple Database Utilization Tools 是 404Team 星链计划2.0 中的一环，如果对 
-Multiple Database Utilization Tools 有任何疑问又或是想要找小伙伴交流，可以参考星链计划的加群方式。
-https://github.com/knownsec/404StarLink2.0-Galaxy#community
+[j1anFen](https://jianfensec.com/) / [冰蝎](https://github.com/rebeyond/Behinder) / [ODAT](https://github.com/quentinhardy/odat) / [MSDAT](https://github.com/quentinhardy/msdat) / SQLTOOLS - 深度撞击 / [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) / [WarSQLKit](https://github.com/mindspoof/MSSQL-Fileless-Rootkit-WarSQLKit)
 
 ## Stargazers over time
+
 [![Stargazers over time](https://starchart.cc/SafeGroceryStore/MDUT.svg)](https://starchart.cc/SafeGroceryStore/MDUT)
 
+## 免责声明
 
-
-## 法律
-> 本工具仅能在取得足够合法授权的企业安全建设中使用在使用本工具过程中，您应确保自己所有行为符合当地的法律法规。如您在使用本工具的过程中存在任何非法行为，您将自行承担所有后果，本工具所有开发者和所有贡献者不承担任何法律及连带责任。 除非您已充分阅读、完全理解并接受本协议所有条款，否则，请您不要安装并使用本工具。您的使用行为或者您以其他任何明示或者默示方式表示接受本协议的，即视为您已阅读并同意本协议的约束。
-
-## 赞赏
-![](/image/3521639573330_.pic.jpg)
+> 本工具仅供授权安全测试和企业安全建设使用。使用本工具时，您应确保所有行为符合当地法律法规。如存在任何非法使用行为，您将自行承担所有后果，本工具开发者和贡献者不承担任何法律及连带责任。使用本工具即视为您已阅读并同意上述条款。

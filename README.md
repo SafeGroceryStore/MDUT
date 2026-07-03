@@ -16,7 +16,7 @@ Cross-platform desktop database utilization and management tool
 
 ---
 
-[中文](./README_ZH.md) / [ChangeLogs](./CHANGELOG.md)
+[中文](./README_ZH.md) / [ChangeLogs](./CHANGELOG_EN.md)
 
 ## Introduction
 

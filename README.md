@@ -97,7 +97,7 @@ When the target Redis is behind NAT or a SOCKS5 proxy, the rogue server techniqu
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=SafeGroceryStore/MDUT&type=Date)](https://star-history.com/#SafeGroceryStore/MDUT&Date)
+[![Star History Chart](https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left)](https://www.star-history.com/?type=date&repos=SafeGroceryStore%2FMDUT)
 
 ## Disclaimer
 

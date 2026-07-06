@@ -49,7 +49,7 @@ Cross-platform desktop database utilization and management tool
 | File Manager | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Reverse Shell | ✅ | — | — | ✅ | — |
 | Shellcode Execution | ✅ | — | — | — | — |
-| SOCKS5 Forward Proxy | ✅ | — | — | ✅ | — |
+| SOCKS5 Forward Proxy | ✅ | — | ✅ | ✅ | — |
 | RDB Write (Redis) | — | — | — | — | ✅ |
 
 > **MSSQL** supports xp_cmdshell, OLE Automation, and Agent Job execution strategies.

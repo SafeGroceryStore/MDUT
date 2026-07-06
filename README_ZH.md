@@ -49,7 +49,7 @@
 | 文件管理器 | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 反弹 Shell | ✅ | — | — | ✅ | — |
 | Shellcode 执行 | ✅ | — | — | — | — |
-| SOCKS5 正向代理 | ✅ | — | — | ✅ | — |
+| SOCKS5 正向代理 | ✅ | — | ✅ | ✅ | — |
 | RDB 写入（Redis 专属） | — | — | — | — | ✅ |
 
 > **MSSQL** 当前支持 xp_cmdshell、OLE Automation、Agent Job 三种执行策略。

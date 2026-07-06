@@ -27,6 +27,8 @@
 ### PostgreSQL
 * UDF privilege escalation and command execution
 * File manager
+* Reverse shell
+* SOCKS5 forward proxy
 
 ### Oracle
 * Java Source / Scheduler dual execution strategies
@@ -35,9 +37,11 @@
 * SOCKS5 forward proxy
 
 ### Redis
-* Module deployment (Rogue Server)
+* Module deployment (Rogue Server / master-slave replication)
 * Command execution
 * File manager (RDB write)
+* Reverse shell
+* SOCKS5 forward proxy (requires Module)
 
 ---
 

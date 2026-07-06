@@ -27,6 +27,8 @@
 ### PostgreSQL
 * 支持 UDF 提权与命令执行
 * 文件管理器
+* 反弹 Shell
+* SOCKS5 正向代理
 
 ### Oracle
 * 支持 Java Source / Scheduler 两种执行策略
@@ -35,9 +37,11 @@
 * SOCKS5 正向代理
 
 ### Redis
-* 支持 Module 部署（Rogue Server）
+* 支持 Module 部署（Rogue Server / 主从复制）
 * 命令执行
 * 文件管理器（RDB 写入）
+* 反弹 Shell
+* SOCKS5 正向代理（需 Module）
 
 ---
 

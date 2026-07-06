@@ -97,7 +97,13 @@
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left)](https://www.star-history.com/?type=date&repos=SafeGroceryStore%2FMDUT)
+<a href="https://www.star-history.com/?type=date&repos=SafeGroceryStore%2FMDUT">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left" />
+ </picture>
+</a>
 
 ## 免责声明
 

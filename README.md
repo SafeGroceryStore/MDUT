@@ -66,6 +66,16 @@ Download pre-built binaries from the [Releases](../../releases) page:
 
 > Linux is not supported yet.
 
+### macOS: Remove Quarantine Attribute
+
+Since the app is not signed with an Apple Developer certificate, macOS Gatekeeper will block the app on first launch. Run the following command to remove the quarantine attribute:
+
+```bash
+sudo xattr -r -d com.apple.quarantine /Applications/Multiple_Database_Utilization_Tools.app
+```
+
+If you see "Multiple_Database_Utilization_Tools.app is damaged and can't be opened", this command will fix it.
+
 ## Tech Stack
 
 | Layer | Technology |

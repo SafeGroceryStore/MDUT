@@ -66,6 +66,16 @@
 
 > 暂不支持 Linux。
 
+### macOS：移除隔离属性
+
+由于应用未使用 Apple 开发者证书签名，首次启动时 macOS Gatekeeper 会拦截应用。执行以下命令移除隔离属性即可：
+
+```bash
+sudo xattr -r -d com.apple.quarantine /Applications/Multiple_Database_Utilization_Tools.app
+```
+
+如果遇到「Multiple_Database_Utilization_Tools.app 已损坏，无法打开」的提示，执行该命令即可修复。
+
 ## 技术栈
 
 | 层级 | 技术 |

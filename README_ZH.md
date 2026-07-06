@@ -85,6 +85,12 @@
 - [Node.js 20+](https://nodejs.org/)
 - [Wails CLI](https://wails.io/docs/gettingstarted/installation)
 
+## Redis Relay
+
+当目标 Redis 处于 NAT 或 SOCKS5 代理后面时，Rogue Server 技术需要一个中间 Relay 来转发流量。具体部署和使用方式见 **[Redis Relay 使用说明](./docs/redis-relay.md)**。
+
+> Relay 工具：[mdut-relay](https://github.com/Ch1ngg/mdut-relay)
+
 ## 致谢
 
 [j1anFen](https://jianfensec.com/) / [冰蝎](https://github.com/rebeyond/Behinder) / [ODAT](https://github.com/quentinhardy/odat) / [MSDAT](https://github.com/quentinhardy/msdat) / SQLTOOLS - 深度撞击 / [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) / [WarSQLKit](https://github.com/mindspoof/MSSQL-Fileless-Rootkit-WarSQLKit)

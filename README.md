@@ -85,6 +85,12 @@ Download pre-built binaries from the [Releases](../../releases) page:
 - [Node.js 20+](https://nodejs.org/)
 - [Wails CLI](https://wails.io/docs/gettingstarted/installation)
 
+## Redis Relay
+
+When the target Redis is behind NAT or a SOCKS5 proxy, the rogue server technique requires an intermediate relay to forward traffic. See **[Redis Relay Usage Guide](./docs/redis-relay-en.md)** for setup instructions.
+
+> Relay tool: [mdut-relay](https://github.com/Ch1ngg/mdut-relay)
+
 ## Thanks
 
 [j1anFen](https://jianfensec.com/) / [冰蝎](https://github.com/rebeyond/Behinder) / [ODAT](https://github.com/quentinhardy/odat) / [MSDAT](https://github.com/quentinhardy/msdat) / SQLTOOLS - 深度撞击 / [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) / [WarSQLKit](https://github.com/mindspoof/MSSQL-Fileless-Rootkit-WarSQLKit)

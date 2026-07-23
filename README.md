@@ -62,7 +62,7 @@ Download pre-built binaries from the [Releases](../../releases) page:
 |----------|--------|
 | Windows | `.exe` / `.zip` |
 | macOS (Universal) | `.dmg` / `.zip` |
-| Linux (amd64) | `.zip`（内含可执行文件） |
+| Linux (amd64) | `.zip` (contains executable) |
 
 > macOS binary is a Universal Binary that runs natively on both Apple Silicon and Intel Macs.  
 > Linux release is a zip archive containing the x86_64 executable. Extract it and run `./Multiple_Database_Utilization_Tools`.
@@ -113,14 +113,13 @@ MDUT exposes its capabilities through the Model Context Protocol (MCP), enabling
 
 ## Star History
 
-<a href="https://www.star-history.com/?type=date&repos=SafeGroceryStore%2FMDUT">
+<a href="https://www.star-history.com/?repos=SafeGroceryStore%2FMDUT&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&theme=dark&legend=top-left&sealed_token=R_6Yl2dRRPoXx36sLaIGpdqSE7e3XBQn_iOX4izcSxsl96JZD4PMc51ae3TAX0bRtegrzjbOgUek27VY2Jwn112ylTPvOIaz3TqxBeFHRej4oKkANtrttQ" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left&sealed_token=R_6Yl2dRRPoXx36sLaIGpdqSE7e3XBQn_iOX4izcSxsl96JZD4PMc51ae3TAX0bRtegrzjbOgUek27VY2Jwn112ylTPvOIaz3TqxBeFHRej4oKkANtrttQ" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left&sealed_token=R_6Yl2dRRPoXx36sLaIGpdqSE7e3XBQn_iOX4izcSxsl96JZD4PMc51ae3TAX0bRtegrzjbOgUek27VY2Jwn112ylTPvOIaz3TqxBeFHRej4oKkANtrttQ" />
  </picture>
 </a>
-
 
 ## Disclaimer
 

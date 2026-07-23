@@ -112,11 +112,11 @@ MDUT 通过 Model Context Protocol（MCP）暴露其能力，AI 客户端可以�
 
 ## Star History
 
-<a href="https://www.star-history.com/?type=date&repos=SafeGroceryStore%2FMDUT">
+<a href="https://www.star-history.com/?repos=SafeGroceryStore%2FMDUT&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&theme=dark&legend=top-left&sealed_token=R_6Yl2dRRPoXx36sLaIGpdqSE7e3XBQn_iOX4izcSxsl96JZD4PMc51ae3TAX0bRtegrzjbOgUek27VY2Jwn112ylTPvOIaz3TqxBeFHRej4oKkANtrttQ" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left&sealed_token=R_6Yl2dRRPoXx36sLaIGpdqSE7e3XBQn_iOX4izcSxsl96JZD4PMc51ae3TAX0bRtegrzjbOgUek27VY2Jwn112ylTPvOIaz3TqxBeFHRej4oKkANtrttQ" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left&sealed_token=R_6Yl2dRRPoXx36sLaIGpdqSE7e3XBQn_iOX4izcSxsl96JZD4PMc51ae3TAX0bRtegrzjbOgUek27VY2Jwn112ylTPvOIaz3TqxBeFHRej4oKkANtrttQ" />
  </picture>
 </a>
 

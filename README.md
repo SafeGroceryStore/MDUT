@@ -61,10 +61,11 @@ Download pre-built binaries from the [Releases](../../releases) page:
 | Platform | Format |
 |----------|--------|
 | Windows | `.exe` / `.zip` |
-| macOS (Intel) | `.dmg` / `.zip` |
-| macOS (Apple Silicon) | `.dmg` / `.zip` |
+| macOS (Universal) | `.dmg` / `.zip` |
+| Linux (amd64) | `.zip`（内含可执行文件） |
 
-> Linux is not supported yet.
+> macOS binary is a Universal Binary that runs natively on both Apple Silicon and Intel Macs.  
+> Linux release is a zip archive containing the x86_64 executable. Extract it and run `./Multiple_Database_Utilization_Tools`.
 
 ### macOS: Remove Quarantine Attribute
 
@@ -100,6 +101,10 @@ If you see "Multiple_Database_Utilization_Tools.app is damaged and can't be open
 When the target Redis is behind NAT or a SOCKS5 proxy, the rogue server technique requires an intermediate relay to forward traffic. See **[Redis Relay Usage Guide](./docs/redis-relay-en.md)** for setup instructions.
 
 > Relay tool: [mdut-relay](https://github.com/Ch1ngg/mdut-relay)
+
+## MCP
+
+MDUT exposes its capabilities through the Model Context Protocol (MCP), enabling AI clients to interact with databases, execute commands, and manage files programmatically. See **[MCP Usage Guide](./docs/mcp-en.md)** for configuration and startup instructions.
 
 ## Thanks
 

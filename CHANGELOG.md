@@ -1,5 +1,16 @@
 # 更新日志
 
+## 2026/07/23 - `v3.1.1`
+### 核心
+* 新增 MCP（Model Context Protocol）服务器，支持 STDIO 与 HTTP SSE 两种传输模式
+* MCP 提供 24 个工具：连接管理、SQL 查询/执行、数据库元数据、命令执行、文件管理、反弹 Shell、SOCKS5 代理等
+* MCP 支持 Token 认证，SSE 模式可配置绑定地址与端口
+* 修复 MCP 每次新建 Exploiter 导致 MySQL UDF `exec_command` 报 "UDF not deployed" 的问题
+* 修复 MCP `deploy_exploit` 硬编码 120 秒超时的问题，改由调用方控制
+* 修复 MCP `start_socks5` 未传 `bind_addr` 时绑定到广播地址 `255.255.255.255` 的问题，空地址默认回退到 `0.0.0.0`
+* 连接对话框密码改为非必填
+* 禁止点击连接对话框遮罩层（灰色区域）关闭弹窗，避免误触退出
+
 ## 2026/07/04 - `v3.1.0`
 ### 核心
 * 项目使用 Go + Wails v2 + React/TypeScript 全面重写

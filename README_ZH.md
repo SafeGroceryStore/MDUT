@@ -61,10 +61,11 @@
 | 平台 | 格式 |
 |------|------|
 | Windows | `.exe` / `.zip` |
-| macOS (Intel) | `.dmg` / `.zip` |
-| macOS (Apple Silicon) | `.dmg` / `.zip` |
+| macOS (Universal) | `.dmg` / `.zip` |
+| Linux (amd64) | `.zip`（内含可执行文件） |
 
-> 暂不支持 Linux。
+> macOS 产物为 Universal Binary，同时支持 Apple Silicon 与 Intel 架构。  
+> Linux 发布包为 zip 压缩包，内含 x86_64 可执行文件，解压后运行 `./Multiple_Database_Utilization_Tools`。
 
 ### macOS：移除隔离属性
 
@@ -100,6 +101,10 @@ sudo xattr -r -d com.apple.quarantine /Applications/Multiple_Database_Utilizatio
 当目标 Redis 处于 NAT 或 SOCKS5 代理后面时，Rogue Server 技术需要一个中间 Relay 来转发流量。具体部署和使用方式见 **[Redis Relay 使用说明](./docs/redis-relay.md)**。
 
 > Relay 工具：[mdut-relay](https://github.com/Ch1ngg/mdut-relay)
+
+## MCP
+
+MDUT 通过 Model Context Protocol（MCP）暴露其能力，AI 客户端可以以编程方式连接数据库、执行命令、管理文件等。配置方法与启动方式见 **[MCP 使用说明](./docs/mcp.md)**。
 
 ## 致谢
 

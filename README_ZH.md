@@ -112,13 +112,7 @@ MDUT 通过 Model Context Protocol（MCP）暴露其能力，AI 客户端可以�
 
 ## Star History
 
-<a href="https://www.star-history.com/?repos=SafeGroceryStore%2FMDUT&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&theme=dark&legend=top-left&sealed_token=CewH_F_-y8Kqt7CKcCOBScfbsupLJGYJH651nSKiC3ZtQBCDKWK1_F1N93-EiBdCOPJL84az2UG72qoRR7mAyr009EdAcVEHqvVfhwJVMxCTIOpamn3NYnuQwa93W6q48i1WqyarwozCnzS-yp6qJXXtGD1S8lYJbiucD1IjwVAs74hNsyvX2uKn8px3" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left&sealed_token=CewH_F_-y8Kqt7CKcCOBScfbsupLJGYJH651nSKiC3ZtQBCDKWK1_F1N93-EiBdCOPJL84az2UG72qoRR7mAyr009EdAcVEHqvVfhwJVMxCTIOpamn3NYnuQwa93W6q48i1WqyarwozCnzS-yp6qJXXtGD1S8lYJbiucD1IjwVAs74hNsyvX2uKn8px3" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left&sealed_token=CewH_F_-y8Kqt7CKcCOBScfbsupLJGYJH651nSKiC3ZtQBCDKWK1_F1N93-EiBdCOPJL84az2UG72qoRR7mAyr009EdAcVEHqvVfhwJVMxCTIOpamn3NYnuQwa93W6q48i1WqyarwozCnzS-yp6qJXXtGD1S8lYJbiucD1IjwVAs74hNsyvX2uKn8px3" />
- </picture>
-</a>
+[![Star History Chart](https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left&sealed_token=CewH_F_-y8Kqt7CKcCOBScfbsupLJGYJH651nSKiC3ZtQBCDKWK1_F1N93-EiBdCOPJL84az2UG72qoRR7mAyr009EdAcVEHqvVfhwJVMxCTIOpamn3NYnuQwa93W6q48i1WqyarwozCnzS-yp6qJXXtGD1S8lYJbiucD1IjwVAs74hNsyvX2uKn8px3)](https://www.star-history.com/?repos=SafeGroceryStore%2FMDUT&type=date&legend=top-left)
 
 ## 免责声明
 

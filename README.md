@@ -1,78 +1,120 @@
-![](https://i.loli.net/2021/05/10/bX6FP4shupnBoDJ.png)
-# MDUT
-[![Author](https://img.shields.io/badge/author-Ch1ng-red.svg?style=flat-square)](https://github.com/ch1ngg)
-[![Author](https://img.shields.io/badge/author-j1anFen-red.svg?style=flat-square)](https://github.com/j1anFen)
-[![Stargazers](https://img.shields.io/github/stars/SafeGroceryStore/MDUT.svg?style=flat-square)](https://github.com/SafeGroceryStore/MDUT/stargazers)
-[![Fork](https://img.shields.io/github/forks/SafeGroceryStore/MDUT.svg?style=flat-square)](https://github.com/SafeGroceryStore/MDUT/ork)
+<div align="center">
+
+<img src="./build/appicon.png" width="200" />
+
+# MDUT — Multiple Database Utilization Tools
+
+Cross-platform desktop database utilization and management tool
+
+[![Go](https://img.shields.io/badge/Go-1.25%2B-blue)](https://golang.org)
+[![Wails](https://img.shields.io/badge/Wails-v2.12-ff4d4d)](https://wails.io)
+[![React](https://img.shields.io/badge/React-18.3-61dafb)](https://react.dev)
 [![License](https://img.shields.io/github/license/SafeGroceryStore/MDUT.svg?style=flat-square)](https://github.com/SafeGroceryStore/MDUT/blob/main/LICENSE)
+[![Stargazers](https://img.shields.io/github/stars/SafeGroceryStore/MDUT.svg?style=flat-square)](https://github.com/SafeGroceryStore/MDUT/stargazers)
 
-MDUT (Multiple Database Utilization Tools) is a Chinese database cross platform utilization tool that integrates multiple mainstream database types.Based on the foundation of the predecessors SQLTOOLS, this program was developed (a tribute to SQLTOOLS), which aims to integrate common database utilization methods in one program, breaking the barriers that various database utilization tools require various environments and cause considerable inconvenience. In addition, the tool uses JAVAFx as the GUI operation interface, which is beautiful. At the same time, the program also supports simultaneous operation of multiple databases, each of which is independent of each other, which greatly facilitates the use of network security workers.
+</div>
 
-[中文](./README_ZH.md) / [Document](https://www.yuque.com/u21224612/nezuig) / [ChangeLogs](./CHANGELOG.md)
-## ScreenShot
-![](https://i.loli.net/2021/05/11/c1M6YqZNAOnjmfp.png)
+---
 
-## Directory
-```
-.
-├── CHANGELOG.md
-├── MDAT-DEV // MDUT Source code
-├── MDUTSqlKit
-│   └── MDATKit.zip // CLR Source code
-├── README.md
-├── README_ZH.md
-├── redis-cus-rogue.py // Redis cus-rogue script
-```
+[中文](./README_ZH.md) / [ChangeLogs](./CHANGELOG_EN.md)
 
+## Introduction
 
-## Linux Dependencies
+**MDUT** (Multiple Database Utilization Tools) is a cross-platform desktop database management and exploitation tool, rebuilt from scratch with **Go + Wails v2 + React/TypeScript**. It supports graphical management of multiple mainstream databases and integrates advanced exploitation modules for authorized security testing.
 
-Linux 版本的 GUI 与 MCP 模式依赖 webkit2gtk 运行库，需要 root 权限安装（由用户自行执行）：
+- 🖥️ **Pure Go Drivers** — Zero CGO, single-binary cross-compilation for all platforms
+- 🔒 **Zero-dependency Runtime** — Embedded frontend assets, runs as a single binary
+- 🌐 **Proxy Support** — SOCKS5 proxy tunneling for all database types
+- 🎨 **Modern UI** — Dark/Light themes with React 18 + Tailwind CSS v4 + shadcn/ui
+- 🌍 **i18n** — Built-in Chinese/English internationalization
+- 📝 **SQL Editor** — Monaco Editor with syntax highlighting and multi-result support
 
-**Ubuntu / Debian / Linux Mint:**
+## Supported Databases
+
+- **MySQL** 5.5+ / 8.0+ (including MariaDB)
+- **Microsoft SQL Server** 2005+
+- **PostgreSQL** 8.2+
+- **Oracle** 11g+
+- **Redis** 4.0+
+
+## Features
+
+| Feature | MySQL | MSSQL | PostgreSQL | Oracle | Redis |
+|---------|:-----:|:-----:|:----------:|:------:|:-----:|
+| Connection Management | ✅ | ✅ | ✅ | ✅ | ✅ |
+| SQL Query Editor (Monaco) | ✅ | ✅ | ✅ | ✅ | — |
+| Table Browsing & Editing | ✅ | ✅ | ✅ | ✅ | — |
+| Schema Inspection | ✅ | ✅ | ✅ | ✅ | — |
+| Command Execution (UDF/CLR/Java) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| File Manager | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Reverse Shell | ✅ | — | ✅ | ✅ | ✅ |
+| Shellcode Execution | ✅ | — | — | — | — |
+| SOCKS5 Forward Proxy | ✅ | — | ✅ | ✅ | ✅ |
+| RDB Write (Redis) | — | — | — | — | ✅ |
+
+> **MSSQL** supports xp_cmdshell, OLE Automation, and Agent Job execution strategies.
+
+## Download
+
+Download pre-built binaries from the [Releases](../../releases) page:
+
+| Platform | Format |
+|----------|--------|
+| Windows | `.exe` / `.zip` |
+| macOS (Universal) | `.dmg` / `.zip` |
+| Linux (amd64) | `.zip` (contains executable) |
+
+> macOS binary is a Universal Binary that runs natively on both Apple Silicon and Intel Macs.  
+> Linux release is a zip archive containing the x86_64 executable. Extract it and run `./Multiple_Database_Utilization_Tools`.
+
+### macOS: Remove Quarantine Attribute
+
+Since the app is not signed with an Apple Developer certificate, macOS Gatekeeper will block the app on first launch. Run the following command to remove the quarantine attribute:
 
 ```bash
-sudo apt update && sudo apt install libwebkit2gtk-4.1-0
+sudo xattr -r -d com.apple.quarantine /Applications/Multiple_Database_Utilization_Tools.app
 ```
 
-**Arch / Manjaro:**
+If you see "Multiple_Database_Utilization_Tools.app is damaged and can't be opened", this command will fix it.
 
-```bash
-sudo pacman -S webkit2gtk-4.1
-```
+## Tech Stack
 
-**Fedora / Rocky / RHEL:**
+| Layer | Technology |
+|-------|-----------|
+| Backend | Go 1.25, Wails v2.12 |
+| Frontend | React 18.3, TypeScript 5.7, Vite 5.4, Tailwind CSS v4, shadcn/ui |
+| State | Zustand 5.0 |
+| Editor | Monaco Editor |
+| i18n | i18next |
+| Storage | SQLite (local, pure Go) |
 
-```bash
-sudo dnf install webkit2gtk4.1
-```
-> 安装完成后直接运行 `Multiple_Database_Utilization_Tools_linux_amd64` 即可，程序首次启动会自动在当前用户目录写入 `.desktop` 文件与图标。
+## Development
 
-## TODO
-~~1. HTTP Tunnel~~
+### Prerequisites
+
+- [Go 1.25+](https://golang.org/dl/)
+- [Node.js 20+](https://nodejs.org/)
+- [Wails CLI](https://wails.io/docs/gettingstarted/installation)
+
+## Redis Relay
+
+When the target Redis is behind NAT or a SOCKS5 proxy, the rogue server technique requires an intermediate relay to forward traffic. See **[Redis Relay Usage Guide](./docs/redis-relay-en.md)** for setup instructions.
+
+> Relay tool: [mdut-relay](https://github.com/Ch1ngg/mdut-relay)
+
+## MCP
+
+MDUT exposes its capabilities through the Model Context Protocol (MCP), enabling AI clients to interact with databases, execute commands, and manage files programmatically. See **[MCP Usage Guide](./docs/mcp-en.md)** for configuration and startup instructions.
 
 ## Thanks
-[j1anFen](https://jianfensec.com/) / [冰蝎](https://github.com/rebeyond/Behinder) / [ODAT](https://github.com/quentinhardy/odat) / [MSDAT](https://github.com/quentinhardy/msdat) / SQLTOOLS - 深度撞击
- / [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) / [WarSQLKit](https://github.com/mindspoof/MSSQL-Fileless-Rootkit-WarSQLKit)
 
-## PS
-After the release of `v2.0`, the subsequent update speed will slow down, please understand. However, the project will continue to be updated,and I hope you can also participate in the project. So let's work together! :)
-
-## Other
-### 404StarLink 2.0 - Galaxy
-
-![](https://github.com/knownsec/404StarLink-Project/raw/master/logo.png)
-
-Multiple Database Utilization Tools is part of the 404Team Starlink Project 2.0. If you correct
-If you have any questions about Multiple Database Utilization Tools, or if you want to talk to a small partner, you can refer to the Starlink Project's way of adding groups.
-https://github.com/knownsec/404StarLink2.0-Galaxy#community
-
-## Stargazers over time
-[![Stargazers over time](https://starchart.cc/SafeGroceryStore/MDUT.svg)](https://starchart.cc/SafeGroceryStore/MDUT)
+[j1anFen](https://github.com/j1anFen) / [冰蝎](https://github.com/rebeyond/Behinder) / [ODAT](https://github.com/quentinhardy/odat) / [MSDAT](https://github.com/quentinhardy/msdat) / SQLTOOLS - 深度撞击 / [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) / [WarSQLKit](https://github.com/mindspoof/MSSQL-Fileless-Rootkit-WarSQLKit)
 
 
-## Law
-> This tool can only be used in enterprise security construction with sufficient legal authorization. In the process of using this tool, you should ensure that all your behaviors comply with local laws and regulations. If you have any illegal behavior in the process of using this tool, you will bear all consequences. All developers and contributors of this tool will not bear any legal and joint liability. Please do not install and use this tool unless you have fully read, understood and accepted all the terms of this agreement. Your use or your acceptance of this agreement in any other way, express or implied, shall be deemed to have read and agreed to be bound by this agreement.
+## Star History
 
-## Sponsor
-![](/image/3521639573330_.pic.jpg)
+[![Star History Chart](https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left&sealed_token=CewH_F_-y8Kqt7CKcCOBScfbsupLJGYJH651nSKiC3ZtQBCDKWK1_F1N93-EiBdCOPJL84az2UG72qoRR7mAyr009EdAcVEHqvVfhwJVMxCTIOpamn3NYnuQwa93W6q48i1WqyarwozCnzS-yp6qJXXtGD1S8lYJbiucD1IjwVAs74hNsyvX2uKn8px3)](https://www.star-history.com/?repos=SafeGroceryStore%2FMDUT&type=date&legend=top-left)
+
+## Disclaimer
+
+> This tool is intended solely for authorized security testing and enterprise security assessment. You must ensure that all usage complies with applicable local laws and regulations. The developers and contributors assume no legal liability for any misuse. By using this tool, you acknowledge that you have read and agreed to these terms.

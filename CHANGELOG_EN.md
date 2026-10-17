@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026/10/17 - `v3.1.2`
+### Core
+* Fixed MCP start/stop button throwing `TypeError: Cannot read properties of undefined (reading 'MCPAPI')` in garble-obfuscated release builds (#83); the frontend now uses generated Wails bindings (`ObfuscatedCall`)
+* Randomized all target-side identifiers across every database exploit chain, removing the fixed `mdut` prefix signature that controlled environments can block on (#84):
+* PostgreSQL: COPY FROM PROGRAM temp table name, libc function name, UDF payload filename
+* MySQL: UDF deploy staging table name, UDF payload filename
+* MSSQL: xp_cmdshell probe token, `%TEMP%` temp filenames, session temp table names, Agent Job names
+* Oracle: Java wrapper function names (with automatic detection and cleanup of legacy fixed-name deployments)
+* Redis: default module landing path, RDB write-file key name, Lua sandbox escape markers
+
+## 2026/07/23 - `v3.1.1`
 ## 2026/07/23 - `v3.1.1`
 ### Core
 * Added MCP (Model Context Protocol) server with STDIO and HTTP SSE transports

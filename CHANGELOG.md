@@ -11,7 +11,6 @@
 * Redis：Module 默认落地路径、RDB 写文件键名、Lua 沙箱逃逸标记
 
 ## 2026/07/23 - `v3.1.1`
-## 2026/07/23 - `v3.1.1`
 ### 核心
 * 新增 MCP（Model Context Protocol）服务器，支持 STDIO 与 HTTP SSE 两种传输模式
 * MCP 提供 24 个工具：连接管理、SQL 查询/执行、数据库元数据、命令执行、文件管理、反弹 Shell、SOCKS5 代理等

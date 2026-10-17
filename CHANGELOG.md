@@ -1,5 +1,16 @@
 # 更新日志
 
+## 2026/10/17 - `v3.1.2`
+### 核心
+* 修复 garble 混淆发布版中 MCP 启停按钮报 `TypeError: Cannot read properties of undefined (reading 'MCPAPI')` 的问题（#83），前端切换到 Wails 生成绑定（`ObfuscatedCall`）
+* 全数据库利用链落地标识符随机化，去除固定 `mdut` 前缀特征，避免受控环境按表名/函数名/文件名特征拦截（#84）：
+* PostgreSQL：COPY FROM PROGRAM 临时表名、libc 函数名、UDF 落盘文件名
+* MySQL：UDF 部署中转表名、UDF 落盘文件名
+* MSSQL：xp_cmdshell 探测标记、`%TEMP%` 临时文件名、会话临时表名、Agent Job 名
+* Oracle：Java 包装函数名（自动兼容并清理旧版固定名残留部署）
+* Redis：Module 默认落地路径、RDB 写文件键名、Lua 沙箱逃逸标记
+
+## 2026/07/23 - `v3.1.1`
 ## 2026/07/23 - `v3.1.1`
 ### 核心
 * 新增 MCP（Model Context Protocol）服务器，支持 STDIO 与 HTTP SSE 两种传输模式

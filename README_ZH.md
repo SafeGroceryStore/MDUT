@@ -77,6 +77,30 @@ sudo xattr -r -d com.apple.quarantine /Applications/Multiple_Database_Utilizatio
 
 如果遇到「Multiple_Database_Utilization_Tools.app 已损坏，无法打开」的提示，执行该命令即可修复。
 
+### Linux：安装 webkit2gtk 运行库
+
+Linux 版本的 GUI 与 MCP 模式依赖 webkit2gtk 运行库，需要 root 权限安装，由用户自行执行：
+
+**Ubuntu / Debian / Linux Mint：**
+
+```bash
+sudo apt update && sudo apt install libwebkit2gtk-4.1-0
+```
+
+**Arch / Manjaro：**
+
+```bash
+sudo pacman -S webkit2gtk-4.1
+```
+
+**Fedora / Rocky / RHEL：**
+
+```bash
+sudo dnf install webkit2gtk4.1
+```
+
+> 安装完成后直接运行解压出的可执行文件即可，首次启动会自动在用户主目录写入 `.desktop` 文件与图标。
+
 ## 技术栈
 
 | 层级 | 技术 |

@@ -77,6 +77,30 @@ sudo xattr -r -d com.apple.quarantine /Applications/Multiple_Database_Utilizatio
 
 If you see "Multiple_Database_Utilization_Tools.app is damaged and can't be opened", this command will fix it.
 
+### Linux: Install webkit2gtk Runtime
+
+The GUI and MCP modes on Linux depend on the webkit2gtk runtime library. It requires root privileges to install and must be executed by the user:
+
+**Ubuntu / Debian / Linux Mint:**
+
+```bash
+sudo apt update && sudo apt install libwebkit2gtk-4.1-0
+```
+
+**Arch / Manjaro:**
+
+```bash
+sudo pacman -S webkit2gtk-4.1
+```
+
+**Fedora / Rocky / RHEL:**
+
+```bash
+sudo dnf install webkit2gtk4.1
+```
+
+> After installation, run the extracted executable directly. On first launch it automatically writes a `.desktop` entry and an icon into the user's home directory.
+
 ## Tech Stack
 
 | Layer | Technology |

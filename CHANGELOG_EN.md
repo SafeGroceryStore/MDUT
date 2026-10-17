@@ -11,7 +11,6 @@
 * Redis: default module landing path, RDB write-file key name, Lua sandbox escape markers
 
 ## 2026/07/23 - `v3.1.1`
-## 2026/07/23 - `v3.1.1`
 ### Core
 * Added MCP (Model Context Protocol) server with STDIO and HTTP SSE transports
 * Exposed 24 MCP tools: connection management, SQL query/execute, database metadata, command execution, file manager, reverse shell, SOCKS5 proxy, and more

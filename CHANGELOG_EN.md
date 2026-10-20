@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026/10/20 - `v3.2.0`
+### Core
+* MSSQL: new CLR extension — reverse shell, shellcode execution, SOCKS5 tunnel, file management (Windows targets, SQL Server 2005-2022)
+* Redis: Windows target support — module deployment (command exec / file manager / SOCKS5 / shellcode) and byte-exact file write via replication
+* Redis: file write now supports local file payloads with precise/fast modes
+* PostgreSQL: fixed UDF deployment failure on Windows PG 9.4 and below
+* PostgreSQL: fixed garbled error messages on Chinese Windows targets
+* Oracle: new privilege escalation (Java Source / DBMS_SCHEDULER strategies with auto fallback)
+* New linux/arm64 payloads: MySQL, PostgreSQL (9.6+), Redis
+* All payloads now compressed, significantly smaller binary
+* MCP fixes: broken deploy chain, unavailable cleanup tool, lost session state, charset & blind-mode parameters
+* File manager: drive letter enumeration on Windows targets
+* Command tab: per-DB guidance hints; echo/blind toggle restyled as an obvious switch
+* Sidebar: click the nav icon to collapse/expand the connection panel
+
 ## 2026/10/17 - `v3.1.2`
 ### Core
 * Fixed MCP start/stop button throwing `TypeError: Cannot read properties of undefined (reading 'MCPAPI')` in garble-obfuscated release builds (#83); the frontend now uses generated Wails bindings (`ObfuscatedCall`)

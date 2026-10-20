@@ -1,5 +1,20 @@
 # 更新日志
 
+## 2026/10/20 - `v3.2.0`
+### 核心
+* MSSQL 新增 CLR 高级扩展：反弹 Shell、Shellcode 执行、SOCKS5 隧道、文件管理（Windows 目标，SQL Server 2005~2022 全版本）
+* Redis 支持 Windows 目标：Module 部署（命令执行/文件管理/SOCKS5/Shellcode）、主从复制精确文件写入（二进制载荷逐字节落盘，支持 webshell/启动项等场景）
+* Redis 文件写入支持本地文件载荷选择与精确/快速两种写入模式
+* PostgreSQL 修复 Windows 版 PG 9.4 及以下 UDF 部署失败的问题
+* PostgreSQL 修复中文 Windows 目标错误信息乱码的问题
+* Oracle 新增权限提升（Java Source / DBMS_SCHEDULER 双策略，自动判别与回退）
+* 新增 linux/arm64 载荷：MySQL、PostgreSQL（9.6+）、Redis
+* 载荷全面压缩加密，程序体积显著减小
+* MCP 修复若干问题：部署链不生效、清理工具不可用、会话状态丢失、执行字符集与静默模式参数支持
+* 文件管理在 Windows 目标支持盘符枚举
+* 命令执行页新增分库操作引导；回显/静默切换按钮改为明确的可切换样式
+* 左侧导航栏支持点击图标收起/展开连接面板
+
 ## 2026/10/17 - `v3.1.2`
 ### 核心
 * 修复 garble 混淆发布版中 MCP 启停按钮报 `TypeError: Cannot read properties of undefined (reading 'MCPAPI')` 的问题（#83），前端切换到 Wails 生成绑定（`ObfuscatedCall`）

@@ -47,12 +47,12 @@ Cross-platform desktop database utilization and management tool
 | Schema Inspection | ✅ | ✅ | ✅ | ✅ | — |
 | Command Execution (UDF/CLR/Java) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | File Manager | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Reverse Shell | ✅ | — | ✅ | ✅ | ✅ |
-| Shellcode Execution | ✅ | — | — | — | — |
-| SOCKS5 Forward Proxy | ✅ | — | ✅ | ✅ | ✅ |
+| Reverse Shell | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Shellcode Execution | ✅ | ✅ | — | — | ✅ |
+| SOCKS5 Forward Proxy | ✅ | ✅ | ✅ | ✅ | ✅ |
 | RDB Write (Redis) | — | — | — | — | ✅ |
 
-> **MSSQL** supports xp_cmdshell, OLE Automation, and Agent Job execution strategies.
+> **MSSQL** supports xp_cmdshell, OLE Automation, and Agent Job execution strategies, plus a CLR extension (reverse shell / shellcode / SOCKS5 / file management) on Windows targets.
 
 ## Download
 

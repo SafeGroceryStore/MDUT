@@ -47,12 +47,12 @@
 | 数据库结构查看 | ✅ | ✅ | ✅ | ✅ | — |
 | 命令执行（UDF/CLR/Java） | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 文件管理器 | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 反弹 Shell | ✅ | — | ✅ | ✅ | ✅ |
-| Shellcode 执行 | ✅ | — | — | — | — |
-| SOCKS5 正向代理 | ✅ | — | ✅ | ✅ | ✅ |
+| 反弹 Shell | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Shellcode 执行 | ✅ | ✅ | — | — | ✅ |
+| SOCKS5 正向代理 | ✅ | ✅ | ✅ | ✅ | ✅ |
 | RDB 写入（Redis 专属） | — | — | — | — | ✅ |
 
-> **MSSQL** 当前支持 xp_cmdshell、OLE Automation、Agent Job 三种执行策略。
+> **MSSQL** 当前支持 xp_cmdshell、OLE Automation、Agent Job 三种执行策略，Windows 目标额外支持 CLR 扩展（反弹 Shell / Shellcode / SOCKS5 / 文件管理）。
 
 ## 下载
 

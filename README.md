@@ -48,7 +48,7 @@ Cross-platform desktop database utilization and management tool
 | Command Execution (UDF/CLR/Java) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | File Manager | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Reverse Shell | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Shellcode Execution | ✅ | ✅ | — | — | ✅ |
+| Shellcode Execution (Windows targets only) | ✅ | ✅ | ✅ | — | ✅ |
 | SOCKS5 Forward Proxy | ✅ | ✅ | ✅ | ✅ | ✅ |
 | RDB Write (Redis) | — | — | — | — | ✅ |
 

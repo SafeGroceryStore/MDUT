@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026/10/27 - `v3.3.1`
+### Core
+* Oracle file manager now supports recursive directory creation; MCP expanded to 35 tools
+* Fixed MSSQL chunked I/O and zero-byte upload, Oracle SOCKS5 capability reporting, and Redis directory-probe/Lua reverse-shell entry
+
+
 ## 2026/10/26 - `v3.3.0`
 ### Core
 * Added sqlmap-style CLI mode: connections, SQL/metadata, exploit deployment, command execution, file operations, interactive shell, SOCKS5, and more

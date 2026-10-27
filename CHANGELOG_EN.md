@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026/10/26 - `v3.3.0`
+### Core
+* Added sqlmap-style CLI mode: connections, SQL/metadata, exploit deployment, command execution, file operations, interactive shell, SOCKS5, and more
+* Fixed Redis ARM64 architecture detection and MySQL compatibility on older GLIBC environments
+* Fixed Oracle 11g Java CLOB compatibility; MSSQL cleanup now restores original configuration
+
+
 ## 2026/10/20 - `v3.2.0`
 ### Core
 * MSSQL: new CLR extension — reverse shell, shellcode execution, SOCKS5 tunnel, file management (Windows targets, SQL Server 2005-2022)

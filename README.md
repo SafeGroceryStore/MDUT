@@ -28,6 +28,7 @@ Cross-platform desktop database utilization and management tool
 - 🎨 **Modern UI** — Dark/Light themes with React 18 + Tailwind CSS v4 + shadcn/ui
 - 🌍 **i18n** — Built-in Chinese/English internationalization
 - 📝 **SQL Editor** — Monaco Editor with syntax highlighting and multi-result support
+- ⌨️ **CLI Mode** — sqlmap-style command-line interface for scripting and headless environments
 
 ## Supported Databases
 
@@ -51,6 +52,7 @@ Cross-platform desktop database utilization and management tool
 | Shellcode Execution (Windows targets only) | ✅ | ✅ | ✅ | — | ✅ |
 | SOCKS5 Forward Proxy | ✅ | ✅ | ✅ | ✅ | ✅ |
 | RDB Write (Redis) | — | — | — | — | ✅ |
+| CLI Mode | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 > **MSSQL** supports xp_cmdshell, OLE Automation, and Agent Job execution strategies, plus a CLR extension (reverse shell / shellcode / SOCKS5 / file management) on Windows targets.
 
@@ -129,6 +131,16 @@ When the target Redis is behind NAT or a SOCKS5 proxy, the rogue server techniqu
 ## MCP
 
 MDUT exposes its capabilities through the Model Context Protocol (MCP), enabling AI clients to interact with databases, execute commands, and manage files programmatically. See **[MCP Usage Guide](./docs/mcp-en.md)** for configuration and startup instructions.
+
+## CLI
+
+MDUT includes a sqlmap-style CLI with DSN connections, SQL and metadata operations, exploit deployment, command execution, file operations, interactive shell, reverse shell, and SOCKS5 support. Use `--help` for the full command surface (Chinese/English bilingual).
+
+```bash
+./Multiple_Database_Utilization_Tools cli --help
+./Multiple_Database_Utilization_Tools cli -d "mysql://root:root@127.0.0.1:3306/mysql" --exec "id"
+./Multiple_Database_Utilization_Tools cli -d "mysql://root:root@127.0.0.1:3306/mysql" --shell
+```
 
 ## Thanks
 

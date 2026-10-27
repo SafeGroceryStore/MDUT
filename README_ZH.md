@@ -28,6 +28,7 @@
 - 🎨 **现代化 UI** — 基于 React 18 + Tailwind CSS v4 + shadcn/ui 的暗色/亮色双主题
 - 🌍 **多语言** — 内置中文/英文国际化支持
 - 📝 **SQL 编辑器** — Monaco Editor，支持语法高亮和多结果集
+- ⌨️ **CLI 模式** — sqlmap 风格命令行界面，适用于脚本化与无图形环境
 
 ## 支持的数据库
 
@@ -51,6 +52,7 @@
 | Shellcode 执行（仅 Windows 目标） | ✅ | ✅ | ✅ | — | ✅ |
 | SOCKS5 正向代理 | ✅ | ✅ | ✅ | ✅ | ✅ |
 | RDB 写入（Redis 专属） | — | — | — | — | ✅ |
+| CLI 模式 | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 > **MSSQL** 当前支持 xp_cmdshell、OLE Automation、Agent Job 三种执行策略，Windows 目标额外支持 CLR 扩展（反弹 Shell / Shellcode / SOCKS5 / 文件管理）。
 
@@ -129,6 +131,16 @@ sudo dnf install webkit2gtk4.1
 ## MCP
 
 MDUT 通过 Model Context Protocol（MCP）暴露其能力，AI 客户端可以以编程方式连接数据库、执行命令、管理文件等。配置方法与启动方式见 **[MCP 使用说明](./docs/mcp.md)**。
+
+## CLI
+
+MDUT 内置 sqlmap 风格 CLI，支持 DSN 连接、SQL 与元数据操作、利用部署、命令执行、文件操作、交互 Shell、反弹 Shell 和 SOCKS5。使用 `--help` 查看完整命令（中英文双语）。
+
+```bash
+./Multiple_Database_Utilization_Tools cli --help
+./Multiple_Database_Utilization_Tools cli -d "mysql://root:root@127.0.0.1:3306/mysql" --exec "id"
+./Multiple_Database_Utilization_Tools cli -d "mysql://root:root@127.0.0.1:3306/mysql" --shell
+```
 
 ## 致谢
 

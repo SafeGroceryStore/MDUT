@@ -1,5 +1,12 @@
 # 更新日志
 
+## 2026/10/26 - `v3.3.0`
+### 核心
+* 新增 sqlmap 风格 CLI 模式：连接、SQL/元数据、利用部署、命令执行、文件操作、交互 Shell、SOCKS5 等
+* 修复 Redis ARM64 架构识别与 MySQL 老环境 GLIBC 兼容问题
+* 修复 Oracle 11g Java CLOB 调用兼容问题；MSSQL 清理时恢复原配置
+
+
 ## 2026/10/20 - `v3.2.0`
 ### 核心
 * MSSQL 新增 CLR 高级扩展：反弹 Shell、Shellcode 执行、SOCKS5 隧道、文件管理（Windows 目标，SQL Server 2005~2022 全版本）

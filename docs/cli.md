@@ -450,6 +450,31 @@ mdut cli -d "$DSN" --blind --exec "nohup /tmp/worker >/tmp/worker.log 2>&1 &"
 | SOCKS5 或 Oracle revshell 一直不退出 | 这是正常常驻行为，用 SIGINT/SIGTERM 结束，不套 `--timeout` |
 | 出现 unknown architecture | 目标 INFO 缺少可识别机器架构，CLI 会拒绝猜测载荷平台 |
 
+## 13. MCP Server
+
+MCP Server 提供 **35 个工具**，包括完整的文件操作流程和数据库专用执行控制。构建独立 STDIO 入口：
+
+```bash
+go build -tags mcp -o mdut-mcp ./cmd/mcp
+./mdut-mcp
+```
+
+`connect` 返回 `session_id` 后，文件工具可创建、重命名、追加、分块读取远端文件，并获取大小和哈希。`append_file` 接受标准 Base64 且不改变编码；`read_file_chunk` 返回 Base64，要求 `offset` 为非负整数、`length` 为正整数：
+
+```json
+{"session_id":"SESSION_ID","path":"/tmp/a.bin","offset":0,"length":4096}
+```
+
+`list_dir` 接受可选 `path_charset`；`read_file` 和 `write_file` 接受可选 `path_charset`、`content_charset`，默认均为 UTF-8。PostgreSQL 客户端可在 `exec_command` 前选择无需 UDF 的命令执行方式：
+
+```json
+{"session_id":"SESSION_ID","method":"copy_program"}
+```
+
+将该请求发送给 `set_pg_exec_method`。`start_socks5` 另接受可选 `user` 和 `pass` 认证参数。Redis 会话中的通用 `deploy_exploit` 与 `redis_deploy_module` 使用相同的 Module 部署路径及 `module_path`/rogue/relay 参数。
+
+完整工具清单和示例见 [MCP 使用指南](mcp.md)。
+
 ## 安全说明
 
 CLI 会在目标上执行 SQL、写入文件、注册函数或加载模块。精确写会清空 Redis 内存数据集。仅在授权环境使用，并优先让默认自动清理完成；失败或中断时按输出提示检查目标残留。

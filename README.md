@@ -54,7 +54,7 @@ Cross-platform desktop database utilization and management tool
 | RDB Write (Redis) | — | — | — | — | ✅ |
 | CLI Mode | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-> **MSSQL** supports xp_cmdshell, OLE Automation, and Agent Job execution strategies, plus a CLR extension (reverse shell / shellcode / SOCKS5 / file management) on Windows targets.
+> **MSSQL** supports xp_cmdshell, OLE Automation, and Agent Job execution strategies, plus an optional CLR extension on Windows targets (reverse shell / shellcode / SOCKS5). File management and chunked uploads/downloads do not depend on CLR and are available according to the built-in strategy's reported capabilities.
 
 ## Download
 

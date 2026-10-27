@@ -134,7 +134,7 @@ MDUT 通过 Model Context Protocol（MCP）暴露其能力，AI 客户端可以�
 
 ## CLI
 
-MDUT 内置 sqlmap 风格 CLI，支持 DSN 连接、SQL 与元数据操作、利用部署、命令执行、文件操作、交互 Shell、反弹 Shell 和 SOCKS5。使用 `--help` 查看完整命令（中英文双语）。
+MDUT 内置 sqlmap 风格 CLI，支持 DSN 连接、SQL 与元数据操作、利用部署、命令执行、文件操作、交互 Shell、反弹 Shell 和 SOCKS5。使用 `--help` 查看完整命令（中英文双语）。完整连接格式、动作说明、部署清理边界、分库参数和示例见 **[CLI 使用手册](./docs/cli.md)**。
 
 ```bash
 ./Multiple_Database_Utilization_Tools cli --help

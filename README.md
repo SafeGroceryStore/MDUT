@@ -134,7 +134,7 @@ MDUT exposes its capabilities through the Model Context Protocol (MCP), enabling
 
 ## CLI
 
-MDUT includes a sqlmap-style CLI with DSN connections, SQL and metadata operations, exploit deployment, command execution, file operations, interactive shell, reverse shell, and SOCKS5 support. Use `--help` for the full command surface (Chinese/English bilingual).
+MDUT includes a sqlmap-style CLI with DSN connections, SQL and metadata operations, exploit deployment, command execution, file operations, interactive shell, reverse shell, and SOCKS5 support. Use `--help` for the full command surface (Chinese/English bilingual). See the **[CLI Usage Guide](./docs/cli-en.md)** for complete connection formats, actions, lifecycle semantics, database-specific options, and examples.
 
 ```bash
 ./Multiple_Database_Utilization_Tools cli --help

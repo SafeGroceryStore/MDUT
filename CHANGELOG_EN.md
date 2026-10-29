@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026/10/29 - `v3.3.2`
+### Core
+* Fixed PostgreSQL connections falling back to the username when the database name is missing, causing `database "<username>" does not exist` errors (#85); an empty database name now defaults to `postgres` across GUI / MCP / CLI
+
+
 ## 2026/10/27 - `v3.3.1`
 ### Core
 * Oracle file manager now supports recursive directory creation; MCP expanded to 35 tools

@@ -3,6 +3,7 @@
 ## 2026/10/29 - `v3.3.2`
 ### 核心
 * 修复 PostgreSQL 连接在库名缺失时回退为用户名、报 `database "<用户名>" does not exist` 的问题（#85）：空库名现默认连接 `postgres`，GUI / MCP / CLI 三端一致生效
+* 空密码连接时省略 `password` 键，避免 lib/pq 忽略 `dbname` 后回退到用户名（#86）
 
 
 ## 2026/10/27 - `v3.3.1`

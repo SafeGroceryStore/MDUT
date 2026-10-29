@@ -3,6 +3,7 @@
 ## 2026/10/29 - `v3.3.2`
 ### Core
 * Fixed PostgreSQL connections falling back to the username when the database name is missing, causing `database "<username>" does not exist` errors (#85); an empty database name now defaults to `postgres` across GUI / MCP / CLI
+* Empty-password connections now omit the `password` key so lib/pq does not ignore `dbname` and fall back to the username (#86)
 
 
 ## 2026/10/27 - `v3.3.1`

@@ -18,6 +18,10 @@
 
 [English](./README.md) / [更新日志](./CHANGELOG.md)
 
+## 免责声明
+
+> 本工具仅供授权安全测试和企业安全建设使用。使用本工具时，您应确保所有行为符合当地法律法规。如存在任何非法使用行为，您将自行承担所有后果，本工具开发者和贡献者不承担任何法律及连带责任。使用本工具即视为您已阅读并同意上述条款。
+
 ## 简介
 
 **MDUT**（Multiple Database Utilization Tools）是一款跨平台桌面数据库管理与利用工具，基于 **Go + Wails v2 + React/TypeScript** 全新重写。支持多种主流数据库的图形化管理，并集成高级利用功能模块，专为授权安全测试场景设计。
@@ -149,7 +153,3 @@ MDUT 内置 sqlmap 风格 CLI，支持 DSN 连接、SQL 与元数据操作、利
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left&sealed_token=CewH_F_-y8Kqt7CKcCOBScfbsupLJGYJH651nSKiC3ZtQBCDKWK1_F1N93-EiBdCOPJL84az2UG72qoRR7mAyr009EdAcVEHqvVfhwJVMxCTIOpamn3NYnuQwa93W6q48i1WqyarwozCnzS-yp6qJXXtGD1S8lYJbiucD1IjwVAs74hNsyvX2uKn8px3)](https://www.star-history.com/?repos=SafeGroceryStore%2FMDUT&type=date&legend=top-left)
-
-## 免责声明
-
-> 本工具仅供授权安全测试和企业安全建设使用。使用本工具时，您应确保所有行为符合当地法律法规。如存在任何非法使用行为，您将自行承担所有后果，本工具开发者和贡献者不承担任何法律及连带责任。使用本工具即视为您已阅读并同意上述条款。

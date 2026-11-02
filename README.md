@@ -18,6 +18,10 @@ Cross-platform desktop database utilization and management tool
 
 [中文](./README_ZH.md) / [ChangeLogs](./CHANGELOG_EN.md)
 
+## Disclaimer
+
+> This tool is intended solely for authorized security testing and enterprise security assessment. You must ensure that all usage complies with applicable local laws and regulations. The developers and contributors assume no legal liability for any misuse. By using this tool, you acknowledge that you have read and agreed to these terms.
+
 ## Introduction
 
 **MDUT** (Multiple Database Utilization Tools) is a cross-platform desktop database management and exploitation tool, rebuilt from scratch with **Go + Wails v2 + React/TypeScript**. It supports graphical management of multiple mainstream databases and integrates advanced exploitation modules for authorized security testing.
@@ -150,7 +154,3 @@ MDUT includes a sqlmap-style CLI with DSN connections, SQL and metadata operatio
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/chart?repos=SafeGroceryStore/MDUT&type=date&legend=top-left&sealed_token=CewH_F_-y8Kqt7CKcCOBScfbsupLJGYJH651nSKiC3ZtQBCDKWK1_F1N93-EiBdCOPJL84az2UG72qoRR7mAyr009EdAcVEHqvVfhwJVMxCTIOpamn3NYnuQwa93W6q48i1WqyarwozCnzS-yp6qJXXtGD1S8lYJbiucD1IjwVAs74hNsyvX2uKn8px3)](https://www.star-history.com/?repos=SafeGroceryStore%2FMDUT&type=date&legend=top-left)
-
-## Disclaimer
-
-> This tool is intended solely for authorized security testing and enterprise security assessment. You must ensure that all usage complies with applicable local laws and regulations. The developers and contributors assume no legal liability for any misuse. By using this tool, you acknowledge that you have read and agreed to these terms.
